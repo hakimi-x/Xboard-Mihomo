@@ -27,10 +27,6 @@ typedef UpdateTasks = List<FutureOr Function()>;
 class GlobalState {
   static GlobalState? _instance;
   Map<CacheTag, FixedMap<String, double>> computeHeightMapCache = {};
-
-  // Map<CacheTag, double> computeScrollPositionCache = {};
-  // final Map<String, double> scrollPositionCache = {};
-  bool isService = false;
   Timer? timer;
   Timer? groupsUpdateTimer;
   late Config config;
@@ -47,8 +43,6 @@ class GlobalState {
   UpdateTasks tasks = [];
   final navigatorKey = GlobalKey<NavigatorState>();
   AppController? _appController;
-
-  // GlobalKey<CommonScaffoldState> homeScaffoldKey = GlobalKey();
   bool isInit = false;
 
   bool get isStart => startTime != null && startTime!.isBeforeNow;
@@ -134,18 +128,18 @@ class GlobalState {
   Future<void> handleStart([UpdateTasks? tasks]) async {
     startTime ??= DateTime.now();
     await clashCore.startListener();
-    await service?.startVpn();
+    await service?.start();
     startUpdateTasks(tasks);
   }
 
   Future updateStartTime() async {
-    startTime = await clashLib?.getRunTime();
+    startTime = await service?.getRunTime();
   }
 
   Future handleStop() async {
     startTime = null;
     await clashCore.stopListener();
-    await service?.stopVpn();
+    await service?.stop();
     stopUpdateTasks();
   }
 
@@ -196,26 +190,21 @@ class GlobalState {
     );
   }
 
-  // Future<Map<String, dynamic>> getProfileMap(String id) async {
-  //   final profilePath = await appPath.getProfilePath(id);
-  //   final res = await Isolate.run<Result<dynamic>>(() async {
-  //     try {
-  //       final file = File(profilePath);
-  //       if (!await file.exists()) {
-  //         return Result.error("");
-  //       }
-  //       final value = await file.readAsString();
-  //       return Result.success(utils.convertYamlNode(loadYaml(value)));
-  //     } catch (e) {
-  //       return Result.error(e.toString());
-  //     }
-  //   });
-  //   if (res.isSuccess) {
-  //     return res.data as Map<String, dynamic>;
-  //   } else {
-  //     throw res.message;
-  //   }
-  // }
+  VpnOptions getVpnOptions() {
+    final vpnProps = config.vpnProps;
+    final networkProps = config.networkProps;
+    final port = config.patchClashConfig.mixedPort;
+    return VpnOptions(
+      enable: vpnProps.enable,
+      systemProxy: networkProps.systemProxy,
+      port: port,
+      ipv6: vpnProps.ipv6,
+      dnsHijacking: vpnProps.dnsHijacking,
+      accessControl: vpnProps.accessControl,
+      allowBypass: vpnProps.allowBypass,
+      bypassDomain: networkProps.bypassDomain,
+    );
+  }
 
   Future<T?> showCommonDialog<T>({
     required Widget child,
@@ -260,16 +249,6 @@ class GlobalState {
       preferences.clearClashConfig();
       preferences.saveConfig(config);
     }
-  }
-
-  CoreState getCoreState() {
-    final currentProfile = config.currentProfile;
-    return CoreState(
-      vpnProps: config.vpnProps,
-      onlyStatisticsProxy: config.appSetting.onlyStatisticsProxy,
-      currentProfileName: currentProfile?.label ?? currentProfile?.id ?? '',
-      bypassDomain: config.networkProps.bypassDomain,
-    );
   }
 
   Future<SetupParams> getSetupParams({
@@ -419,10 +398,7 @@ class GlobalState {
   }
 
   Future<Map<String, dynamic>> getProfileConfig(String profileId) async {
-    final configMap = await switch (clashLibHandler != null) {
-      true => clashLibHandler!.getConfig(profileId),
-      false => clashCore.getConfig(profileId),
-    };
+    final configMap = await clashCore.getConfig(profileId);
     configMap['rules'] = configMap['rule'];
     configMap.remove('rule');
     return configMap;

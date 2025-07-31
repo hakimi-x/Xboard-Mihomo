@@ -140,6 +140,7 @@ class VpnProps with _$VpnProps {
     @Default(true) bool systemProxy,
     @Default(false) bool ipv6,
     @Default(true) bool allowBypass,
+    @Default(false) bool dnsHijacking,
     @Default(defaultAccessControl) AccessControl accessControl,
   }) = _VpnProps;
 

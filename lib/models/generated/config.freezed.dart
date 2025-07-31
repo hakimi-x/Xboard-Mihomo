@@ -1070,6 +1070,7 @@ mixin _$VpnProps {
   bool get systemProxy => throw _privateConstructorUsedError;
   bool get ipv6 => throw _privateConstructorUsedError;
   bool get allowBypass => throw _privateConstructorUsedError;
+  bool get dnsHijacking => throw _privateConstructorUsedError;
   AccessControl get accessControl => throw _privateConstructorUsedError;
 
   /// Serializes this VpnProps to a JSON map.
@@ -1092,6 +1093,7 @@ abstract class $VpnPropsCopyWith<$Res> {
       bool systemProxy,
       bool ipv6,
       bool allowBypass,
+      bool dnsHijacking,
       AccessControl accessControl});
 
   $AccessControlCopyWith<$Res> get accessControl;
@@ -1116,6 +1118,7 @@ class _$VpnPropsCopyWithImpl<$Res, $Val extends VpnProps>
     Object? systemProxy = null,
     Object? ipv6 = null,
     Object? allowBypass = null,
+    Object? dnsHijacking = null,
     Object? accessControl = null,
   }) {
     return _then(_value.copyWith(
@@ -1134,6 +1137,10 @@ class _$VpnPropsCopyWithImpl<$Res, $Val extends VpnProps>
       allowBypass: null == allowBypass
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
+              as bool,
+      dnsHijacking: null == dnsHijacking
+          ? _value.dnsHijacking
+          : dnsHijacking // ignore: cast_nullable_to_non_nullable
               as bool,
       accessControl: null == accessControl
           ? _value.accessControl
@@ -1166,6 +1173,7 @@ abstract class _$$VpnPropsImplCopyWith<$Res>
       bool systemProxy,
       bool ipv6,
       bool allowBypass,
+      bool dnsHijacking,
       AccessControl accessControl});
 
   @override
@@ -1189,6 +1197,7 @@ class __$$VpnPropsImplCopyWithImpl<$Res>
     Object? systemProxy = null,
     Object? ipv6 = null,
     Object? allowBypass = null,
+    Object? dnsHijacking = null,
     Object? accessControl = null,
   }) {
     return _then(_$VpnPropsImpl(
@@ -1208,6 +1217,10 @@ class __$$VpnPropsImplCopyWithImpl<$Res>
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
               as bool,
+      dnsHijacking: null == dnsHijacking
+          ? _value.dnsHijacking
+          : dnsHijacking // ignore: cast_nullable_to_non_nullable
+              as bool,
       accessControl: null == accessControl
           ? _value.accessControl
           : accessControl // ignore: cast_nullable_to_non_nullable
@@ -1224,6 +1237,7 @@ class _$VpnPropsImpl implements _VpnProps {
       this.systemProxy = true,
       this.ipv6 = false,
       this.allowBypass = true,
+      this.dnsHijacking = false,
       this.accessControl = defaultAccessControl});
 
   factory _$VpnPropsImpl.fromJson(Map<String, dynamic> json) =>
@@ -1243,11 +1257,14 @@ class _$VpnPropsImpl implements _VpnProps {
   final bool allowBypass;
   @override
   @JsonKey()
+  final bool dnsHijacking;
+  @override
+  @JsonKey()
   final AccessControl accessControl;
 
   @override
   String toString() {
-    return 'VpnProps(enable: $enable, systemProxy: $systemProxy, ipv6: $ipv6, allowBypass: $allowBypass, accessControl: $accessControl)';
+    return 'VpnProps(enable: $enable, systemProxy: $systemProxy, ipv6: $ipv6, allowBypass: $allowBypass, dnsHijacking: $dnsHijacking, accessControl: $accessControl)';
   }
 
   @override
@@ -1261,14 +1278,16 @@ class _$VpnPropsImpl implements _VpnProps {
             (identical(other.ipv6, ipv6) || other.ipv6 == ipv6) &&
             (identical(other.allowBypass, allowBypass) ||
                 other.allowBypass == allowBypass) &&
+            (identical(other.dnsHijacking, dnsHijacking) ||
+                other.dnsHijacking == dnsHijacking) &&
             (identical(other.accessControl, accessControl) ||
                 other.accessControl == accessControl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, enable, systemProxy, ipv6, allowBypass, accessControl);
+  int get hashCode => Object.hash(runtimeType, enable, systemProxy, ipv6,
+      allowBypass, dnsHijacking, accessControl);
 
   /// Create a copy of VpnProps
   /// with the given fields replaced by the non-null parameter values.
@@ -1292,6 +1311,7 @@ abstract class _VpnProps implements VpnProps {
       final bool systemProxy,
       final bool ipv6,
       final bool allowBypass,
+      final bool dnsHijacking,
       final AccessControl accessControl}) = _$VpnPropsImpl;
 
   factory _VpnProps.fromJson(Map<String, dynamic> json) =
@@ -1305,6 +1325,8 @@ abstract class _VpnProps implements VpnProps {
   bool get ipv6;
   @override
   bool get allowBypass;
+  @override
+  bool get dnsHijacking;
   @override
   AccessControl get accessControl;
 

@@ -2,24 +2,25 @@ package com.follow.clash
 
 import android.app.Activity
 import android.os.Bundle
-import com.follow.clash.extensions.wrapAction
+import com.follow.clash.common.QuickAction
+import com.follow.clash.common.value
 
 class TempActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (intent.action) {
-            wrapAction("START") -> {
-                GlobalState.handleStart()
+            QuickAction.START.value -> {
+                State.handleStartService()
             }
 
-            wrapAction("STOP") -> {
-                GlobalState.handleStop()
+            QuickAction.STOP.value -> {
+                State.handleStopService()
             }
 
-            wrapAction("CHANGE") -> {
-                GlobalState.handleToggle()
+            QuickAction.TOGGLE.value -> {
+                State.handleToggle()
             }
         }
-        finishAndRemoveTask()
+        finish()
     }
 }

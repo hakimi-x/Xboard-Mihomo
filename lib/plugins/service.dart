@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:fl_clash/common/constant.dart';
 import 'package:fl_clash/common/system.dart';
+import 'package:fl_clash/models/core.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/services.dart';
-
-import '../clash/lib.dart';
 
 class Service {
   static Service? _instance;
@@ -14,7 +14,15 @@ class Service {
   ReceivePort? receiver;
 
   Service._internal() {
-    methodChannel = const MethodChannel('service');
+    methodChannel = const MethodChannel('$packageName/service');
+    methodChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'getVpnOptions':
+          return handleGetVpnOptions();
+        default:
+          throw MissingPluginException();
+      }
+    });
   }
 
   factory Service() {
@@ -22,25 +30,36 @@ class Service {
     return _instance!;
   }
 
-  Future<bool?> init() async {
-    return await methodChannel.invokeMethod<bool>('init');
+  Future<ActionResult?> invokeAction(Action action) async {
+    final data = await methodChannel.invokeMethod<String>(
+      'invokeAction',
+      json.encode(action),
+    );
+    if (data == null) {
+      return null;
+    }
+    return json.decode(data) as ActionResult?;
   }
 
-  Future<bool?> destroy() async {
-    return await methodChannel.invokeMethod<bool>('destroy');
+  VpnOptions handleGetVpnOptions() {
+    return globalState.getVpnOptions();
   }
 
-  Future<bool?> startVpn() async {
-    final options = await clashLib?.getAndroidVpnOptions();
-    return await methodChannel.invokeMethod<bool>('startVpn', {
-      'data': json.encode(options),
-    });
+  Future<bool> start<T>() async {
+    return await methodChannel.invokeMethod<bool>('start') ?? false;
   }
 
-  Future<bool?> stopVpn() async {
-    return await methodChannel.invokeMethod<bool>('stopVpn');
+  Future<bool> stop<T>() async {
+    return await methodChannel.invokeMethod<bool>('stop') ?? false;
+  }
+
+  Future<DateTime?> getRunTime<T>() async {
+    final ms = await methodChannel.invokeMethod<int>('getRunTime') ?? 0;
+    if (ms == 0) {
+      return null;
+    }
+    return DateTime.fromMillisecondsSinceEpoch(ms);
   }
 }
 
-Service? get service =>
-    system.isAndroid && !globalState.isService ? Service() : null;
+Service? get service => system.isAndroid ? Service() : null;

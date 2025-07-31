@@ -153,7 +153,10 @@ class Build {
       assert(ndk != null);
       final prebuiltDir =
           Directory(join(ndk!, 'toolchains', 'llvm', 'prebuilt'));
-      final prebuiltDirList = prebuiltDir.listSync();
+      final prebuiltDirList = prebuiltDir
+          .listSync()
+          .where((file) => !basename(file.path).startsWith('.'))
+          .toList();
       final map = {
         'armeabi-v7a': 'armv7a-linux-androideabi21-clang',
         'arm64-v8a': 'aarch64-linux-android21-clang',
@@ -222,13 +225,15 @@ class Build {
     final List<String> corePaths = [];
 
     for (final item in items) {
-      final outFileDir = join(
+      final targetOutFilePath = join(
         outDir,
         item.target.name,
+      );
+      final outFilePath = join(
+        targetOutFilePath,
         item.archName,
       );
-
-      final file = File(outFileDir);
+      final file = File(outFilePath);
       if (file.existsSync()) {
         file.deleteSync(recursive: true);
       }
@@ -236,11 +241,11 @@ class Build {
       final fileName = isLib
           ? '$libName${item.target.dynamicLibExtensionName}'
           : '$coreName${item.target.executableExtensionName}';
-      final outPath = join(
-        outFileDir,
+      final realOutPath = join(
+        outFilePath,
         fileName,
       );
-      corePaths.add(outPath);
+      corePaths.add(realOutPath);
 
       final Map<String, String> env = {};
       env['GOOS'] = item.target.os;
@@ -254,7 +259,6 @@ class Build {
       } else {
         env['CGO_ENABLED'] = '0';
       }
-
       final execLines = [
         'go',
         'build',
@@ -262,7 +266,7 @@ class Build {
         '-tags=$tags',
         if (isLib) '-buildmode=c-shared',
         '-o',
-        outPath,
+        realOutPath,
       ];
       await exec(
         execLines,
@@ -270,9 +274,49 @@ class Build {
         environment: env,
         workingDirectory: _coreDir,
       );
+      if (isLib && item.archName != null) {
+        await adjustLibOut(
+          targetOutFilePath: targetOutFilePath,
+          outFilePath: outFilePath,
+          archName: item.archName!,
+        );
+      }
     }
 
     return corePaths;
+  }
+
+  static Future<void> adjustLibOut({
+    required String targetOutFilePath,
+    required String outFilePath,
+    required String archName,
+  }) async {
+    final includesPath = join(
+      targetOutFilePath,
+      'includes',
+    );
+    final realOutPath = join(
+      includesPath,
+      archName,
+    );
+    await Directory(realOutPath).create(recursive: true);
+    final targetOutFiles = Directory(outFilePath).listSync();
+    final coreFiles = Directory(_coreDir).listSync();
+    for (final file in [...targetOutFiles, ...coreFiles]) {
+      if (!file.path.endsWith('.h')) {
+        continue;
+      }
+      print(file.path);
+      final targetFilePath = join(realOutPath, basename(file.path));
+      final realFile = File(file.path);
+      await realFile.copy(
+        targetFilePath,
+      );
+      if (coreFiles.contains(file)) {
+        continue;
+      }
+      await realFile.delete();
+    }
   }
 
   static Future<void> buildHelper(Target target, String token) async {

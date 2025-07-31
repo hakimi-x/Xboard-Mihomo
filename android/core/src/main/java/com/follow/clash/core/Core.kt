@@ -7,7 +7,16 @@ import java.net.URL
 data object Core {
     private external fun startTun(
         fd: Int,
-        cb: TunInterface
+        cb: TunInterface,
+        address: String,
+        dns: String,
+    )
+
+    external fun forceGC(
+    )
+
+    external fun updateDNS(
+        dns: String,
     )
 
     private fun parseInetSocketAddress(address: String): InetSocketAddress {
@@ -19,27 +28,53 @@ data object Core {
     fun startTun(
         fd: Int,
         protect: (Int) -> Boolean,
-        resolverProcess: (protocol: Int, source: InetSocketAddress, target: InetSocketAddress, uid: Int) -> String
+        resolverProcess: (protocol: Int, source: InetSocketAddress, target: InetSocketAddress, uid: Int) -> String,
+        address: String,
+        dns: String,
     ) {
-        startTun(fd, object : TunInterface {
-            override fun protect(fd: Int) {
-                protect(fd)
-            }
+        startTun(
+            fd,
+            object : TunInterface {
+                override fun protect(fd: Int) {
+                    protect(fd)
+                }
 
-            override fun resolverProcess(
-                protocol: Int,
-                source: String,
-                target: String,
-                uid: Int
-            ): String {
-                return resolverProcess(
-                    protocol,
-                    parseInetSocketAddress(source),
-                    parseInetSocketAddress(target),
-                    uid,
-                )
-            }
-        });
+                override fun resolverProcess(
+                    protocol: Int,
+                    source: String,
+                    target: String,
+                    uid: Int
+                ): String {
+                    return resolverProcess(
+                        protocol,
+                        parseInetSocketAddress(source),
+                        parseInetSocketAddress(target),
+                        uid,
+                    )
+                }
+            },
+            address,
+            dns
+        )
+    }
+
+    private external fun invokeAction(
+        data: String,
+        cb: InvokeInterface
+    )
+
+    fun invokeAction(
+        data: String,
+        cb: (result: String?) -> Unit
+    ) {
+        invokeAction(
+            data,
+            object : InvokeInterface {
+                override fun onResult(result: String?) {
+                    cb(result)
+                }
+            },
+        )
     }
 
     external fun stopTun()

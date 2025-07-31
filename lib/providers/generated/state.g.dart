@@ -79,22 +79,6 @@ final currentNavigationItemsStateProvider =
 // ignore: unused_element
 typedef CurrentNavigationItemsStateRef
     = AutoDisposeProviderRef<NavigationItemsState>;
-String _$coreStateHash() => r'3a651f6254443f4f760720cb570195199d014d4b';
-
-/// See also [coreState].
-@ProviderFor(coreState)
-final coreStateProvider = AutoDisposeProvider<CoreState>.internal(
-  coreState,
-  name: r'coreStateProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$coreStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CoreStateRef = AutoDisposeProviderRef<CoreState>;
 String _$updateParamsHash() => r'012df72ab0e769a51c573f4692031506d7b1f1b4';
 
 /// See also [updateParams].

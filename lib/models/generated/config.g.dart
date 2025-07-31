@@ -137,6 +137,7 @@ _$VpnPropsImpl _$$VpnPropsImplFromJson(Map<String, dynamic> json) =>
       systemProxy: json['systemProxy'] as bool? ?? true,
       ipv6: json['ipv6'] as bool? ?? false,
       allowBypass: json['allowBypass'] as bool? ?? true,
+      dnsHijacking: json['dnsHijacking'] as bool? ?? false,
       accessControl: json['accessControl'] == null
           ? defaultAccessControl
           : AccessControl.fromJson(
@@ -149,6 +150,7 @@ Map<String, dynamic> _$$VpnPropsImplToJson(_$VpnPropsImpl instance) =>
       'systemProxy': instance.systemProxy,
       'ipv6': instance.ipv6,
       'allowBypass': instance.allowBypass,
+      'dnsHijacking': instance.dnsHijacking,
       'accessControl': instance.accessControl,
     };
 

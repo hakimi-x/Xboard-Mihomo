@@ -17,12 +17,6 @@ abstract mixin class AppMessageListener {
   void onLoaded(String providerName) {}
 }
 
-// abstract mixin class ServiceMessageListener {
-//   onProtect(Fd fd) {}
-//
-//   onProcess(ProcessData process) {}
-// }
-
 @freezed
 class SetupParams with _$SetupParams {
   const factory SetupParams({
@@ -34,15 +28,6 @@ class SetupParams with _$SetupParams {
   factory SetupParams.fromJson(Map<String, dynamic> json) =>
       _$SetupParamsFromJson(json);
 }
-
-// extension SetupParamsExt on SetupParams {
-//   Map<String, dynamic> get json {
-//     final json = Map<String, dynamic>.from(config);
-//     json["selected-map"] = selectedMap;
-//     json["test-url"] = testUrl;
-//     return json;
-//   }
-// }
 
 @freezed
 class UpdateParams with _$UpdateParams {
@@ -66,35 +51,21 @@ class UpdateParams with _$UpdateParams {
 }
 
 @freezed
-class CoreState with _$CoreState {
-  const factory CoreState({
-    @JsonKey(name: 'vpn-props') required VpnProps vpnProps,
-    @JsonKey(name: 'only-statistics-proxy') required bool onlyStatisticsProxy,
-    @JsonKey(name: 'current-profile-name') required String currentProfileName,
-    @JsonKey(name: 'bypass-domain') @Default([]) List<String> bypassDomain,
-  }) = _CoreState;
-
-  factory CoreState.fromJson(Map<String, Object?> json) =>
-      _$CoreStateFromJson(json);
-}
-
-@freezed
-class AndroidVpnOptions with _$AndroidVpnOptions {
-  const factory AndroidVpnOptions({
+class VpnOptions with _$VpnOptions {
+  const factory VpnOptions({
     required bool enable,
     required int port,
-    required AccessControl? accessControl,
+    required bool ipv6,
+    required bool dnsHijacking,
+    required AccessControl accessControl,
     required bool allowBypass,
     required bool systemProxy,
     required List<String> bypassDomain,
-    required String ipv4Address,
-    required String ipv6Address,
     @Default([]) List<String> routeAddress,
-    required String dnsServerAddress,
-  }) = _AndroidVpnOptions;
+  }) = _VpnOptions;
 
-  factory AndroidVpnOptions.fromJson(Map<String, Object?> json) =>
-      _$AndroidVpnOptionsFromJson(json);
+  factory VpnOptions.fromJson(Map<String, Object?> json) =>
+      _$VpnOptionsFromJson(json);
 }
 
 @freezed
@@ -172,27 +143,6 @@ class Now with _$Now {
 
   factory Now.fromJson(Map<String, Object?> json) => _$NowFromJson(json);
 }
-
-// @freezed
-// class ProcessData with _$ProcessData {
-//   const factory ProcessData({
-//     required String id,
-//     required Metadata metadata,
-//   }) = _ProcessData;
-//
-//   factory ProcessData.fromJson(Map<String, Object?> json) =>
-//       _$ProcessDataFromJson(json);
-// }
-//
-// @freezed
-// class Fd with _$Fd {
-//   const factory Fd({
-//     required String id,
-//     required int value,
-//   }) = _Fd;
-//
-//   factory Fd.fromJson(Map<String, Object?> json) => _$FdFromJson(json);
-// }
 
 @freezed
 class ProviderSubscriptionInfo with _$ProviderSubscriptionInfo {

@@ -274,7 +274,7 @@ class AppController {
   }
 
   Future<Result<bool>> _requestAdmin(bool enableTun) async {
-    if(system.isWindows && kDebugMode){
+    if (system.isWindows && kDebugMode) {
       return Result.success(false);
     }
     final realTunEnable = _ref.read(realTunEnableProvider);
@@ -545,9 +545,6 @@ class AppController {
     final isInit = await clashCore.isInit;
     if (!isInit) {
       await clashCore.init();
-      await clashCore.setState(
-        globalState.getCoreState(),
-      );
     }
     await applyProfile();
   }
@@ -1072,8 +1069,9 @@ class AppController {
       final res = await futureFunction();
       return res;
     } catch (e) {
-      commonPrint.log('$e');
+      commonPrint.log('$futureFunction ===> $e');
       if (realSilence) {
+        globalState.showNotifier(e.toString());
         globalState.showNotifier(e.toString());
       } else {
         globalState.showMessage(

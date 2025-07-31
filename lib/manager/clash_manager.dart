@@ -37,11 +37,6 @@ class _ClashContainerState extends ConsumerState<ClashManager>
         globalState.appController.handleChangeProfile();
       }
     });
-    ref.listenManual(coreStateProvider, (prev, next) async {
-      if (prev != next) {
-        await clashCore.setState(next);
-      }
-    });
     ref.listenManual(updateParamsProvider, (prev, next) {
       if (prev != next) {
         globalState.appController.updateClashConfigDebounce();
