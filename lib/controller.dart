@@ -123,10 +123,12 @@ class AppController {
   }
 
   Future<void> updateTraffic() async {
-    final traffic = await clashCore.getTraffic();
+    final onlyStatisticsProxy = _ref
+        .read(appSettingProvider.select((state) => state.onlyStatisticsProxy));
+    final traffic = await clashCore.getTraffic(onlyStatisticsProxy);
     _ref.read(trafficsProvider.notifier).addTraffic(traffic);
     _ref.read(totalTrafficProvider.notifier).value =
-        await clashCore.getTotalTraffic();
+        await clashCore.getTotalTraffic(onlyStatisticsProxy);
   }
 
   Future<void> addProfile(Profile profile) async {

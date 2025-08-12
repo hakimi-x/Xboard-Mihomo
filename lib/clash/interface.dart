@@ -48,9 +48,9 @@ mixin ClashInterface {
 
   Future<String> updateExternalProvider(String providerName);
 
-  FutureOr<String> getTraffic();
+  FutureOr<String> getTraffic(bool onlyStatisticsProxy);
 
-  FutureOr<String> getTotalTraffic();
+  FutureOr<String> getTotalTraffic(bool onlyStatisticsProxy);
 
   FutureOr<String> getCountryCode(String ip);
 
@@ -78,7 +78,7 @@ abstract class ClashHandlerInterface with ClashInterface {
 
   Future<T?> invoke<T>({
     required ActionMethod method,
-    String? data,
+    dynamic data,
     Duration? timeout,
   });
 
@@ -268,17 +268,19 @@ abstract class ClashHandlerInterface with ClashInterface {
   }
 
   @override
-  Future<String> getTotalTraffic() async {
+  Future<String> getTotalTraffic(bool onlyStatisticsProxy) async {
     return await invoke<String>(
           method: ActionMethod.getTotalTraffic,
+          data: onlyStatisticsProxy,
         ) ??
         '';
   }
 
   @override
-  Future<String> getTraffic() async {
+  Future<String> getTraffic(bool onlyStatisticsProxy) async {
     return await invoke<String>(
           method: ActionMethod.getTraffic,
+          data: onlyStatisticsProxy,
         ) ??
         '';
   }

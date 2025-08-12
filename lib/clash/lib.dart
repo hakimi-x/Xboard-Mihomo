@@ -37,7 +37,7 @@ class ClashLib extends ClashHandlerInterface {
   @override
   Future<T?> invoke<T>({
     required ActionMethod method,
-    String? data,
+    dynamic data,
     Duration? timeout,
   }) async {
     final id = '${method.name}#${utils.id}';

@@ -179,7 +179,7 @@ class ClashService extends ClashHandlerInterface {
   @override
   Future<T?> invoke<T>({
     required ActionMethod method,
-    String? data,
+    dynamic data,
     Duration? timeout,
   }) {
     final id = '${method.name}#${utils.id}';

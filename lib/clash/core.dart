@@ -221,8 +221,8 @@ class ClashCore {
     }
   }
 
-  Future<Traffic> getTraffic() async {
-    final trafficString = await clashInterface.getTraffic();
+  Future<Traffic> getTraffic(bool onlyStatisticsProxy) async {
+    final trafficString = await clashInterface.getTraffic(onlyStatisticsProxy);
     if (trafficString.isEmpty) {
       return Traffic();
     }
@@ -240,8 +240,9 @@ class ClashCore {
     );
   }
 
-  Future<Traffic> getTotalTraffic() async {
-    final totalTrafficString = await clashInterface.getTotalTraffic();
+  Future<Traffic> getTotalTraffic(bool onlyStatisticsProxy) async {
+    final totalTrafficString =
+        await clashInterface.getTotalTraffic(onlyStatisticsProxy);
     if (totalTrafficString.isEmpty) {
       return Traffic();
     }
