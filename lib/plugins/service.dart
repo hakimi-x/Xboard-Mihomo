@@ -41,8 +41,8 @@ class Service {
     return ActionResult.fromJson(json.decode(data));
   }
 
-  VpnOptions handleGetVpnOptions() {
-    return globalState.getVpnOptions();
+  String handleGetVpnOptions() {
+    return json.encode(globalState.getVpnOptions());
   }
 
   Future<bool> start<T>() async {

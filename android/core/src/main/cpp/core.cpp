@@ -58,7 +58,6 @@ static void call_tun_interface_protect_impl(void *tun_interface, const int fd) {
     env->CallVoidMethod(static_cast<jobject>(tun_interface),
                         m_tun_interface_protect,
                         fd);
-    release_jni_object_impl(tun_interface);
 }
 
 static char *
@@ -82,6 +81,7 @@ static void call_invoke_interface_result_impl(void *invoke_interface, const char
     env->CallVoidMethod(static_cast<jobject>(invoke_interface),
                         m_invoke_interface_result,
                         new_string(data));
+    release_jni_object_impl(invoke_interface);
 }
 
 extern "C"
