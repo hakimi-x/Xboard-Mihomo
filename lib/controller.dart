@@ -966,7 +966,7 @@ class AppController {
   }
 
   Future<void> updateTray([bool focus = false]) async {
-    tray.update(
+    tray?.update(
       trayState: _ref.read(trayStateProvider),
     );
   }

@@ -18,11 +18,11 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        service.bind()
         flutterMethodChannel = MethodChannel(
             flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/service"
         )
         flutterMethodChannel.setMethodCallHandler(this)
-        service.bind()
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -74,9 +74,14 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         return Gson().fromJson(res, VpnOptions::class.java)
     }
 
-    fun handleSyncVpnOption(options: VpnOptions, inApp: Boolean) {
-        service.remote?.syncVpnOptions(options, inApp)
+    fun startService(options: VpnOptions, inApp: Boolean) {
+        service.remote?.satrtService(options, inApp)
     }
+
+    fun stopService() {
+        service.remote?.stopService()
+    }
+
 
     private fun handleGetRunTime(result: MethodChannel.Result) {
         return result.success(State.runTime)

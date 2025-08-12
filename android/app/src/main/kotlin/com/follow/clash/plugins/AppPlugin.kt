@@ -290,7 +290,11 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
         requestNotificationCallback = null
     }
 
-    fun startVpnService(callBack: () -> Unit) {
+    fun prepare(needPrepare: Boolean, callBack: () -> Unit) {
+        if (!needPrepare) {
+            callBack.invoke()
+            return
+        }
         vpnPrepareCallback = callBack
         val intent = VpnService.prepare(GlobalState.application)
         if (intent != null) {

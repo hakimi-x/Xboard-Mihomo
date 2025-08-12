@@ -3,8 +3,11 @@ package com.follow.clash.service
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.ProxyInfo
-import android.net.VpnService
+import android.os.Binder
 import android.os.Build
+import android.os.IBinder
+import android.os.Parcel
+import android.os.RemoteException
 import android.util.Log
 import androidx.core.content.getSystemService
 import com.follow.clash.common.AccessControlMode
@@ -19,36 +22,21 @@ import com.follow.clash.service.models.toCIDR
 import com.follow.clash.service.modules.NetworkObserveModule
 import com.follow.clash.service.modules.NotificationModule
 import java.net.InetSocketAddress
+import android.net.VpnService as SystemVpnService
 
-class VpnService : VpnService() {
+class VpnService : SystemVpnService(), IBaseService {
     val notificationModule = NotificationModule(this)
     val networkObserveModule = NetworkObserveModule(this)
 
     override fun onCreate() {
         super.onCreate()
-        if (!State.inApp) {
-            QuickAction.START.quickIntent.toPendingIntent.send()
-        } else {
-            State.inApp = false
-        }
+        handleCreate()
     }
 
     private val connectivity by lazy {
         this.getSystemService<ConnectivityManager>()
     }
     private val uidPageNameMap = mutableMapOf<Int, String>()
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        State.options?.let {
-            handleStart(it)
-        }
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onDestroy() {
-        handleStop()
-        super.onDestroy()
-    }
 
     private fun resolverProcess(
         protocol: Int,
@@ -92,6 +80,34 @@ class VpnService : VpnService() {
                 }
             }
         }
+
+
+    override fun onLowMemory() {
+        Core.forceGC()
+        super.onLowMemory()
+    }
+
+    private val binder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
+        fun getService(): VpnService = this@VpnService
+
+        override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+            try {
+                val isSuccess = super.onTransact(code, data, reply, flags)
+                if (!isSuccess) {
+                    QuickAction.STOP.quickIntent.toPendingIntent.send()
+                }
+                return isSuccess
+            } catch (e: RemoteException) {
+                throw e
+            }
+        }
+    }
+
+    override fun onBind(intent: Intent): IBinder {
+        return binder
+    }
 
     private fun handleStart(options: VpnOptions) {
         notificationModule.install()
@@ -200,12 +216,15 @@ class VpnService : VpnService() {
         )
     }
 
-    override fun onLowMemory() {
-        Core.forceGC()
-        super.onLowMemory()
+    override fun start() {
+        notificationModule.install()
+        networkObserveModule.install()
+        State.options?.let {
+            handleStart(it)
+        }
     }
 
-    private fun handleStop() {
+    override fun stop() {
         notificationModule.uninstall()
         networkObserveModule.uninstall()
         Core.stopTun()

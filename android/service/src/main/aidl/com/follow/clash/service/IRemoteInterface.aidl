@@ -7,6 +7,7 @@ import com.follow.clash.service.models.NotificationParams;
 
 interface IRemoteInterface {
     void invokeAction(in String data, in ICallbackInterface callback);
-    void syncVpnOptions(in VpnOptions options,in boolean inApp);
     void updateNotificationParams(in NotificationParams params);
+    void satrtService(in VpnOptions options,in boolean inApp);
+    void stopService();
 }

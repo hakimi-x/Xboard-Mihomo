@@ -1,14 +1,8 @@
 package com.follow.clash
 
-import android.content.Intent
-import com.follow.clash.common.GlobalState
-import com.follow.clash.common.intent
-import com.follow.clash.common.startForegroundServiceCompat
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.ServicePlugin
 import com.follow.clash.plugins.TilePlugin
-import com.follow.clash.service.CommonService
-import com.follow.clash.service.VpnService
 import io.flutter.embedding.engine.FlutterEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +17,6 @@ enum class RunState {
 
 
 object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
-    var intent: Intent? = null
 
     val runLock = ReentrantLock()
 
@@ -80,22 +73,11 @@ object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
                 if (options == null) {
                     return@launch
                 }
-                servicePlugin?.handleSyncVpnOption(options, true)
-                val vpn = options.enable
-                intent = if (vpn) {
-                    VpnService::class.intent
-                } else {
-                    CommonService::class.intent
+                appPlugin?.prepare(options.enable) {
+                    servicePlugin?.startService(options, true)
+                    runStateFlow.tryEmit(RunState.START)
+                    runTime = System.currentTimeMillis()
                 }
-                if (vpn) {
-                    appPlugin?.startVpnService {
-                        GlobalState.application.startForegroundServiceCompat(intent)
-                    }
-                } else {
-                    GlobalState.application.startForegroundServiceCompat(intent)
-                }
-                runStateFlow.tryEmit(RunState.START)
-                runTime = System.currentTimeMillis()
             }
         }
     }
@@ -106,11 +88,7 @@ object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
                 return
             }
             runStateFlow.tryEmit(RunState.PENDING)
-            if (intent == null) {
-                return
-            }
-            GlobalState.application.stopService(intent)
-            intent = null
+            servicePlugin?.stopService()
             runStateFlow.tryEmit(RunState.STOP)
             runTime = 0
         }
