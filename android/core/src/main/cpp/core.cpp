@@ -76,14 +76,11 @@ call_tun_interface_resolve_process_impl(void *tun_interface, const int protocol,
     return sp;
 }
 
-static char *
-call_invoke_interface_result_impl(void *invoke_interface, const char *data) {
+static void call_invoke_interface_result_impl(void *invoke_interface, const char *data) {
     ATTACH_JNI();
-    const auto res = reinterpret_cast<jstring>(env->CallObjectMethod(static_cast<jobject>(invoke_interface),
-                                                                     m_invoke_interface_result,
-                                                                     new_string(data)));
-    scoped_string sr = get_string(res);
-    return sr;
+    env->CallVoidMethod(static_cast<jobject>(invoke_interface),
+                        m_invoke_interface_result,
+                        new_string(data));
 }
 
 extern "C"

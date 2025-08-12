@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
+import 'package:fl_clash/models/core.dart';
+import 'package:fl_clash/plugins/service.dart';
 
 import 'interface.dart';
 
@@ -38,20 +40,19 @@ class ClashLib extends ClashHandlerInterface {
     String? data,
     Duration? timeout,
   }) async {
-    return null;
-    // final id = '${method.name}#${utils.id}';
-    // final result = await service?.invokeAction(Action(
-    //   id: id,
-    //   method: method,
-    //   data: data,
-    // ));
-    // if (result == null) {
-    //   return null;
-    // }
-    // if (result.method == ActionMethod.getConfig) {
-    //   return result.toResult as T?;
-    // }
-    // return result.data as T?;
+    final id = '${method.name}#${utils.id}';
+    final result = await service?.invokeAction(Action(
+      id: id,
+      method: method,
+      data: data,
+    ));
+    if (result == null) {
+      return null;
+    }
+    if (result.method == ActionMethod.getConfig) {
+      return result.toResult as T?;
+    }
+    return result.data as T?;
   }
 }
 

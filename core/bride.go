@@ -20,12 +20,10 @@ func resolveProcess(callback unsafe.Pointer, protocol int, source, target string
 	return C.GoString(res)
 }
 
-func invokeResult(callback unsafe.Pointer, data string) string {
+func invokeResult(callback unsafe.Pointer, data string) {
 	s := C.CString(data)
 	defer C.free(unsafe.Pointer(s))
-	res := C.result(callback, s)
-	defer C.free(unsafe.Pointer(res))
-	return C.GoString(res)
+	C.result(callback, s)
 }
 
 func releaseObject(callback unsafe.Pointer) {

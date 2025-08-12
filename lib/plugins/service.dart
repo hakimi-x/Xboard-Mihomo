@@ -38,7 +38,7 @@ class Service {
     if (data == null) {
       return null;
     }
-    return json.decode(data) as ActionResult?;
+    return ActionResult.fromJson(json.decode(data));
   }
 
   VpnOptions handleGetVpnOptions() {

@@ -4,16 +4,16 @@
 
 extern void (*release_object_func)(void *obj);
 
-extern void (*protect_func)(void *tun_interface, const int fd);
+extern void (*protect_func)(void *tun_interface, int fd);
 
-extern char* (*resolve_process_func)(void *tun_interface, const int protocol, const char *source, const char *target, const int uid);
+extern char* (*resolve_process_func)(void *tun_interface, int protocol, const char *source, const char *target, int uid);
 
-extern char* (*result_func)(void *invoke_Interface, const char *data);
+extern void (*result_func)(void *invoke_Interface, const char *data);
 
-extern void protect(void *tun_interface, const int fd);
+extern void protect(void *tun_interface, int fd);
 
-extern char* resolve_process(void *tun_interface, const int protocol, const char *source, const char *target, const int uid);
+extern char* resolve_process(void *tun_interface, int protocol, const char *source, const char *target, int uid);
 
 extern void release_object(void *obj);
 
-extern char* result(void *invoke_Interface,  const char *data);
+extern void result(void *invoke_Interface,  const char *data);
