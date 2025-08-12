@@ -77,6 +77,20 @@ data object Core {
         )
     }
 
+    private external fun setMessageCallback(cb: InvokeInterface)
+
+    fun setMessageCallback(
+        cb: (result: String?) -> Unit
+    ) {
+        setMessageCallback(
+            object : InvokeInterface {
+                override fun onResult(result: String?) {
+                    cb(result)
+                }
+            },
+        )
+    }
+
     external fun stopTun()
 
     init {

@@ -12,7 +12,6 @@ import com.follow.clash.service.models.NotificationParams
 import com.follow.clash.service.models.VpnOptions
 
 class RemoteService : Service() {
-
     private var service: IBaseService? = null
 
     private val connection = object : ServiceConnection {
@@ -30,11 +29,11 @@ class RemoteService : Service() {
         }
     }
 
-    private fun handleStop() {
+    private fun handleStopService() {
         service?.stop()
     }
 
-    private fun handleStart() {
+    private fun handleStartService() {
         val origin = when (State.options?.enable == true) {
             true -> VpnService::class
             false -> CommonService::class
@@ -50,13 +49,8 @@ class RemoteService : Service() {
     }
 
     private val binder: IRemoteInterface.Stub = object : IRemoteInterface.Stub() {
-        override fun invokeAction(data: String?, callback: ICallbackInterface?) {
-            if (data == null) {
-                return
-            }
-            Core.invokeAction(data) {
-                callback?.onResult(it)
-            }
+        override fun invokeAction(data: String, callback: ICallbackInterface) {
+            Core.invokeAction(data, callback::onResult)
         }
 
         override fun updateNotificationParams(params: NotificationParams?) {
@@ -64,16 +58,25 @@ class RemoteService : Service() {
         }
 
         override fun satrtService(
-            options: VpnOptions?, inApp: Boolean
+            options: VpnOptions,
+            inApp: Boolean
         ) {
             State.options = options
             State.inApp = inApp
-            handleStart()
+            handleStartService()
         }
 
         override fun stopService() {
-            handleStop()
+            handleStopService()
         }
+
+        override fun setMessageCallback(messageCallback: ICallbackInterface) {
+            setMessageCallback(messageCallback::onResult)
+        }
+    }
+
+    private fun setMessageCallback(cb: (result: String?) -> Unit) {
+        Core.setMessageCallback(cb)
     }
 
     override fun onBind(intent: Intent?): IBinder {

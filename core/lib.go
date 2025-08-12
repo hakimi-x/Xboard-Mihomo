@@ -7,51 +7,6 @@ package main
 */
 import "C"
 
-////export attachMessagePort
-//func attachMessagePort(mPort C.longlong) {
-//	messagePort = int64(mPort)
-//}
-//
-////export getTraffic
-//func getTraffic() *C.char {
-//	return C.CString(handleGetTraffic())
-//}
-//
-////export getTotalTraffic
-//func getTotalTraffic() *C.char {
-//	return C.CString(handleGetTotalTraffic())
-//}
-//
-////export freeCString
-//func freeCString(s *C.char) {
-//	C.free(unsafe.Pointer(s))
-//}
-//
-
-////export getConfig
-//func getConfig(s *C.char) *C.char {
-//	path := C.GoString(s)
-//	config, err := handleGetConfig(path)
-//	if err != nil {
-//		return C.CString("")
-//	}
-//	marshal, err := json.Marshal(config)
-//	if err != nil {
-//		return C.CString("")
-//	}
-//	return C.CString(string(marshal))
-//}
-//
-////export startListener
-//func startListener() {
-//	handleStartListener()
-//}
-//
-////export stopListener
-//func stopListener() {
-//	handleStopListener()
-//}
-
 import (
 	"context"
 	"core/platform"
@@ -73,6 +28,8 @@ import (
 	"time"
 	"unsafe"
 )
+
+var messageCallback unsafe.Pointer
 
 type TunHandler struct {
 	listener *sing_tun.Listener
@@ -210,6 +167,10 @@ func (result ActionResult) send() {
 		return
 	}
 	invokeResult(result.callback, string(data))
+	if result.Method != messageMethod {
+		releaseObject(result.callback)
+	}
+
 }
 
 func nextHandle(action *Action, result ActionResult) bool {
@@ -264,16 +225,24 @@ func startTUN(callback unsafe.Pointer, fd C.int, addressChar, dnsChar *C.char) b
 	return true
 }
 
+//export setMessageCallback
+func setMessageCallback(callback unsafe.Pointer) {
+	if messageCallback != nil {
+		releaseObject(messageCallback)
+	}
+	messageCallback = callback
+}
+
 func sendMessage(message Message) {
-	//if messagePort == -1 {
-	//	return
-	//}
-	//result := ActionResult{
-	//	Method: messageMethod,
-	//	callback:  messagePort,
-	//	Data:   message,
-	//}
-	//result.send()
+	if messageCallback == nil {
+		return
+	}
+	result := ActionResult{
+		Method:   messageMethod,
+		callback: messageCallback,
+		Data:     message,
+	}
+	result.send()
 }
 
 //export getRunTime

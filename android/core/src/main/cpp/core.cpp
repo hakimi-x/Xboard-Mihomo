@@ -42,6 +42,13 @@ Java_com_follow_clash_core_Core_invokeAction(JNIEnv *env, jobject thiz, jstring 
     invokeAction(interface, sd);
 }
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_follow_clash_core_Core_setMessageCallback(JNIEnv *env, jobject thiz, jobject cb) {
+    const auto interface = new_global(cb);
+    setMessageCallback(interface);
+}
+
 
 static jmethodID m_tun_interface_protect;
 static jmethodID m_tun_interface_resolve_process;
@@ -81,7 +88,6 @@ static void call_invoke_interface_result_impl(void *invoke_interface, const char
     env->CallVoidMethod(static_cast<jobject>(invoke_interface),
                         m_invoke_interface_result,
                         new_string(data));
-    release_jni_object_impl(invoke_interface);
 }
 
 extern "C"
@@ -137,5 +143,10 @@ Java_com_follow_clash_core_Core_forceGC(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_follow_clash_core_Core_updateDNS(JNIEnv *env, jobject thiz, jstring dns) {
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_follow_clash_core_Core_setMessageCallback(JNIEnv *env, jobject thiz, jobject cb) {
 }
 #endif

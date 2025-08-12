@@ -82,6 +82,13 @@ abstract class ClashHandlerInterface with ClashInterface {
     Duration? timeout,
   });
 
+  Future<T> parasResult<T>(ActionResult result) async {
+    return switch (result.method) {
+      ActionMethod.getConfig => result.toResult as T,
+      _ => result.data as T,
+    };
+  }
+
   @override
   Future<bool> init(InitParams params) async {
     return await invoke<bool>(

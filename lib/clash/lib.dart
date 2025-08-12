@@ -49,10 +49,7 @@ class ClashLib extends ClashHandlerInterface {
     if (result == null) {
       return null;
     }
-    if (result.method == ActionMethod.getConfig) {
-      return result.toResult as T?;
-    }
-    return result.data as T?;
+    return parasResult<T>(result);
   }
 }
 

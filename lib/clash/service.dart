@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/clash/interface.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -33,22 +34,11 @@ class ClashService extends ClashHandlerInterface {
 
   Future<void> handleResult(ActionResult result) async {
     final completer = callbackCompleterMap[result.id];
-    try {
-      switch (result.method) {
-        case ActionMethod.message:
-          // clashMessage.controller.add(result.data);
-          completer?.complete(true);
-          return;
-        case ActionMethod.getConfig:
-          completer?.complete(result.toResult);
-          return;
-        default:
-          completer?.complete(result.data);
-          return;
-      }
-    } catch (e) {
-      commonPrint.log('${result.id} error $e');
+    final data = parasResult(result);
+    if (result.id?.isEmpty == true) {
+      clashMessage.controller.add(result.data);
     }
+    completer?.complete(data);
   }
 
   Future<void> _initServer() async {

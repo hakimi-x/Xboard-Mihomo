@@ -10,4 +10,5 @@ interface IRemoteInterface {
     void updateNotificationParams(in NotificationParams params);
     void satrtService(in VpnOptions options,in boolean inApp);
     void stopService();
+    void setMessageCallback(in ICallbackInterface messageCallback);
 }
