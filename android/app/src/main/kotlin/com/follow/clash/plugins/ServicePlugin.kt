@@ -10,6 +10,7 @@ import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.launch
 
 
 class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
@@ -18,16 +19,16 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        service.bind()
         flutterMethodChannel = MethodChannel(
             flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/service"
         )
         flutterMethodChannel.setMethodCallHandler(this)
+        handleInit()
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        handleUnBind()
         flutterMethodChannel.setMethodCallHandler(null)
-        service.unbind()
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) = when (call.method) {
@@ -53,9 +54,11 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     private fun handleInvokeAction(call: MethodCall, result: MethodChannel.Result) {
-        val data = call.arguments<String>()!!
-        service.invokeAction(data) {
-            result.success(it)
+        GlobalState.launch {
+            val data = call.arguments<String>()!!
+            service.invokeAction(data) {
+                result.success(it)
+            }
         }
     }
 
@@ -74,14 +77,27 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         return Gson().fromJson(res, VpnOptions::class.java)
     }
 
-    fun startService(options: VpnOptions, inApp: Boolean) {
-        service.remote?.satrtService(options, inApp)
+    suspend fun startService(options: VpnOptions, inApp: Boolean) {
+        service.startService(options, inApp)
     }
 
-    fun stopService() {
-        service.remote?.stopService()
+    suspend fun stopService() {
+        service.stopService()
     }
 
+    fun handleUnBind() {
+        GlobalState.launch {
+            service.unbind()
+        }
+    }
+
+    fun handleInit() {
+        GlobalState.launch {
+            service.setMessageCallback {
+                flutterMethodChannel.invokeMethod("message", it)
+            }
+        }
+    }
 
     private fun handleGetRunTime(result: MethodChannel.Result) {
         return result.success(State.runTime)

@@ -1,24 +1,23 @@
 package com.follow.clash
 
+import com.follow.clash.common.GlobalState
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.ServicePlugin
 import com.follow.clash.plugins.TilePlugin
 import io.flutter.embedding.engine.FlutterEngine
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 enum class RunState {
     START, PENDING, STOP
 }
 
 
-object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
+object State {
 
-    val runLock = ReentrantLock()
+    val runLock = Mutex()
 
     var runTime: Long = 0
 
@@ -35,18 +34,20 @@ object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
         get() = flutterEngine?.plugin<TilePlugin>()
 
     fun handleToggle() {
-        var action: (() -> Unit)?
-        runLock.lock()
-        try {
-            action = when (runStateFlow.value) {
-                RunState.PENDING -> null
-                RunState.START -> ::handleStartService
-                RunState.STOP -> ::handleStopService
+        GlobalState.launch {
+            var action: (() -> Unit)?
+            runLock.lock()
+            try {
+                action = when (runStateFlow.value) {
+                    RunState.PENDING -> null
+                    RunState.START -> ::handleStartService
+                    RunState.STOP -> ::handleStopService
+                }
+            } finally {
+                runLock.unlock()
             }
-        } finally {
-            runLock.unlock()
+            action?.invoke()
         }
-        action?.invoke()
     }
 
     fun handleStartService() {
@@ -60,8 +61,8 @@ object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
     }
 
     private fun startService() {
-        runLock.withLock {
-            launch {
+        GlobalState.launch {
+            runLock.withLock {
                 if (runStateFlow.value == RunState.PENDING || runStateFlow.value == RunState.START) {
                     return@launch
                 }
@@ -80,18 +81,22 @@ object State : CoroutineScope by CoroutineScope(Dispatchers.IO) {
                 }
             }
         }
+
     }
 
     fun handleStopService() {
-        runLock.withLock {
-            if (runStateFlow.value == RunState.PENDING || runStateFlow.value == RunState.STOP) {
-                return
+        GlobalState.launch {
+            runLock.withLock {
+                if (runStateFlow.value == RunState.PENDING || runStateFlow.value == RunState.STOP) {
+                    return@launch
+                }
+                runStateFlow.tryEmit(RunState.PENDING)
+                servicePlugin?.stopService()
+                runStateFlow.tryEmit(RunState.STOP)
+                runTime = 0
             }
-            runStateFlow.tryEmit(RunState.PENDING)
-            servicePlugin?.stopService()
-            runStateFlow.tryEmit(RunState.STOP)
-            runTime = 0
         }
+
     }
 }
 

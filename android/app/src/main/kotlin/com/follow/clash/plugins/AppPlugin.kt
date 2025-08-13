@@ -54,7 +54,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
 
     private lateinit var scope: CoroutineScope
 
-    private var vpnPrepareCallback: (() -> Unit)? = null
+    private var vpnPrepareCallback: (suspend CoroutineScope.() -> Unit)? = null
 
     private var requestNotificationCallback: (() -> Unit)? = null
 
@@ -290,12 +290,12 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
         requestNotificationCallback = null
     }
 
-    fun prepare(needPrepare: Boolean, callBack: () -> Unit) {
+    fun prepare(needPrepare: Boolean, callBack: suspend CoroutineScope.() -> Unit) {
+        vpnPrepareCallback = callBack
         if (!needPrepare) {
-            callBack.invoke()
+            invokeVpnPrepareCallback()
             return
         }
-        vpnPrepareCallback = callBack
         val intent = VpnService.prepare(GlobalState.application)
         if (intent != null) {
             activityRef?.get()?.startActivityForResult(intent, VPN_PERMISSION_REQUEST_CODE)
@@ -305,8 +305,10 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     }
 
     fun invokeVpnPrepareCallback() {
-        vpnPrepareCallback?.invoke()
-        vpnPrepareCallback = null
+        GlobalState.launch {
+            vpnPrepareCallback?.invoke(this)
+            vpnPrepareCallback = null
+        }
     }
 
     private fun isChinaPackage(packageName: String): Boolean {

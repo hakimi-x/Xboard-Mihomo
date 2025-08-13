@@ -1,13 +1,10 @@
 package com.follow.clash.common
 
-import android.Manifest
 import android.app.Application
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
-object GlobalState {
+object GlobalState : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     const val NOTIFICATION_CHANNEL = "FlClash"
 

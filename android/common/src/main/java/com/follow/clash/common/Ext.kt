@@ -7,15 +7,21 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.os.Build
+import android.os.IBinder
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KClass
 
 fun Context.startForegroundServiceCompat(intent: Intent?) {
@@ -76,12 +82,11 @@ fun Service.startForeground(notification: Notification) {
 fun Context.registerReceiverCompat(
     receiver: BroadcastReceiver,
     filter: IntentFilter,
-) =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
-    } else {
-        registerReceiver(receiver, filter)
-    }
+) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+} else {
+    registerReceiver(receiver, filter)
+}
 
 fun Context.receiveBroadcastFlow(
     configure: IntentFilter.() -> Unit,
@@ -95,4 +100,45 @@ fun Context.receiveBroadcastFlow(
     }
     registerReceiverCompat(receiver, filter)
     awaitClose { unregisterReceiver(receiver) }
+}
+
+data class BinderConnection<T : IBinder>(
+    val binder: T,
+    val unbind: () -> Unit
+)
+
+
+inline fun <reified T : IBinder> Context.awaitService(
+    intent: Intent, flags: Int = Context.BIND_AUTO_CREATE
+): suspend () -> BinderConnection<T> = {
+    suspendCancellableCoroutine { continuation ->
+        val connection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+                @Suppress("UNCHECKED_CAST") val casted = binder as? T
+                if (casted != null && continuation.isActive) {
+                    continuation.resume(
+                        BinderConnection(casted) { unbindService(this) }
+                    )
+
+                } else {
+                    continuation.resumeWithException(
+                        IllegalStateException("Binder is not of type ${T::class.java}")
+                    )
+                }
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {}
+        }
+
+        if (!bindService(intent, connection, flags)) {
+            continuation.resumeWithException(
+                IllegalStateException("Failed to bind service")
+            )
+            return@suspendCancellableCoroutine
+        }
+
+        continuation.invokeOnCancellation {
+            runCatching { unbindService(connection) }
+        }
+    }
 }

@@ -47,6 +47,7 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
@@ -69,8 +70,8 @@
 
         <activity
             android:name=".TempActivity"
-            android:exported="true"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:theme="@style/TransparentTheme">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -82,7 +83,7 @@
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="${applicationId}.action.TOOGLE" />
+                <action android:name="${applicationId}.action.TOGGLE" />
             </intent-filter>
         </activity>
 

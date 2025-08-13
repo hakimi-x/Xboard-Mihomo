@@ -57,7 +57,7 @@ class RemoteService : Service() {
             State.notificationParamsFlow.tryEmit(params)
         }
 
-        override fun satrtService(
+        override fun startService(
             options: VpnOptions,
             inApp: Boolean
         ) {

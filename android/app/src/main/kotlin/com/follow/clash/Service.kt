@@ -1,49 +1,83 @@
 package com.follow.clash
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.Context
-import android.content.ServiceConnection
-import android.os.IBinder
+import com.follow.clash.common.BinderConnection
+import com.follow.clash.common.awaitService
 import com.follow.clash.common.intent
 import com.follow.clash.service.ICallbackInterface
 import com.follow.clash.service.IRemoteInterface
 import com.follow.clash.service.RemoteService
+import com.follow.clash.service.models.VpnOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
-class Service(private val context: Application) {
 
-    var remote: IRemoteInterface? = null
+class Service(private val context: Application) :
+    CoroutineScope by CoroutineScope(Dispatchers.Default) {
+    private val lock = Mutex()
 
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            remote = IRemoteInterface.Stub.asInterface(service)
-        }
+    @Volatile
+    private var binderConnectionDeferred: Deferred<BinderConnection<IRemoteInterface.Stub>>? = null
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            remote = null
+    private suspend fun remote(): IRemoteInterface {
+        return getBinderConnection().binder
+    }
+
+    private suspend fun getBinderConnection(): BinderConnection<IRemoteInterface.Stub> {
+        binderConnectionDeferred?.let { return it.await() }
+        return lock.withLock {
+            val existing = binderConnectionDeferred
+            if (existing != null) {
+                existing.await()
+            } else {
+                val deferred = async {
+                    context.awaitService<IRemoteInterface.Stub>(
+                        RemoteService::class.intent
+                    ).invoke()
+                }
+                binderConnectionDeferred = deferred
+                deferred.await()
+            }
         }
     }
 
-    fun invokeAction(
+    suspend fun unbind() {
+        lock.withLock {
+            binderConnectionDeferred?.await()?.unbind()
+            binderConnectionDeferred = null
+        }
+    }
+
+    suspend fun invokeAction(
         data: String,
         cb: (result: String?) -> Unit
     ) {
-        remote?.invokeAction(data, object : ICallbackInterface.Stub() {
+        remote().invokeAction(data, object : ICallbackInterface.Stub() {
             override fun onResult(result: String?) {
                 cb(result)
             }
         })
     }
 
-    fun bind() {
-        context.bindService(
-            RemoteService::class.intent,
-            connection,
-            Context.BIND_AUTO_CREATE
-        )
+    suspend fun setMessageCallback(
+        cb: (result: String?) -> Unit
+    ) {
+        remote().setMessageCallback(object : ICallbackInterface.Stub() {
+            override fun onResult(result: String?) {
+                cb(result)
+            }
+        })
     }
 
-    fun unbind() {
-        context.unbindService(connection)
+    suspend fun startService(options: VpnOptions, inApp: Boolean) {
+        remote().startService(options, inApp)
+    }
+
+    suspend fun stopService() {
+        remote().stopService()
     }
 }
