@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/plugins/service.dart';
 import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/state.dart';
@@ -22,7 +25,7 @@ class ClashManager extends ConsumerStatefulWidget {
 }
 
 class _ClashContainerState extends ConsumerState<ClashManager>
-    with AppMessageListener {
+    with AppMessageListener, ServiceListener {
   @override
   Widget build(BuildContext context) {
     return widget.child;
@@ -32,6 +35,7 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   void initState() {
     super.initState();
     clashMessage.addListener(this);
+    service?.addListener(this);
     ref.listenManual(needSetupProvider, (prev, next) {
       if (prev != next) {
         globalState.appController.handleChangeProfile();
@@ -58,7 +62,14 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   @override
   Future<void> dispose() async {
     clashMessage.removeListener(this);
+    service?.removeListener(this);
     super.dispose();
+  }
+
+  @override
+  void onServiceMessage(String message) {
+    clashMessage.controller.add(json.decode(message));
+    super.onServiceMessage(message);
   }
 
   @override

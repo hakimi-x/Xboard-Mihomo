@@ -6,12 +6,25 @@ import 'package:fl_clash/common/constant.dart';
 import 'package:fl_clash/common/system.dart';
 import 'package:fl_clash/models/core.dart';
 import 'package:fl_clash/state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+
+abstract mixin class ServiceListener {
+  void onServiceMessage(String message) {}
+}
 
 class Service {
   static Service? _instance;
   late MethodChannel methodChannel;
   ReceivePort? receiver;
+
+  final ObserverList<ServiceListener> _listeners =
+      ObserverList<ServiceListener>();
+
+  factory Service() {
+    _instance ??= Service._internal();
+    return _instance!;
+  }
 
   Service._internal() {
     methodChannel = const MethodChannel('$packageName/service');
@@ -19,15 +32,19 @@ class Service {
       switch (call.method) {
         case 'getVpnOptions':
           return handleGetVpnOptions();
+        case 'message':
+          final message = call.arguments as String? ?? '';
+          if (message.isNotEmpty) {
+            break;
+          }
+          for (final listener in _listeners) {
+            listener.onServiceMessage(message);
+          }
+          break;
         default:
           throw MissingPluginException();
       }
     });
-  }
-
-  factory Service() {
-    _instance ??= Service._internal();
-    return _instance!;
   }
 
   Future<ActionResult?> invokeAction(Action action) async {
@@ -59,6 +76,18 @@ class Service {
       return null;
     }
     return DateTime.fromMillisecondsSinceEpoch(ms);
+  }
+
+  bool get hasListeners {
+    return _listeners.isNotEmpty;
+  }
+
+  void addListener(ServiceListener listener) {
+    _listeners.add(listener);
+  }
+
+  void removeListener(ServiceListener listener) {
+    _listeners.remove(listener);
   }
 }
 

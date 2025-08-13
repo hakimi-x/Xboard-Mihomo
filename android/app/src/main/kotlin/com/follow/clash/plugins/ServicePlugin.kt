@@ -10,8 +10,9 @@ import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import kotlinx.coroutines.withContext
 
 class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
@@ -94,7 +95,11 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     fun handleInit() {
         GlobalState.launch {
             service.setMessageCallback {
-                flutterMethodChannel.invokeMethod("message", it)
+                GlobalState.launch {
+                    withContext(Dispatchers.Main) {
+                        flutterMethodChannel.invokeMethod("message", it)
+                    }
+                }
             }
         }
     }

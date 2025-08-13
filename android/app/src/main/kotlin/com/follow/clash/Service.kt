@@ -1,7 +1,7 @@
 package com.follow.clash
 
 import android.app.Application
-import com.follow.clash.common.BinderConnection
+import android.os.IBinder
 import com.follow.clash.common.awaitService
 import com.follow.clash.common.intent
 import com.follow.clash.service.ICallbackInterface
@@ -15,19 +15,22 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+data class RemoteConnection(
+    val remote: IRemoteInterface, val unbind: () -> Unit
+)
 
 class Service(private val context: Application) :
     CoroutineScope by CoroutineScope(Dispatchers.Default) {
     private val lock = Mutex()
 
     @Volatile
-    private var binderConnectionDeferred: Deferred<BinderConnection<IRemoteInterface.Stub>>? = null
+    private var binderConnectionDeferred: Deferred<RemoteConnection>? = null
 
     private suspend fun remote(): IRemoteInterface {
-        return getBinderConnection().binder
+        return getRemoteConnection().remote
     }
 
-    private suspend fun getBinderConnection(): BinderConnection<IRemoteInterface.Stub> {
+    private suspend fun getRemoteConnection(): RemoteConnection {
         binderConnectionDeferred?.let { return it.await() }
         return lock.withLock {
             val existing = binderConnectionDeferred
@@ -35,9 +38,13 @@ class Service(private val context: Application) :
                 existing.await()
             } else {
                 val deferred = async {
-                    context.awaitService<IRemoteInterface.Stub>(
+                    val binderConnection = context.awaitService<IBinder>(
                         RemoteService::class.intent
                     ).invoke()
+                    RemoteConnection(
+                        IRemoteInterface.Stub.asInterface(binderConnection.binder),
+                        binderConnection.unbind
+                    )
                 }
                 binderConnectionDeferred = deferred
                 deferred.await()
@@ -47,14 +54,13 @@ class Service(private val context: Application) :
 
     suspend fun unbind() {
         lock.withLock {
-            binderConnectionDeferred?.await()?.unbind()
+            binderConnectionDeferred?.await()?.unbind?.invoke()
             binderConnectionDeferred = null
         }
     }
 
     suspend fun invokeAction(
-        data: String,
-        cb: (result: String?) -> Unit
+        data: String, cb: (result: String?) -> Unit
     ) {
         remote().invokeAction(data, object : ICallbackInterface.Stub() {
             override fun onResult(result: String?) {
