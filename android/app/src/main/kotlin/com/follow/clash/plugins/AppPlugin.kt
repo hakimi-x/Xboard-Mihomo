@@ -54,7 +54,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
 
     private lateinit var scope: CoroutineScope
 
-    private var vpnPrepareCallback: (suspend CoroutineScope.() -> Unit)? = null
+    private var vpnPrepareCallback: (suspend () -> Unit)? = null
 
     private var requestNotificationCallback: (() -> Unit)? = null
 
@@ -185,13 +185,17 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     }
 
     private fun initShortcuts(label: String) {
-        val shortcut =
-            ShortcutInfoCompat.Builder(GlobalState.application, "toggle").setShortLabel(label)
-                .setIcon(
-                    IconCompat.createWithResource(
-                        GlobalState.application, R.mipmap.ic_launcher_round
-                    )
-                ).setIntent(QuickAction.TOGGLE.quickIntent).build()
+        val shortcut = with(ShortcutInfoCompat.Builder(GlobalState.application, "toggle")) {
+            setShortLabel(label)
+            setIcon(
+                IconCompat.createWithResource(
+                    GlobalState.application,
+                    R.mipmap.ic_launcher_round,
+                )
+            )
+            setIntent(QuickAction.TOGGLE.quickIntent)
+            build()
+        }
         ShortcutManagerCompat.setDynamicShortcuts(
             GlobalState.application, listOf(shortcut)
         )
@@ -290,7 +294,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
         requestNotificationCallback = null
     }
 
-    fun prepare(needPrepare: Boolean, callBack: suspend CoroutineScope.() -> Unit) {
+    fun prepare(needPrepare: Boolean, callBack: (suspend () -> Unit)) {
         vpnPrepareCallback = callBack
         if (!needPrepare) {
             invokeVpnPrepareCallback()
@@ -306,7 +310,7 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
 
     fun invokeVpnPrepareCallback() {
         GlobalState.launch {
-            vpnPrepareCallback?.invoke(this)
+            vpnPrepareCallback?.invoke()
             vpnPrepareCallback = null
         }
     }

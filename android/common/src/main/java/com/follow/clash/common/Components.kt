@@ -6,8 +6,8 @@ object Components {
     const val PACKAGE_NAME = "com.follow.clash"
 
     val MAIN_ACTIVITY =
-        ComponentName(PACKAGE_NAME, "${GlobalState.application.packageName}.MainActivity")
+        ComponentName(GlobalState.application.packageName, "${PACKAGE_NAME}.MainActivity")
 
     val TEMP_ACTIVITY =
-        ComponentName(PACKAGE_NAME, "${GlobalState.application.packageName}.TempActivity")
+        ComponentName(GlobalState.application.packageName, "${PACKAGE_NAME}.TempActivity")
 }

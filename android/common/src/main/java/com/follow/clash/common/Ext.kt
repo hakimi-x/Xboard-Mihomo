@@ -16,6 +16,7 @@ import android.content.ServiceConnection
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -24,13 +25,13 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KClass
 
-fun Context.startForegroundServiceCompat(intent: Intent?) {
-    if (Build.VERSION.SDK_INT >= 26) {
-        startForegroundService(intent)
-    } else {
-        startService(intent)
-    }
-}
+//fun Context.startForegroundServiceCompat(intent: Intent?) {
+//    if (Build.VERSION.SDK_INT >= 26) {
+//        startForegroundService(intent)
+//    } else {
+//        startService(intent)
+//    }
+//}
 
 val KClass<*>.intent: Intent
     get() = Intent(GlobalState.application, this.java)
@@ -48,6 +49,7 @@ val QuickAction.value: String
 
 val QuickAction.quickIntent: Intent
     get() = Intent().apply {
+        Log.d("[quickIntent]", Components.TEMP_ACTIVITY.toString())
         setComponent(Components.TEMP_ACTIVITY)
         action = this@quickIntent.value
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
@@ -103,8 +105,7 @@ fun Context.receiveBroadcastFlow(
 }
 
 data class BinderConnection<T : IBinder>(
-    val binder: T,
-    val unbind: () -> Unit
+    val binder: T, val unbind: () -> Unit
 )
 
 
@@ -117,8 +118,7 @@ inline fun <reified T : IBinder> Context.awaitService(
                 @Suppress("UNCHECKED_CAST") val casted = binder as? T
                 if (casted != null && continuation.isActive) {
                     continuation.resume(
-                        BinderConnection(casted) { unbindService(this) }
-                    )
+                        BinderConnection(casted) { unbindService(this) })
 
                 } else {
                     continuation.resumeWithException(

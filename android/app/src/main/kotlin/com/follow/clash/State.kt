@@ -1,14 +1,17 @@
 package com.follow.clash
 
+import android.util.Log
 import com.follow.clash.common.GlobalState
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.ServicePlugin
 import com.follow.clash.plugins.TilePlugin
 import io.flutter.embedding.engine.FlutterEngine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 enum class RunState {
     START, PENDING, STOP
@@ -34,19 +37,19 @@ object State {
         get() = flutterEngine?.plugin<TilePlugin>()
 
     fun handleToggle() {
+        Log.d("[quick]", "${runStateFlow.value}")
         GlobalState.launch {
             var action: (() -> Unit)?
-            runLock.lock()
-            try {
+            runLock.withLock {
                 action = when (runStateFlow.value) {
                     RunState.PENDING -> null
-                    RunState.START -> ::handleStartService
-                    RunState.STOP -> ::handleStopService
+                    RunState.START -> tilePlugin?.let { it::handleStop } ?: ::handleStopService
+                    RunState.STOP -> tilePlugin?.let { it::handleStart } ?: ::handleStartService
                 }
-            } finally {
-                runLock.unlock()
             }
-            action?.invoke()
+            withContext(Dispatchers.Main) {
+                action?.invoke()
+            }
         }
     }
 

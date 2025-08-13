@@ -10,12 +10,12 @@ class TilePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/tile")
+        channel =
+            MethodChannel(flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/tile")
         channel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        handleDetached()
         channel.setMethodCallHandler(null)
     }
 
@@ -25,10 +25,6 @@ class TilePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     fun handleStop() {
         channel.invokeMethod("stop", null)
-    }
-
-    private fun handleDetached() {
-        channel.invokeMethod("detached", null)
     }
 
 
