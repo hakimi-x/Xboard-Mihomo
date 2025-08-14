@@ -18,8 +18,6 @@ class ClashService extends ClashHandlerInterface {
 
   Map<String, Completer> callbackCompleterMap = {};
 
-  bool isStarting = false;
-
   Process? process;
 
   factory ClashService() {
@@ -29,7 +27,6 @@ class ClashService extends ClashHandlerInterface {
 
   ClashService._internal() {
     _initServer();
-    reStart();
   }
 
   Future<void> handleResult(ActionResult result) async {
@@ -42,7 +39,7 @@ class ClashService extends ClashHandlerInterface {
   }
 
   Future<void> _initServer() async {
-    runZonedGuarded(() async {
+    await runZonedGuarded(() async {
       final address = !system.isWindows
           ? InternetAddress(
               unixSocketPath,
@@ -82,13 +79,10 @@ class ClashService extends ClashHandlerInterface {
         globalState.showNotifier(error.toString());
       }
     });
+    await start();
   }
 
-  Future<void> reStart() async {
-    if (isStarting == true) {
-      return;
-    }
-    isStarting = true;
+  Future<void> start() async {
     socketCompleter = Completer();
     if (process != null) {
       await shutdown();
@@ -116,7 +110,6 @@ class ClashService extends ClashHandlerInterface {
         commonPrint.log(error);
       }
     });
-    isStarting = false;
   }
 
   @override
