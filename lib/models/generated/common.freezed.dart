@@ -2679,6 +2679,11 @@ class _$TrafficImpl implements _Traffic {
   final num down;
 
   @override
+  String toString() {
+    return 'Traffic(up: $up, down: $down)';
+  }
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
