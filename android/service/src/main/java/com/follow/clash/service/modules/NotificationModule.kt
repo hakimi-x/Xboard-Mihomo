@@ -14,17 +14,21 @@ import com.follow.clash.common.QuickAction
 import com.follow.clash.common.quickIntent
 import com.follow.clash.common.receiveBroadcastFlow
 import com.follow.clash.common.startForeground
+import com.follow.clash.common.tickerFlow
 import com.follow.clash.common.toPendingIntent
+import com.follow.clash.core.Core
 import com.follow.clash.service.R
 import com.follow.clash.service.State
 import com.follow.clash.service.models.NotificationParams
+import com.follow.clash.service.models.getSpeedTrafficText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 class NotificationModule(private val service: Service) : Module() {
@@ -38,23 +42,33 @@ class NotificationModule(private val service: Service) : Module() {
             val screenFlow = service.receiveBroadcastFlow {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
+            }.map { intent ->
+                intent.action == Intent.ACTION_SCREEN_ON
+            }.onStart {
+                emit(isScreenOn())
             }
-                .map { intent -> intent.action == Intent.ACTION_SCREEN_ON }
-                .onStart { emit(isScreenOn()) }
-            combine(
-                State.notificationParamsFlow,
-                screenFlow,
-            ) { params, shouldUpdate ->
-                params to shouldUpdate
-            }
-                .distinctUntilChanged()
-                .collect { (params, shouldUpdate) ->
-                    {
-                        params?.takeIf { shouldUpdate }?.let {
-                            update(it)
-                        }
-                    }
+
+            tickerFlow(1000, 0)
+                .combine(State.notificationParamsFlow.zip(screenFlow) { params, screenOn ->
+                    params to screenOn
+                }) { _, (params, screenOn) -> params to screenOn }
+                .filter { (params, screenOn) -> params != null && screenOn }
+                .collect { (params, _) ->
+                    update(params!!)
                 }
+
+//            combine(
+//                State.notificationParamsFlow,
+//                screenFlow,
+//            ) { params, shouldUpdate ->
+//                params to shouldUpdate
+//            }.collect { (params, shouldUpdate) ->
+//                {
+//                    params?.takeIf { shouldUpdate }?.let {
+//                        update(it)
+//                    }
+//                }
+//            }
         }
     }
 
@@ -87,15 +101,14 @@ class NotificationModule(private val service: Service) : Module() {
     }
 
     private fun update(params: NotificationParams) {
+        val contentText = Core.getSpeedTrafficText(params.onlyStatisticsProxy)
         service.startForeground(
-            notificationBuilder
-                .setContentTitle(params.title)
-//                .setContentText(params.contentText)
-//                .setSubText(params.subText)
-                .clearActions()
-                .addAction(0, params.stopText, QuickAction.STOP.quickIntent.toPendingIntent)
-                .build()
-        )
+            with(notificationBuilder) {
+                setContentTitle(params.title)
+                setContentText(contentText)
+                clearActions()
+                addAction(0, params.stopText, QuickAction.STOP.quickIntent.toPendingIntent).build()
+            })
     }
 
     override fun onUninstall() {

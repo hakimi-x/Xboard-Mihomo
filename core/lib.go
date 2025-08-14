@@ -21,11 +21,9 @@ import (
 	"github.com/metacubex/mihomo/log"
 	"golang.org/x/sync/semaphore"
 	"net"
-	"strconv"
 	"strings"
 	"sync"
 	"syscall"
-	"time"
 	"unsafe"
 )
 
@@ -87,7 +85,6 @@ func (t *TunHandler) handleResolveProcess(source, target net.Addr) string {
 
 var (
 	tunLock    sync.Mutex
-	runTime    *time.Time
 	errBlocked = errors.New("blocked")
 	tunHandler *TunHandler
 )
@@ -95,7 +92,6 @@ var (
 func handleStopTun() {
 	tunLock.Lock()
 	defer tunLock.Unlock()
-	runTime = nil
 	if tunHandler != nil {
 		tunHandler.close()
 	}
@@ -105,8 +101,6 @@ func handleStartTun(callback unsafe.Pointer, fd int, address, dns string) {
 	handleStopTun()
 	tunLock.Lock()
 	defer tunLock.Unlock()
-	now := time.Now()
-	runTime = &now
 	if fd != 0 {
 		tunHandler = &TunHandler{
 			callback: callback,
@@ -121,13 +115,6 @@ func handleStartTun(callback unsafe.Pointer, fd int, address, dns string) {
 			removeTunHook()
 		}
 	}
-}
-
-func handleGetRunTime() string {
-	if runTime == nil {
-		return ""
-	}
-	return strconv.FormatInt(runTime.UnixMilli(), 10)
 }
 
 func initTunHook() {
@@ -233,6 +220,16 @@ func setMessageCallback(callback unsafe.Pointer) {
 	messageCallback = callback
 }
 
+//export getTotalTraffic
+func getTotalTraffic(onlyStatisticsProxy bool) *C.char {
+	return C.CString(handleGetTotalTraffic(onlyStatisticsProxy))
+}
+
+//export getTraffic
+func getTraffic(onlyStatisticsProxy bool) *C.char {
+	return C.CString(handleGetTraffic(onlyStatisticsProxy))
+}
+
 func sendMessage(message Message) {
 	if messageCallback == nil {
 		return
@@ -243,11 +240,6 @@ func sendMessage(message Message) {
 		Data:     message,
 	}
 	result.send()
-}
-
-//export getRunTime
-func getRunTime() *C.char {
-	return C.CString(handleGetRunTime())
 }
 
 //export stopTun

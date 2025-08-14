@@ -93,6 +93,10 @@ data object Core {
 
     external fun stopTun()
 
+    external fun getTraffic(onlyStatisticsProxy: Boolean): String
+
+    external fun getTotalTraffic(onlyStatisticsProxy: Boolean): String
+
     init {
         System.loadLibrary("core")
     }

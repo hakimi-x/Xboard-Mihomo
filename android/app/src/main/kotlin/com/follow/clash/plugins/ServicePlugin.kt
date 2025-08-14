@@ -19,12 +19,10 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        service.bind()
         flutterMethodChannel = MethodChannel(
             flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/service"
         )
         flutterMethodChannel.setMethodCallHandler(this)
-        handleInit()
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -33,6 +31,10 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) = when (call.method) {
+        "init" -> {
+            handleInit(result)
+        }
+
         "invokeAction" -> {
             handleInvokeAction(call, result)
         }
@@ -86,13 +88,18 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         service.stopService()
     }
 
-    fun handleInit() {
+    fun handleInit(result: MethodChannel.Result) {
         GlobalState.launch {
+            val res = service.bind()
+            if (!res) {
+                result.success(false)
+            }
             service.setMessageCallback {
                 GlobalState.launch(Dispatchers.Main) {
                     flutterMethodChannel.invokeMethod("message", it)
                 }
             }
+            result.success(true)
         }
     }
 

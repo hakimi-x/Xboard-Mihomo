@@ -62,15 +62,19 @@ class Service {
     return json.encode(globalState.getVpnOptions());
   }
 
-  Future<bool> start<T>() async {
+  Future<bool> start() async {
     return await methodChannel.invokeMethod<bool>('start') ?? false;
   }
 
-  Future<bool> stop<T>() async {
+  Future<bool> stop() async {
     return await methodChannel.invokeMethod<bool>('stop') ?? false;
   }
 
-  Future<DateTime?> getRunTime<T>() async {
+  Future<bool> init() async {
+    return await methodChannel.invokeMethod<bool>('init') ?? false;
+  }
+
+  Future<DateTime?> getRunTime() async {
     final ms = await methodChannel.invokeMethod<int>('getRunTime') ?? 0;
     if (ms == 0) {
       return null;

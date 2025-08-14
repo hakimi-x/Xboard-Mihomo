@@ -16,8 +16,17 @@ class Service(context: Application) {
     }
 
 
-    fun bind() = delegate.bind()
-    fun unbind() = delegate.unbind()
+    suspend fun bind(): Boolean {
+        delegate.bind()
+        delegate.useService {
+            return@useService true
+        }
+        return false
+    }
+
+    fun unbind() {
+        delegate.unbind()
+    }
 
     suspend fun invokeAction(
         data: String, cb: (result: String?) -> Unit

@@ -135,3 +135,22 @@ inline fun <reified T : IBinder> Context.bindServiceFlow(
         runCatching { unbindService(connection) }
     }
 }
+
+
+val Long.formatBytes: String
+    get() {
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        var size = this.toDouble()
+        var unitIndex = 0
+
+        while (size >= 1024 && unitIndex < units.size - 1) {
+            size /= 1024
+            unitIndex++
+        }
+
+        return if (unitIndex == 0) {
+            "${size.toLong()}${units[unitIndex]}"
+        } else {
+            "%.1f${units[unitIndex]}".format(size)
+        }
+    }

@@ -49,6 +49,22 @@ Java_com_follow_clash_core_Core_setMessageCallback(JNIEnv *env, jobject thiz, jo
     setMessageCallback(interface);
 }
 
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_follow_clash_core_Core_getTraffic(JNIEnv *env, jobject thiz,
+                                           const jboolean only_statistics_proxy) {
+    scoped_string res = getTraffic(only_statistics_proxy);
+    return new_string(res);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_follow_clash_core_Core_getTotalTraffic(JNIEnv *env, jobject thiz,
+                                                const jboolean only_statistics_proxy) {
+    scoped_string res = getTotalTraffic(only_statistics_proxy);
+    return new_string(res);
+}
+
 
 static jmethodID m_tun_interface_protect;
 static jmethodID m_tun_interface_resolve_process;
@@ -148,5 +164,16 @@ Java_com_follow_clash_core_Core_updateDNS(JNIEnv *env, jobject thiz, jstring dns
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_follow_clash_core_Core_setMessageCallback(JNIEnv *env, jobject thiz, jobject cb) {
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_follow_clash_core_Core_getTraffic(JNIEnv *env, jobject thiz,
+                                           const jboolean only_statistics_proxy) {
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_follow_clash_core_Core_getTotalTraffic(JNIEnv *env, jobject thiz,
+                                                const jboolean only_statistics_proxy) {
 }
 #endif
