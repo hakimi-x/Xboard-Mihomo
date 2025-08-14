@@ -16,12 +16,8 @@ class Service(context: Application) {
     }
 
 
-    suspend fun bind(): Boolean {
+    fun bind() {
         delegate.bind()
-        delegate.useService {
-            return@useService true
-        }
-        return false
     }
 
     fun unbind() {

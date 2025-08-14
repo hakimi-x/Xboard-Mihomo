@@ -2567,6 +2567,310 @@ abstract class _VersionInfo implements VersionInfo {
       throw _privateConstructorUsedError;
 }
 
+Traffic _$TrafficFromJson(Map<String, dynamic> json) {
+  return _Traffic.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Traffic {
+  num get up => throw _privateConstructorUsedError;
+  num get down => throw _privateConstructorUsedError;
+
+  /// Serializes this Traffic to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of Traffic
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TrafficCopyWith<Traffic> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TrafficCopyWith<$Res> {
+  factory $TrafficCopyWith(Traffic value, $Res Function(Traffic) then) =
+      _$TrafficCopyWithImpl<$Res, Traffic>;
+  @useResult
+  $Res call({num up, num down});
+}
+
+/// @nodoc
+class _$TrafficCopyWithImpl<$Res, $Val extends Traffic>
+    implements $TrafficCopyWith<$Res> {
+  _$TrafficCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of Traffic
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? up = null,
+    Object? down = null,
+  }) {
+    return _then(_value.copyWith(
+      up: null == up
+          ? _value.up
+          : up // ignore: cast_nullable_to_non_nullable
+              as num,
+      down: null == down
+          ? _value.down
+          : down // ignore: cast_nullable_to_non_nullable
+              as num,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TrafficImplCopyWith<$Res> implements $TrafficCopyWith<$Res> {
+  factory _$$TrafficImplCopyWith(
+          _$TrafficImpl value, $Res Function(_$TrafficImpl) then) =
+      __$$TrafficImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({num up, num down});
+}
+
+/// @nodoc
+class __$$TrafficImplCopyWithImpl<$Res>
+    extends _$TrafficCopyWithImpl<$Res, _$TrafficImpl>
+    implements _$$TrafficImplCopyWith<$Res> {
+  __$$TrafficImplCopyWithImpl(
+      _$TrafficImpl _value, $Res Function(_$TrafficImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Traffic
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? up = null,
+    Object? down = null,
+  }) {
+    return _then(_$TrafficImpl(
+      up: null == up
+          ? _value.up
+          : up // ignore: cast_nullable_to_non_nullable
+              as num,
+      down: null == down
+          ? _value.down
+          : down // ignore: cast_nullable_to_non_nullable
+              as num,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TrafficImpl implements _Traffic {
+  const _$TrafficImpl({this.up = 0, this.down = 0});
+
+  factory _$TrafficImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TrafficImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final num up;
+  @override
+  @JsonKey()
+  final num down;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TrafficImpl &&
+            (identical(other.up, up) || other.up == up) &&
+            (identical(other.down, down) || other.down == down));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, up, down);
+
+  /// Create a copy of Traffic
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TrafficImplCopyWith<_$TrafficImpl> get copyWith =>
+      __$$TrafficImplCopyWithImpl<_$TrafficImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TrafficImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Traffic implements Traffic {
+  const factory _Traffic({final num up, final num down}) = _$TrafficImpl;
+
+  factory _Traffic.fromJson(Map<String, dynamic> json) = _$TrafficImpl.fromJson;
+
+  @override
+  num get up;
+  @override
+  num get down;
+
+  /// Create a copy of Traffic
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TrafficImplCopyWith<_$TrafficImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$TrafficShow {
+  String get value => throw _privateConstructorUsedError;
+  String get unit => throw _privateConstructorUsedError;
+
+  /// Create a copy of TrafficShow
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TrafficShowCopyWith<TrafficShow> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TrafficShowCopyWith<$Res> {
+  factory $TrafficShowCopyWith(
+          TrafficShow value, $Res Function(TrafficShow) then) =
+      _$TrafficShowCopyWithImpl<$Res, TrafficShow>;
+  @useResult
+  $Res call({String value, String unit});
+}
+
+/// @nodoc
+class _$TrafficShowCopyWithImpl<$Res, $Val extends TrafficShow>
+    implements $TrafficShowCopyWith<$Res> {
+  _$TrafficShowCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TrafficShow
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? value = null,
+    Object? unit = null,
+  }) {
+    return _then(_value.copyWith(
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      unit: null == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TrafficShowImplCopyWith<$Res>
+    implements $TrafficShowCopyWith<$Res> {
+  factory _$$TrafficShowImplCopyWith(
+          _$TrafficShowImpl value, $Res Function(_$TrafficShowImpl) then) =
+      __$$TrafficShowImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String value, String unit});
+}
+
+/// @nodoc
+class __$$TrafficShowImplCopyWithImpl<$Res>
+    extends _$TrafficShowCopyWithImpl<$Res, _$TrafficShowImpl>
+    implements _$$TrafficShowImplCopyWith<$Res> {
+  __$$TrafficShowImplCopyWithImpl(
+      _$TrafficShowImpl _value, $Res Function(_$TrafficShowImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TrafficShow
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? value = null,
+    Object? unit = null,
+  }) {
+    return _then(_$TrafficShowImpl(
+      value: null == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      unit: null == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$TrafficShowImpl implements _TrafficShow {
+  const _$TrafficShowImpl({required this.value, required this.unit});
+
+  @override
+  final String value;
+  @override
+  final String unit;
+
+  @override
+  String toString() {
+    return 'TrafficShow(value: $value, unit: $unit)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TrafficShowImpl &&
+            (identical(other.value, value) || other.value == value) &&
+            (identical(other.unit, unit) || other.unit == unit));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, value, unit);
+
+  /// Create a copy of TrafficShow
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TrafficShowImplCopyWith<_$TrafficShowImpl> get copyWith =>
+      __$$TrafficShowImplCopyWithImpl<_$TrafficShowImpl>(this, _$identity);
+}
+
+abstract class _TrafficShow implements TrafficShow {
+  const factory _TrafficShow(
+      {required final String value,
+      required final String unit}) = _$TrafficShowImpl;
+
+  @override
+  String get value;
+  @override
+  String get unit;
+
+  /// Create a copy of TrafficShow
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TrafficShowImplCopyWith<_$TrafficShowImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 Proxy _$ProxyFromJson(Map<String, dynamic> json) {
   return _Proxy.fromJson(json);
 }

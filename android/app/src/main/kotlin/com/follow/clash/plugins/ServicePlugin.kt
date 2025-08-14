@@ -90,10 +90,7 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     fun handleInit(result: MethodChannel.Result) {
         GlobalState.launch {
-            val res = service.bind()
-            if (!res) {
-                result.success(false)
-            }
+            service.bind()
             service.setMessageCallback {
                 GlobalState.launch(Dispatchers.Main) {
                     flutterMethodChannel.invokeMethod("message", it)

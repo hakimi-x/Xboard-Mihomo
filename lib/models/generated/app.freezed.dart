@@ -74,6 +74,8 @@ abstract class $AppStateCopyWith<$Res> {
       bool realTunEnable,
       bool loading,
       SystemUiOverlayStyle systemUiOverlayStyle});
+
+  $TrafficCopyWith<$Res> get totalTraffic;
 }
 
 /// @nodoc
@@ -200,6 +202,16 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
               as SystemUiOverlayStyle,
     ) as $Val);
   }
+
+  /// Create a copy of AppState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrafficCopyWith<$Res> get totalTraffic {
+    return $TrafficCopyWith<$Res>(_value.totalTraffic, (value) {
+      return _then(_value.copyWith(totalTraffic: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -232,6 +244,9 @@ abstract class _$$AppStateImplCopyWith<$Res>
       bool realTunEnable,
       bool loading,
       SystemUiOverlayStyle systemUiOverlayStyle});
+
+  @override
+  $TrafficCopyWith<$Res> get totalTraffic;
 }
 
 /// @nodoc

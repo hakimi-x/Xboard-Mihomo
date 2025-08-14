@@ -226,7 +226,7 @@ class ClashCore {
     if (trafficString.isEmpty) {
       return Traffic();
     }
-    return Traffic.fromMap(json.decode(trafficString));
+    return Traffic.fromJson(json.decode(trafficString));
   }
 
   Future<IpInfo?> getCountryCode(String ip) async {
@@ -246,7 +246,7 @@ class ClashCore {
     if (totalTrafficString.isEmpty) {
       return Traffic();
     }
-    return Traffic.fromMap(json.decode(totalTrafficString));
+    return Traffic.fromJson(json.decode(totalTrafficString));
   }
 
   Future<int> getMemory() async {

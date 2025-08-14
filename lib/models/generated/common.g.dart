@@ -155,6 +155,18 @@ Map<String, dynamic> _$$VersionInfoImplToJson(_$VersionInfoImpl instance) =>
       'version': instance.version,
     };
 
+_$TrafficImpl _$$TrafficImplFromJson(Map<String, dynamic> json) =>
+    _$TrafficImpl(
+      up: json['up'] as num? ?? 0,
+      down: json['down'] as num? ?? 0,
+    );
+
+Map<String, dynamic> _$$TrafficImplToJson(_$TrafficImpl instance) =>
+    <String, dynamic>{
+      'up': instance.up,
+      'down': instance.down,
+    };
+
 _$ProxyImpl _$$ProxyImplFromJson(Map<String, dynamic> json) => _$ProxyImpl(
       name: json['name'] as String,
       type: json['type'] as String,

@@ -1,7 +1,5 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'dart:math';
-
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:flutter/material.dart';
@@ -216,7 +214,7 @@ class FileInfo with _$FileInfo {
 
 extension FileInfoExt on FileInfo {
   String get desc =>
-      '${TrafficValue(value: size).show}  ·  ${lastModified.lastUpdateTimeDesc}';
+      '${size.traffic.show}  ·  ${lastModified.lastUpdateTimeDesc}';
 }
 
 @freezed
@@ -230,56 +228,40 @@ class VersionInfo with _$VersionInfo {
       _$VersionInfoFromJson(json);
 }
 
-class Traffic {
-  int id;
-  TrafficValue up;
-  TrafficValue down;
+@freezed
+class Traffic with _$Traffic {
+  const factory Traffic({
+    @Default(0) num up,
+    @Default(0) num down,
+  }) = _Traffic;
 
-  Traffic({int? up, int? down})
-      : id = DateTime.now().millisecondsSinceEpoch,
-        up = TrafficValue(value: up),
-        down = TrafficValue(value: down);
-
-  num get speed => up.value + down.value;
-
-  factory Traffic.fromMap(Map<String, dynamic> map) {
-    return Traffic(
-      up: map['up'],
-      down: map['down'],
-    );
-  }
-
-  String toSpeedText() {
-    return '↑ $up/s   ↓ $down/s';
-  }
+  factory Traffic.fromJson(Map<String, Object?> json) =>
+      _$TrafficFromJson(json);
 
   @override
   String toString() {
     return '$up↑ $down↓';
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Traffic &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          up == other.up &&
-          down == other.down;
-
-  @override
-  int get hashCode => id.hashCode ^ up.hashCode ^ down.hashCode;
 }
 
-@immutable
-class TrafficValueShow {
-  final double value;
-  final TrafficUnit unit;
+extension TrafficExt on Traffic {
+  String get speedText {
+    return '↑ ${up.traffic.show}/s   ↓ ${down.traffic.show}/s';
+  }
 
-  const TrafficValueShow({
-    required this.value,
-    required this.unit,
-  });
+  num get speed => up + down;
+}
+
+@freezed
+class TrafficShow with _$TrafficShow {
+  const factory TrafficShow({
+    required String value,
+    required String unit,
+  }) = _TrafficShow;
+}
+
+extension TrafficShowExt on TrafficShow {
+  String get show => '$value $unit';
 }
 
 @freezed
@@ -324,68 +306,6 @@ extension GroupExt on Group {
     }
     return proxyName.isNotEmpty ? proxyName : realNow;
   }
-}
-
-@immutable
-class TrafficValue {
-  final int _value;
-
-  const TrafficValue({int? value}) : _value = value ?? 0;
-
-  int get value => _value;
-
-  String get show => '$showValue $showUnit';
-
-  String get shortShow =>
-      '${trafficValueShow.value.fixed(decimals: 1)} $showUnit';
-
-  String get showValue => trafficValueShow.value.fixed();
-
-  String get showUnit => trafficValueShow.unit.name;
-
-  TrafficValueShow get trafficValueShow {
-    if (_value > pow(1024, 4)) {
-      return TrafficValueShow(
-        value: _value / pow(1024, 4),
-        unit: TrafficUnit.TB,
-      );
-    }
-    if (_value > pow(1024, 3)) {
-      return TrafficValueShow(
-        value: _value / pow(1024, 3),
-        unit: TrafficUnit.GB,
-      );
-    }
-    if (_value > pow(1024, 2)) {
-      return TrafficValueShow(
-          value: _value / pow(1024, 2), unit: TrafficUnit.MB);
-    }
-    if (_value > pow(1024, 1)) {
-      return TrafficValueShow(
-        value: _value / pow(1024, 1),
-        unit: TrafficUnit.KB,
-      );
-    }
-    return TrafficValueShow(
-      value: _value.toDouble(),
-      unit: TrafficUnit.B,
-    );
-  }
-
-  @override
-  String toString() {
-    return '$showValue$showUnit';
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TrafficValue &&
-          runtimeType == other.runtimeType &&
-          _value == other._value;
-
-  @override
-  int get hashCode => _value.hashCode;
 }
 
 @freezed

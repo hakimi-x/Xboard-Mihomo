@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:fl_clash/common/common.dart';
-import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/widgets/widgets.dart';
@@ -14,7 +13,7 @@ class TrafficUsage extends StatelessWidget {
   Widget _buildTrafficDataItem(
     BuildContext context,
     Icon icon,
-    TrafficValue trafficValue,
+    num trafficValue,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +32,7 @@ class TrafficUsage extends StatelessWidget {
               Flexible(
                 flex: 1,
                 child: Text(
-                  trafficValue.showValue,
+                  trafficValue.traffic.value,
                   style: context.textTheme.bodySmall,
                   maxLines: 1,
                 ),
@@ -42,7 +41,7 @@ class TrafficUsage extends StatelessWidget {
           ),
         ),
         Text(
-          trafficValue.showUnit,
+          trafficValue.traffic.unit,
           style: context.textTheme.bodySmall?.toLighter,
         ),
       ],
@@ -89,11 +88,11 @@ class TrafficUsage extends StatelessWidget {
                             child: DonutChart(
                               data: [
                                 DonutChartData(
-                                  value: upTotalTrafficValue.value.toDouble(),
+                                  value: upTotalTrafficValue.toDouble(),
                                   color: primaryColor,
                                 ),
                                 DonutChartData(
-                                  value: downTotalTrafficValue.value.toDouble(),
+                                  value: downTotalTrafficValue.toDouble(),
                                   color: secondaryColor,
                                 ),
                               ],

@@ -48,7 +48,7 @@ class TrackerInfoItem extends ConsumerWidget {
       up: trackerInfo.upload,
       down: trackerInfo.download,
     );
-    return '$progress${traffic.toString()}';
+    return '$progress$traffic';
   }
 
   @override
@@ -359,11 +359,11 @@ class TrackerInfoDetailView extends StatelessWidget {
         ),
       _buildItem(
         title: appLocalizations.upload,
-        desc: TrafficValue(value: trackerInfo.upload).show,
+        desc: trackerInfo.upload.traffic.show,
       ),
       _buildItem(
         title: appLocalizations.download,
-        desc: TrafficValue(value: trackerInfo.download).show,
+        desc: trackerInfo.download.traffic.show,
       ),
       if (trackerInfo.metadata.destinationGeoIP.isNotEmpty)
         _buildItem(
