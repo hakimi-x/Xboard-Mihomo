@@ -48,7 +48,7 @@ class TrackerInfoItem extends ConsumerWidget {
       up: trackerInfo.upload,
       down: trackerInfo.download,
     );
-    return '$progress$traffic';
+    return '$progress${traffic.desc}';
   }
 
   @override

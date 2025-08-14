@@ -28,17 +28,10 @@ extension NumExt on num {
       size /= 1024;
       unitIndex++;
     }
-    if (unitIndex == 0) {
-      return TrafficShow(
-        value: size.toString(),
-        unit: units[unitIndex].name,
-      );
-    } else {
-      return TrafficShow(
-        value: size.fixed(decimals: 1),
-        unit: units[unitIndex].name,
-      );
-    }
+    return TrafficShow(
+      value: size.fixed(decimals: 1),
+      unit: units[unitIndex].name,
+    );
   }
 }
 

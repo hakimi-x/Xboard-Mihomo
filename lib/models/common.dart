@@ -237,16 +237,15 @@ class Traffic with _$Traffic {
 
   factory Traffic.fromJson(Map<String, Object?> json) =>
       _$TrafficFromJson(json);
-
-  @override
-  String toString() {
-    return '$up↑ $down↓';
-  }
 }
 
 extension TrafficExt on Traffic {
   String get speedText {
     return '↑ ${up.traffic.show}/s   ↓ ${down.traffic.show}/s';
+  }
+
+  String get desc {
+    return '${up.traffic.show}↑ ${down.traffic.show}↓';
   }
 
   num get speed => up + down;
