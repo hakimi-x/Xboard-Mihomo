@@ -35,20 +35,36 @@ object State {
     val tilePlugin: TilePlugin?
         get() = flutterEngine?.plugin<TilePlugin>()
 
-    fun handleToggle() {
-        GlobalState.launch {
-            var action: (() -> Unit)?
-            runLock.withLock {
-                action = when (runStateFlow.value) {
-                    RunState.PENDING -> null
-                    RunState.START -> tilePlugin?.let { it::handleStop } ?: ::handleStopService
-                    RunState.STOP -> tilePlugin?.let { it::handleStart } ?: ::handleStartService
-                }
-            }
-            withContext(Dispatchers.Main) {
-                action?.invoke()
+    suspend fun handleToggleAction() {
+        var action: (suspend () -> Unit)?
+        runLock.withLock {
+            action = when (runStateFlow.value) {
+                RunState.PENDING -> null
+                RunState.START -> ::handleStopServiceAction
+                RunState.STOP -> ::handleStartServiceAction
             }
         }
+        action?.invoke()
+    }
+
+    suspend fun handleStartServiceAction() {
+        tilePlugin?.let {
+            withContext(Dispatchers.Main) {
+                it.handleStart()
+            }
+            return
+        }
+        handleStartService()
+    }
+
+    suspend fun handleStopServiceAction() {
+        tilePlugin?.let {
+            withContext(Dispatchers.Main) {
+                it.handleStop()
+            }
+            return
+        }
+        handleStopService()
     }
 
     fun handleStartService() {
