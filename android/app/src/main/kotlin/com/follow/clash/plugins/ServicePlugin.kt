@@ -12,7 +12,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
@@ -20,6 +19,7 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        service.bind()
         flutterMethodChannel = MethodChannel(
             flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/service"
         )
@@ -28,7 +28,7 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        handleUnBind()
+        service.unbind()
         flutterMethodChannel.setMethodCallHandler(null)
     }
 
@@ -86,19 +86,11 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         service.stopService()
     }
 
-    fun handleUnBind() {
-        GlobalState.launch {
-            service.unbind()
-        }
-    }
-
     fun handleInit() {
         GlobalState.launch {
             service.setMessageCallback {
-                GlobalState.launch {
-                    withContext(Dispatchers.Main) {
-                        flutterMethodChannel.invokeMethod("message", it)
-                    }
+                GlobalState.launch(Dispatchers.Main) {
+                    flutterMethodChannel.invokeMethod("message", it)
                 }
             }
         }

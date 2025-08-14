@@ -60,7 +60,7 @@ class NotificationModule(private val service: Service) : Module() {
 
     private fun isScreenOn(): Boolean {
         val pm = service.getSystemService<PowerManager>()
-        return when(pm != null){
+        return when (pm != null) {
             true -> pm.isInteractive
             false -> true
         }
@@ -90,8 +90,8 @@ class NotificationModule(private val service: Service) : Module() {
         service.startForeground(
             notificationBuilder
                 .setContentTitle(params.title)
-                .setContentText(params.contentText)
-                .setSubText(params.subText)
+//                .setContentText(params.contentText)
+//                .setSubText(params.subText)
                 .clearActions()
                 .addAction(0, params.stopText, QuickAction.STOP.quickIntent.toPendingIntent)
                 .build()

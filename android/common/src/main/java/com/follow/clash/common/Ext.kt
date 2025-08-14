@@ -20,9 +20,6 @@ import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KClass
 
 //fun Context.startForegroundServiceCompat(intent: Intent?) {
@@ -104,41 +101,37 @@ fun Context.receiveBroadcastFlow(
     awaitClose { unregisterReceiver(receiver) }
 }
 
-data class BinderConnection<T : IBinder>(
-    val binder: T, val unbind: () -> Unit
-)
 
-
-inline fun <reified T : IBinder> Context.awaitService(
+inline fun <reified T : IBinder> Context.bindServiceFlow(
     intent: Intent, flags: Int = Context.BIND_AUTO_CREATE
-): suspend () -> BinderConnection<T> = {
-    suspendCancellableCoroutine { continuation ->
-        val connection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-                @Suppress("UNCHECKED_CAST") val casted = binder as? T
-                if (casted != null && continuation.isActive) {
-                    continuation.resume(
-                        BinderConnection(casted) { unbindService(this) })
-
-                } else {
-                    continuation.resumeWithException(
-                        IllegalStateException("Binder is not of type ${T::class.java}")
-                    )
-                }
+): Flow<T?> = callbackFlow {
+    val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            @Suppress("UNCHECKED_CAST") val casted = binder as? T
+            if (casted != null) {
+                trySend(
+                    casted
+                )
+            } else {
+                Log.d("[BindService]", "Binder is not of type ${T::class.java}")
+                trySend(null)
             }
-
-            override fun onServiceDisconnected(name: ComponentName?) {}
         }
 
-        if (!bindService(intent, connection, flags)) {
-            continuation.resumeWithException(
-                IllegalStateException("Failed to bind service")
-            )
-            return@suspendCancellableCoroutine
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.d("[BindService]", "Service disconnected")
+            trySend(null)
         }
+    }
 
-        continuation.invokeOnCancellation {
-            runCatching { unbindService(connection) }
-        }
+    if (!bindService(intent, connection, flags)) {
+        Log.d("[BindService]", "Failed to bind service")
+        trySend(null)
+        close()
+        return@callbackFlow
+    }
+
+    awaitClose {
+        runCatching { unbindService(connection) }
     }
 }

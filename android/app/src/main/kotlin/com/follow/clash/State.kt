@@ -1,6 +1,5 @@
 package com.follow.clash
 
-import android.util.Log
 import com.follow.clash.common.GlobalState
 import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.ServicePlugin
@@ -37,7 +36,6 @@ object State {
         get() = flutterEngine?.plugin<TilePlugin>()
 
     fun handleToggle() {
-        Log.d("[quick]", "${runStateFlow.value}")
         GlobalState.launch {
             var action: (() -> Unit)?
             runLock.withLock {
