@@ -5,12 +5,10 @@ import com.follow.clash.plugins.AppPlugin
 import com.follow.clash.plugins.ServicePlugin
 import com.follow.clash.plugins.TilePlugin
 import io.flutter.embedding.engine.FlutterEngine
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 
 enum class RunState {
     START, PENDING, STOP
@@ -35,33 +33,31 @@ object State {
     val tilePlugin: TilePlugin?
         get() = flutterEngine?.plugin<TilePlugin>()
 
-    suspend fun handleToggleAction() {
-        var action: (suspend () -> Unit)?
-        runLock.withLock {
-            action = when (runStateFlow.value) {
-                RunState.PENDING -> null
-                RunState.START -> ::handleStopServiceAction
-                RunState.STOP -> ::handleStartServiceAction
+    fun handleToggleAction() {
+        GlobalState.launch {
+            var action: (() -> Unit)?
+            runLock.withLock {
+                action = when (runStateFlow.value) {
+                    RunState.PENDING -> null
+                    RunState.START -> ::handleStopServiceAction
+                    RunState.STOP -> ::handleStartServiceAction
+                }
             }
+            action?.invoke()
         }
-        action?.invoke()
     }
 
-    suspend fun handleStartServiceAction() {
+    fun handleStartServiceAction() {
         tilePlugin?.let {
-            withContext(Dispatchers.Main) {
-                it.handleStart()
-            }
+            it.handleStart()
             return
         }
         handleStartService()
     }
 
-    suspend fun handleStopServiceAction() {
+    fun handleStopServiceAction() {
         tilePlugin?.let {
-            withContext(Dispatchers.Main) {
-                it.handleStop()
-            }
+            it.handleStop()
             return
         }
         handleStopService()

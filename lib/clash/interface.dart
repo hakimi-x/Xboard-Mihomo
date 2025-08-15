@@ -102,7 +102,6 @@ abstract class ClashHandlerInterface with ClashInterface {
   Future<bool> shutdown() async {
     return await invoke<bool>(
           method: ActionMethod.shutdown,
-          timeout: Duration(seconds: 1),
         ) ??
         false;
   }
@@ -137,7 +136,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<String>(
           method: ActionMethod.updateConfig,
           data: json.encode(updateParams),
-          timeout: Duration(minutes: 2),
         ) ??
         '';
   }
@@ -147,7 +145,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<Result>(
           method: ActionMethod.getConfig,
           data: path,
-          timeout: Duration(minutes: 2),
         ) ??
         Result<Map<String, dynamic>>.success({});
   }
@@ -158,7 +155,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<String>(
           method: ActionMethod.setupConfig,
           data: data,
-          timeout: Duration(minutes: 2),
         ) ??
         '';
   }
@@ -175,7 +171,6 @@ abstract class ClashHandlerInterface with ClashInterface {
   Future<Map> getProxies() async {
     return await invoke<Map>(
           method: ActionMethod.getProxies,
-          timeout: Duration(seconds: 5),
         ) ??
         {};
   }
@@ -211,7 +206,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<String>(
           method: ActionMethod.updateGeoData,
           data: json.encode(params),
-          timeout: Duration(minutes: 1),
         ) ??
         '';
   }
@@ -236,7 +230,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<String>(
           method: ActionMethod.updateExternalProvider,
           data: providerName,
-          timeout: Duration(minutes: 1),
         ) ??
         '';
   }
@@ -335,9 +328,6 @@ abstract class ClashHandlerInterface with ClashInterface {
     return await invoke<String>(
           method: ActionMethod.asyncTestDelay,
           data: json.encode(delayParams),
-          timeout: Duration(
-            milliseconds: 6000,
-          ),
         ) ??
         json.encode(
           Delay(

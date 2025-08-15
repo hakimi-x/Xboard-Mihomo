@@ -12,10 +12,12 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
-    private val service = Service(GlobalState.application)
+    private val service = Service(GlobalState.application, ::handleServiceCrash)
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -70,6 +72,10 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         result.success(true)
     }
 
+    private fun handleServiceCrash() {
+
+    }
+
     private fun handleStop(result: MethodChannel.Result) {
         State.handleStopService()
         result.success(true)
@@ -88,12 +94,22 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         service.stopService()
     }
 
+    val semaphore = Semaphore(10)
+
+    fun handleSendMessage(value: String?) {
+        GlobalState.launch(Dispatchers.Main) {
+            semaphore.withPermit {
+                flutterMethodChannel.invokeMethod("message", value)
+            }
+        }
+    }
+
     fun handleInit(result: MethodChannel.Result) {
         GlobalState.launch {
             service.bind()
             service.setMessageCallback {
                 GlobalState.launch(Dispatchers.Main) {
-                    flutterMethodChannel.invokeMethod("message", it)
+                    handleSendMessage(it)
                 }
             }
             result.success(true)

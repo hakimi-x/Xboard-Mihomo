@@ -8,13 +8,17 @@ import com.follow.clash.service.IRemoteInterface
 import com.follow.clash.service.RemoteService
 import com.follow.clash.service.models.VpnOptions
 
-class Service(context: Application) {
+class Service(
+    context: Application,
+    onServiceCrash: (() -> Unit)? = null,
+) {
     private val delegate = ServiceDelegate<IRemoteInterface>(
-        context, RemoteService::class.intent
+        context,
+        RemoteService::class.intent,
+        onServiceCrash,
     ) {
         IRemoteInterface.Stub.asInterface(it)
     }
-
 
     fun bind() {
         delegate.bind()
@@ -51,7 +55,6 @@ class Service(context: Application) {
     suspend fun startService(options: VpnOptions, inApp: Boolean) {
         delegate.useService { it.startService(options, inApp) }
     }
-
 
     suspend fun stopService() {
         delegate.useService { it.stopService() }

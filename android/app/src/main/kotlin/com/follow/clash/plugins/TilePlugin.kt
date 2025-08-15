@@ -1,6 +1,7 @@
 package com.follow.clash.plugins
 
 import com.follow.clash.common.Components
+import com.follow.clash.invokeMethodOnMainThread
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -20,11 +21,11 @@ class TilePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     fun handleStart() {
-        channel.invokeMethod("start", null)
+        channel.invokeMethodOnMainThread<Any>("start", null)
     }
 
     fun handleStop() {
-        channel.invokeMethod("stop", null)
+        channel.invokeMethodOnMainThread<Any>("stop", null)
     }
 
 

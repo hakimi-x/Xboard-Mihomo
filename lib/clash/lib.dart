@@ -41,11 +41,15 @@ class ClashLib extends ClashHandlerInterface {
     Duration? timeout,
   }) async {
     final id = '${method.name}#${utils.id}';
-    final result = await service?.invokeAction(Action(
-      id: id,
-      method: method,
-      data: data,
-    ));
+    final result = await service
+        ?.invokeAction(Action(
+          id: id,
+          method: method,
+          data: data,
+        ))
+        .withTimeout(
+          onTimeout: () => null,
+        );
     if (result == null) {
       return null;
     }

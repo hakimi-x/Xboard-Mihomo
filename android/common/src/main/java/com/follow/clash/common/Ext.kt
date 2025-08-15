@@ -16,6 +16,7 @@ import android.content.ServiceConnection
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.os.Build
 import android.os.IBinder
+import android.os.RemoteException
 import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -103,23 +104,43 @@ fun Context.receiveBroadcastFlow(
 
 
 inline fun <reified T : IBinder> Context.bindServiceFlow(
-    intent: Intent, flags: Int = Context.BIND_AUTO_CREATE
+    intent: Intent,
+    flags: Int = Context.BIND_AUTO_CREATE,
+    noinline onCrash: (() -> Unit)? = null,
 ): Flow<T?> = callbackFlow {
+    var currentBinder: IBinder? = null
+    val deathRecipient = IBinder.DeathRecipient {
+        onCrash?.invoke()
+        trySend(null)
+    }
     val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            @Suppress("UNCHECKED_CAST") val casted = binder as? T
-            if (casted != null) {
-                trySend(
-                    casted
-                )
+            if (binder != null) {
+                try {
+                    binder.linkToDeath(deathRecipient, 0)
+                    currentBinder = binder
+                    @Suppress("UNCHECKED_CAST")
+                    val casted = binder as? T
+                    if (casted != null) {
+                        trySend(casted)
+                    } else {
+                        Log.d("[BindService]", "Binder is not of type ${T::class.java}")
+                        trySend(null)
+                    }
+                } catch (e: RemoteException) {
+                    Log.d("[BindService]", "Failed to link to death: ${e.message}")
+                    binder.unlinkToDeath(deathRecipient, 0)
+                    trySend(null)
+                }
             } else {
-                Log.d("[BindService]", "Binder is not of type ${T::class.java}")
                 trySend(null)
             }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.d("[BindService]", "Service disconnected")
+            currentBinder?.unlinkToDeath(deathRecipient, 0)
+            currentBinder = null
             trySend(null)
         }
     }
@@ -132,6 +153,7 @@ inline fun <reified T : IBinder> Context.bindServiceFlow(
     }
 
     awaitClose {
+        currentBinder?.unlinkToDeath(deathRecipient, 0)
         runCatching { unbindService(connection) }
     }
 }

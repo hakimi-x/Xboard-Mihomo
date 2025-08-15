@@ -179,14 +179,14 @@ class ClashService extends ClashHandlerInterface {
       ),
     );
 
-    return (callbackCompleterMap[id] as Completer<T?>).safeFuture(
-      timeout: timeout,
-      onLast: () {
-        callbackCompleterMap.remove(id);
-      },
-      functionName: id,
-      onTimeout: () => null,
-    );
+    return (callbackCompleterMap[id] as Completer<T?>).future.withTimeout(
+          timeout: timeout,
+          onLast: () {
+            callbackCompleterMap.remove(id);
+          },
+          tag: id,
+          onTimeout: () => null,
+        );
   }
 }
 

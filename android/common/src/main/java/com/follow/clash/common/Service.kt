@@ -16,7 +16,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 class ServiceDelegate<T>(
     private val context: Context,
     private val intent: Intent,
-    private val interfaceCreator: (IBinder) -> T
+    private val onServiceCrash: (() -> Unit)? = null,
+    private val interfaceCreator: (IBinder) -> T,
 ) : CoroutineScope by CoroutineScope(SupervisorJob() + Dispatchers.Default) {
 
     private val _service = MutableStateFlow<T?>(null)
@@ -25,7 +26,7 @@ class ServiceDelegate<T>(
 
     fun bind() {
         launch {
-            context.bindServiceFlow<IBinder>(intent)
+            context.bindServiceFlow<IBinder>(intent, onCrash = onServiceCrash)
                 .collect { binder ->
                     _service.value = binder?.let(interfaceCreator)
                 }
