@@ -26,32 +26,6 @@
 | **Golang** | >= 1.19 | 编译 Clash.Meta 核心 |
 | **Git** | 最新版 | 管理代码和子模块 |
 
-### 平台特定工具
-
-根据你的目标平台，需要安装对应的开发工具：
-
-#### 🤖 Android
-- **Android SDK** - 最新稳定版
-- **Android NDK** - r21 或更高版本
-- **Java JDK** - 11 或更高版本
-
-#### 🪟 Windows
-- **GCC 编译器** - MinGW-w64 或 TDM-GCC
-- **Inno Setup** - 用于打包 Windows 安装程序
-
-#### 🍎 macOS
-- **Xcode** - 最新版本
-- **Xcode Command Line Tools**
-- **CocoaPods** - Ruby 包管理器
-
-#### 🐧 Linux
-必需的系统依赖：
-```bash
-sudo apt-get install libayatana-appindicator3-dev
-sudo apt-get install libkeybinder-3.0-dev
-```
-
----
 
 ## 环境准备
 
@@ -240,50 +214,6 @@ flutter devices
 # 在默认设备运行（Debug 模式）
 flutter run
 
-# 在指定设备运行
-flutter run -d <device-id>
-
-# Release 模式运行
-flutter run --release
-```
-
-### 热重载
-
-运行 Debug 模式时，修改代码后：
-- 按 `r` - 热重载（Hot Reload）
-- 按 `R` - 热重启（Hot Restart）
-- 按 `q` - 退出
-
----
-
-## 常见问题
-
-### 子模块更新失败
-```bash
-git submodule deinit -f --all
-git submodule update --init --recursive
-```
-
-### SDK 代码生成失败
-```bash
-cd lib/sdk/flutter_xboard_sdk
-flutter clean && flutter pub get
-dart run build_runner build --delete-conflicting-outputs
-```
-
-### NDK 未找到
-设置环境变量：
-```bash
-export ANDROID_NDK=/path/to/ndk  # Linux/macOS
-```
-
-### Flutter 依赖冲突
-```bash
-flutter clean
-flutter pub get
-```
-
----
 
 ## 📚 相关文档
 
