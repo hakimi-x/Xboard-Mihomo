@@ -63,26 +63,9 @@ XBoard Mihomo 是基于 [FlClash v0.8.85](https://github.com/chen08209/FlClash) 
 
 ## 🚀 快速开始
 
-### 1. 最小可用配置（5分钟上手）
+> 📖 **配置教程**：[最小可用性配置指南](docs/quick-start.md) | [配置示例](docs/examples/minimal.md)
 
-只需配置一个面板地址即可使用：
-
-```json
-{
-    "panels": {
-        "mihomo": [
-            {
-                "url": "https://your-panel.com",
-                "description": "主面板"
-            }
-        ]
-    }
-}
-```
-
-> 📖 **完整教程**：[最小可用性配置指南](docs/quick-start.md)
-
-### 2. 构建应用
+### 1. 构建应用
 
 ```bash
 # 更新子模块
@@ -99,21 +82,11 @@ dart setup.dart android
 
 > 🛠️ **详细步骤**：[构建指南](docs/build-guide.md)
 
-### 3. 配置应用
+### 2. 配置应用
 
-编辑 `assets/config/xboard.config.yaml`：
+详细配置步骤请查看文档：
 
-```yaml
-xboard:
-  provider: mihomo
-  remote_config:
-    sources:
-      - name: main_source
-        url: https://your-domain.com/config.json
-        priority: 100
-```
-
-> ⚙️ **配置详解**：[配置文档](docs/configuration.md)
+> ⚙️ **配置指南**：[快速开始](docs/quick-start.md) | [配置文档](docs/configuration.md) | [配置示例](docs/examples/minimal.md)
 
 ---
 
