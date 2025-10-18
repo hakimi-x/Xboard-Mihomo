@@ -25,18 +25,30 @@ Xboard-Mihomo 采用**主源配置**的方式管理服务器信息：
                 "description": "主面板"
             }
         ]
-    }
+    },
+    "onlineSupport": [
+        {
+            "url": "https://chat.example.com",
+            "description": "在线客服",
+            "apiBaseUrl": "https://chat.example.com",
+            "wsBaseUrl": "wss://chat.example.com"
+        }
+    ]
 }
 ```
 
 **说明：**
-- `panels.mihomo` - 面板列表（mihomo 是提供商名称）
-- `url` - 您的面板地址（必填）
-- `description` - 面板描述（可选，方便识别）
+- `panels.mihomo` - 面板列表（mihomo 是提供商名称，必填）
+- `panels[].url` - 您的面板地址（必填）
+- `panels[].description` - 面板描述（可选，方便识别）
+- `onlineSupport` - 在线客服配置（必填）
+- `onlineSupport[].url` - 在线客服地址（必填）
+- `onlineSupport[].apiBaseUrl` - API 基础地址（必填）
+- `onlineSupport[].wsBaseUrl` - WebSocket 地址（必填）
 
-> 💡 **提示**：这就是最小配置！其他配置项（proxy、ws、update等）都是可选的，不需要也能正常使用。
+> 💡 **最小必填字段**：`panels` 和 `onlineSupport` 是客户端正常运行的最小必填配置。
 > 
-> ✅ **容错机制**：配置模块完全支持不完全的字段，缺失的字段会使用空值，不会导致程序崩溃。
+> ✅ **容错机制**：其他配置项（proxy、ws、update、subscription等）都是可选的，缺失的字段会使用空值，不会导致程序崩溃。
 
 ### 第二步：配置客户端 `xboard.config.yaml`
 
@@ -77,7 +89,15 @@ xboard:
                 "description": "主面板"
             }
         ]
-    }
+    },
+    "onlineSupport": [
+        {
+            "url": "https://chat.example.com",
+            "description": "在线客服",
+            "apiBaseUrl": "https://chat.example.com",
+            "wsBaseUrl": "wss://chat.example.com"
+        }
+    ]
 }
 ```
 
@@ -119,15 +139,16 @@ xboard:
 
 ## 📝 配置提示
 
-### 1. 只需要配置面板地址
-最小配置下，`config.json` 中只需要 `panels` 部分：
+### 1. 最小必填字段
+最小配置下，`config.json` 中必须包含以下两个部分：
 - ✅ 必填：`panels` - 面板地址列表
-- ❌ 可选：`proxy`、`ws`、`update`、`onlineSupport`、`subscription` 等
+- ✅ 必填：`onlineSupport` - 在线客服配置
+- ❌ 可选：`proxy`、`ws`、`update`、`subscription` 等
 
 **容错保证：**
 - 所有可选字段缺失时，会使用空值（空对象 `{}` 或空数组 `[]`）
-- 不会因为缺少字段而导致程序崩溃或报错
-- 即使只配置一个面板地址，程序也能完全正常运行
+- 不会因为缺少可选字段而导致程序崩溃或报错
+- 配置 `panels` 和 `onlineSupport` 两个字段，程序即可完全正常运行
 
 ### 2. 支持多个面板地址（可选）
 如果需要高可用性，可以配置多个面板地址：

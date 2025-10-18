@@ -55,8 +55,9 @@ class ConfigValidator {
 
   /// 验证提供商名称
   static bool isValidProvider(String provider) {
-    const validProviders = ['Flclash', 'Flclash'];
-    return validProviders.contains(provider.toLowerCase());
+    // 移除硬编码限制，允许使用任意 provider
+    // 只要不为空且是有效字符串即可
+    return provider.isNotEmpty;
   }
 
   /// 验证协议类型

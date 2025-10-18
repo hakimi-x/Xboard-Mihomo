@@ -14,7 +14,15 @@
                 "description": "主面板"
             }
         ]
-    }
+    },
+    "onlineSupport": [
+        {
+            "url": "https://chat.example.com",
+            "description": "在线客服",
+            "apiBaseUrl": "https://chat.example.com",
+            "wsBaseUrl": "wss://chat.example.com"
+        }
+    ]
 }
 ```
 
@@ -38,7 +46,8 @@ xboard:
 
 ## 配置说明
 
-- **panels.mihomo** - 只配置一个面板地址
+- **panels.mihomo** - 面板地址（必填）
+- **onlineSupport** - 在线客服地址（必填）
 - **remote_config.sources** - 指向托管的 config.json
 - **log** - 基础日志配置
 

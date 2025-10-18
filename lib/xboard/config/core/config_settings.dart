@@ -42,11 +42,8 @@ class ConfigSettings {
 
   /// 验证配置
   bool validate() {
-    const validProviders = ['Flclash', 'Flclash'];
-    if (!validProviders.contains(currentProvider)) {
-      return false;
-    }
-
+    // 移除 provider 硬编码限制，允许使用任意 provider
+    // 只要远程配置 JSON 中有对应的键名即可
     return remoteConfig.validate() && subscription.validate() && log.validate();
   }
 
@@ -54,10 +51,8 @@ class ConfigSettings {
   List<String> getValidationErrors() {
     final errors = <String>[];
 
-    const validProviders = ['Flclash', 'Flclash'];
-    if (!validProviders.contains(currentProvider)) {
-      errors.add('Invalid provider: $currentProvider');
-    }
+    // 移除 provider 硬编码限制
+    // provider 仅作为 key 从远程配置的 panels 对象中选择数据
 
     errors.addAll(remoteConfig.getValidationErrors());
     errors.addAll(subscription.getValidationErrors());
