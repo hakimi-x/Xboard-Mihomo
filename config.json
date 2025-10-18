@@ -1,0 +1,139 @@
+{
+    "panels": {
+        "mihomo": [
+            {
+                "url": "https://api.example1.com",
+                "description": "自动生成的域名 - wujie"
+            },
+            {
+                "url": "https://xxx.xxx.xxx.1:8888",
+                "description": "服务器1-应用"
+            },
+            {
+                "url": "https://xxx.xxx.xxx.2:8888",
+                "description": "服务器2-ecs"
+            },
+            {
+                "url": "https://xxx.xxx.xxx.3:8888",
+                "description": "服务器3-ecs"
+            }
+        ]
+    },
+    "proxy": [
+        {
+            "url": "username:password@proxy.example.com:38769",
+            "description": "代理服务器1",
+            "protocol": "http"
+        },
+        {
+            "url": "username:password@proxy.example.com:38769",
+            "description": "备用代理服务器",
+            "protocol": "http"
+        }
+    ],
+    "ws": [
+        {
+            "url": "wss://ws.example.com/ws/",
+            "description": "WebSocket服务器1"
+        },
+        {
+            "url": "wss://ws01.example.com/ws/",
+            "description": "备用ws服务器"
+        }
+    ],
+    "update": [
+        {
+            "url": "https://update.example.com",
+            "description": "更新服务器1"
+        },
+        {
+            "url": "https://update01.example.com",
+            "description": "备用更新服务器"
+        }
+    ],
+    "onlineSupport": [
+        {
+            "url": "https://chat.example.com",
+            "description": "在线客服API服务",
+            "apiBaseUrl": "https://chat.example.com",
+            "wsBaseUrl": "wss://chat.example.com"
+        }
+    ],
+    "subscription": {
+        "urls": [
+            {
+                "url": "https://www.example-sub1.com",
+                "description": "reverse",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            },
+            {
+                "url": "https://www.example-sub1.com/v2",
+                "description": "v2word",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            },
+            {
+                "url": "https://api.example-origin.com",
+                "description": "origin",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            },
+            {
+                "url": "http://xxx.xxx.xxx.3:7880",
+                "description": "服务器3-ecs",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            },
+            {
+                "url": "http://xxx.xxx.xxx.2:7881",
+                "description": "服务器2-ecs",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            },
+            {
+                "url": "http://xxx.xxx.xxx.1:7880",
+                "description": "服务器1-应用",
+                "endpoints": {
+                    "v2": {
+                        "path": "/api/v2/subscription-encrypt/{token}",
+                        "requiresToken": true,
+                        "method": "GET",
+                        "description": "V2 加密订阅接口，token在路径中"
+                    }
+                }
+            }
+        ]
+    }
+}
+
