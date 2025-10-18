@@ -5,8 +5,6 @@
 
 **基于 FlClash v0.8.85 的多平台代理客户端，深度集成全新 XBoard 面板支持**
 
-[English](README.md) | [**简体中文**](README_zh_CN.md)
-
 </div>
 
 ---
@@ -684,18 +682,6 @@ dart setup.dart linux --arch amd64
 dart setup.dart linux --arch arm64
 ```
 
----
-
-## 📚 文档索引
-
-| 文档 | 说明 | 路径 |
-|-----|------|------|
-| **XBoard 配置详解** | 配置文件完整说明文档 | [lib/xboard/config/README.md](lib/xboard/config/README.md) |
-| **SDK 使用指南** | 独立 SDK 集成使用文档 | [lib/xboard/sdk/README.md](lib/xboard/sdk/README.md) |
-| **开源协议说明** | XBoard 模块开源说明 | [lib/xboard/README_OPENSOURCE.md](lib/xboard/README_OPENSOURCE.md) |
-| **变更日志** | 版本更新记录 | [CHANGELOG.md](CHANGELOG.md) |
-
----
 
 ## 🔒 服务端部署
 
@@ -906,21 +892,3 @@ adb shell am broadcast -a com.follow.clash.action.START
 
 如果这个项目对你有帮助，请点击右上角的 ⭐ Star 支持我们！
 
-
----
-
-## 📄 开源协议
-
-本项目遵循上游 FlClash 的开源协议。
-
-XBoard 模块部分保留独立版权声明，详见 [lib/xboard/README_OPENSOURCE.md](lib/xboard/README_OPENSOURCE.md)。
-
----
-
-<div align="center">
-
-**Built with ❤️ on FlClash Core**
-
-**为更好的网络体验而生**
-
-</div>
