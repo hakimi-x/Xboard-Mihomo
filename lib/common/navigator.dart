@@ -2,6 +2,7 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class BaseNavigator {
@@ -20,20 +21,20 @@ class BaseNavigator {
     );
   }
 
-  // static Future<T?> modal<T>(BuildContext context, Widget child) async {
-  //   if (globalState.appState.viewMode != ViewMode.mobile) {
-  //     return await globalState.showCommonDialog<T>(
-  //       child: CommonModal(
-  //         child: child,
-  //       ),
-  //     );
-  //   }
-  //   return await Navigator.of(context).push<T>(
-  //     CommonRoute(
-  //       builder: (context) => child,
-  //     ),
-  //   );
-  // }
+  static Future<T?> modal<T>(BuildContext context, Widget child) async {
+    if (globalState.appState.viewMode != ViewMode.mobile) {
+      return await globalState.showCommonDialog<T>(
+        child: CommonModal(
+          child: child,
+        ),
+      );
+    }
+    return await Navigator.of(context).push<T>(
+      CommonRoute(
+        builder: (context) => child,
+      ),
+    );
+  }
 }
 
 class CommonDesktopRoute<T> extends PageRoute<T> {

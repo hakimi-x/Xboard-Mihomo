@@ -1,5 +1,5 @@
-display_name: FlClash
-package_name: FlClash
+display_name: Flclash
+package_name: Flclash
 maintainer:
   name: chen08209
   email: chen08209@gmail.com
@@ -15,12 +15,12 @@ dependencies:
   - libkeybinder-3.0-dev
 
 keywords:
-  - FlClash
+  - Flclash
   - Clash
   - ClashMeta
   - Proxy
 
-generic_name: FlClash
+generic_name: Flclash
 
 categories:
   - Network

@@ -148,6 +148,7 @@ mixin _$CommonMessage {
   String get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
+  VoidCallback? get onTap => throw _privateConstructorUsedError;
 
   /// Create a copy of CommonMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -162,7 +163,7 @@ abstract class $CommonMessageCopyWith<$Res> {
           CommonMessage value, $Res Function(CommonMessage) then) =
       _$CommonMessageCopyWithImpl<$Res, CommonMessage>;
   @useResult
-  $Res call({String id, String text, Duration duration});
+  $Res call({String id, String text, Duration duration, VoidCallback? onTap});
 }
 
 /// @nodoc
@@ -183,6 +184,7 @@ class _$CommonMessageCopyWithImpl<$Res, $Val extends CommonMessage>
     Object? id = null,
     Object? text = null,
     Object? duration = null,
+    Object? onTap = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -197,6 +199,10 @@ class _$CommonMessageCopyWithImpl<$Res, $Val extends CommonMessage>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
+      onTap: freezed == onTap
+          ? _value.onTap
+          : onTap // ignore: cast_nullable_to_non_nullable
+              as VoidCallback?,
     ) as $Val);
   }
 }
@@ -209,7 +215,7 @@ abstract class _$$CommonMessageImplCopyWith<$Res>
       __$$CommonMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String text, Duration duration});
+  $Res call({String id, String text, Duration duration, VoidCallback? onTap});
 }
 
 /// @nodoc
@@ -228,6 +234,7 @@ class __$$CommonMessageImplCopyWithImpl<$Res>
     Object? id = null,
     Object? text = null,
     Object? duration = null,
+    Object? onTap = freezed,
   }) {
     return _then(_$CommonMessageImpl(
       id: null == id
@@ -242,6 +249,10 @@ class __$$CommonMessageImplCopyWithImpl<$Res>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
+      onTap: freezed == onTap
+          ? _value.onTap
+          : onTap // ignore: cast_nullable_to_non_nullable
+              as VoidCallback?,
     ));
   }
 }
@@ -252,7 +263,8 @@ class _$CommonMessageImpl implements _CommonMessage {
   const _$CommonMessageImpl(
       {required this.id,
       required this.text,
-      this.duration = const Duration(seconds: 3)});
+      this.duration = const Duration(seconds: 3),
+      this.onTap});
 
   @override
   final String id;
@@ -261,10 +273,12 @@ class _$CommonMessageImpl implements _CommonMessage {
   @override
   @JsonKey()
   final Duration duration;
+  @override
+  final VoidCallback? onTap;
 
   @override
   String toString() {
-    return 'CommonMessage(id: $id, text: $text, duration: $duration)';
+    return 'CommonMessage(id: $id, text: $text, duration: $duration, onTap: $onTap)';
   }
 
   @override
@@ -275,11 +289,12 @@ class _$CommonMessageImpl implements _CommonMessage {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.duration, duration) ||
-                other.duration == duration));
+                other.duration == duration) &&
+            (identical(other.onTap, onTap) || other.onTap == onTap));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, text, duration);
+  int get hashCode => Object.hash(runtimeType, id, text, duration, onTap);
 
   /// Create a copy of CommonMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -294,7 +309,8 @@ abstract class _CommonMessage implements CommonMessage {
   const factory _CommonMessage(
       {required final String id,
       required final String text,
-      final Duration duration}) = _$CommonMessageImpl;
+      final Duration duration,
+      final VoidCallback? onTap}) = _$CommonMessageImpl;
 
   @override
   String get id;
@@ -302,6 +318,8 @@ abstract class _CommonMessage implements CommonMessage {
   String get text;
   @override
   Duration get duration;
+  @override
+  VoidCallback? get onTap;
 
   /// Create a copy of CommonMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -314,6 +332,7 @@ abstract class _CommonMessage implements CommonMessage {
 /// @nodoc
 mixin _$AppBarState {
   List<Widget> get actions => throw _privateConstructorUsedError;
+  Widget? get leading => throw _privateConstructorUsedError;
   AppBarSearchState? get searchState => throw _privateConstructorUsedError;
   AppBarEditState? get editState => throw _privateConstructorUsedError;
 
@@ -332,6 +351,7 @@ abstract class $AppBarStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<Widget> actions,
+      Widget? leading,
       AppBarSearchState? searchState,
       AppBarEditState? editState});
 
@@ -355,6 +375,7 @@ class _$AppBarStateCopyWithImpl<$Res, $Val extends AppBarState>
   @override
   $Res call({
     Object? actions = null,
+    Object? leading = freezed,
     Object? searchState = freezed,
     Object? editState = freezed,
   }) {
@@ -363,6 +384,10 @@ class _$AppBarStateCopyWithImpl<$Res, $Val extends AppBarState>
           ? _value.actions
           : actions // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      leading: freezed == leading
+          ? _value.leading
+          : leading // ignore: cast_nullable_to_non_nullable
+              as Widget?,
       searchState: freezed == searchState
           ? _value.searchState
           : searchState // ignore: cast_nullable_to_non_nullable
@@ -413,6 +438,7 @@ abstract class _$$AppBarStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<Widget> actions,
+      Widget? leading,
       AppBarSearchState? searchState,
       AppBarEditState? editState});
 
@@ -436,6 +462,7 @@ class __$$AppBarStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? actions = null,
+    Object? leading = freezed,
     Object? searchState = freezed,
     Object? editState = freezed,
   }) {
@@ -444,6 +471,10 @@ class __$$AppBarStateImplCopyWithImpl<$Res>
           ? _value._actions
           : actions // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      leading: freezed == leading
+          ? _value.leading
+          : leading // ignore: cast_nullable_to_non_nullable
+              as Widget?,
       searchState: freezed == searchState
           ? _value.searchState
           : searchState // ignore: cast_nullable_to_non_nullable
@@ -460,7 +491,10 @@ class __$$AppBarStateImplCopyWithImpl<$Res>
 
 class _$AppBarStateImpl implements _AppBarState {
   const _$AppBarStateImpl(
-      {final List<Widget> actions = const [], this.searchState, this.editState})
+      {final List<Widget> actions = const [],
+      this.leading,
+      this.searchState,
+      this.editState})
       : _actions = actions;
 
   final List<Widget> _actions;
@@ -473,13 +507,15 @@ class _$AppBarStateImpl implements _AppBarState {
   }
 
   @override
+  final Widget? leading;
+  @override
   final AppBarSearchState? searchState;
   @override
   final AppBarEditState? editState;
 
   @override
   String toString() {
-    return 'AppBarState(actions: $actions, searchState: $searchState, editState: $editState)';
+    return 'AppBarState(actions: $actions, leading: $leading, searchState: $searchState, editState: $editState)';
   }
 
   @override
@@ -488,6 +524,7 @@ class _$AppBarStateImpl implements _AppBarState {
         (other.runtimeType == runtimeType &&
             other is _$AppBarStateImpl &&
             const DeepCollectionEquality().equals(other._actions, _actions) &&
+            (identical(other.leading, leading) || other.leading == leading) &&
             (identical(other.searchState, searchState) ||
                 other.searchState == searchState) &&
             (identical(other.editState, editState) ||
@@ -495,8 +532,12 @@ class _$AppBarStateImpl implements _AppBarState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_actions), searchState, editState);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_actions),
+      leading,
+      searchState,
+      editState);
 
   /// Create a copy of AppBarState
   /// with the given fields replaced by the non-null parameter values.
@@ -510,11 +551,14 @@ class _$AppBarStateImpl implements _AppBarState {
 abstract class _AppBarState implements AppBarState {
   const factory _AppBarState(
       {final List<Widget> actions,
+      final Widget? leading,
       final AppBarSearchState? searchState,
       final AppBarEditState? editState}) = _$AppBarStateImpl;
 
   @override
   List<Widget> get actions;
+  @override
+  Widget? get leading;
   @override
   AppBarSearchState? get searchState;
   @override
@@ -531,7 +575,7 @@ abstract class _AppBarState implements AppBarState {
 /// @nodoc
 mixin _$AppBarSearchState {
   dynamic Function(String) get onSearch => throw _privateConstructorUsedError;
-  String? get query => throw _privateConstructorUsedError;
+  bool get isSearch => throw _privateConstructorUsedError;
 
   /// Create a copy of AppBarSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -546,7 +590,7 @@ abstract class $AppBarSearchStateCopyWith<$Res> {
           AppBarSearchState value, $Res Function(AppBarSearchState) then) =
       _$AppBarSearchStateCopyWithImpl<$Res, AppBarSearchState>;
   @useResult
-  $Res call({dynamic Function(String) onSearch, String? query});
+  $Res call({dynamic Function(String) onSearch, bool isSearch});
 }
 
 /// @nodoc
@@ -565,17 +609,17 @@ class _$AppBarSearchStateCopyWithImpl<$Res, $Val extends AppBarSearchState>
   @override
   $Res call({
     Object? onSearch = null,
-    Object? query = freezed,
+    Object? isSearch = null,
   }) {
     return _then(_value.copyWith(
       onSearch: null == onSearch
           ? _value.onSearch
           : onSearch // ignore: cast_nullable_to_non_nullable
               as dynamic Function(String),
-      query: freezed == query
-          ? _value.query
-          : query // ignore: cast_nullable_to_non_nullable
-              as String?,
+      isSearch: null == isSearch
+          ? _value.isSearch
+          : isSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -588,7 +632,7 @@ abstract class _$$AppBarSearchStateImplCopyWith<$Res>
       __$$AppBarSearchStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({dynamic Function(String) onSearch, String? query});
+  $Res call({dynamic Function(String) onSearch, bool isSearch});
 }
 
 /// @nodoc
@@ -605,17 +649,17 @@ class __$$AppBarSearchStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? onSearch = null,
-    Object? query = freezed,
+    Object? isSearch = null,
   }) {
     return _then(_$AppBarSearchStateImpl(
       onSearch: null == onSearch
           ? _value.onSearch
           : onSearch // ignore: cast_nullable_to_non_nullable
               as dynamic Function(String),
-      query: freezed == query
-          ? _value.query
-          : query // ignore: cast_nullable_to_non_nullable
-              as String?,
+      isSearch: null == isSearch
+          ? _value.isSearch
+          : isSearch // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -623,17 +667,18 @@ class __$$AppBarSearchStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AppBarSearchStateImpl implements _AppBarSearchState {
-  const _$AppBarSearchStateImpl({required this.onSearch, this.query = null});
+  const _$AppBarSearchStateImpl(
+      {required this.onSearch, this.isSearch = false});
 
   @override
   final dynamic Function(String) onSearch;
   @override
   @JsonKey()
-  final String? query;
+  final bool isSearch;
 
   @override
   String toString() {
-    return 'AppBarSearchState(onSearch: $onSearch, query: $query)';
+    return 'AppBarSearchState(onSearch: $onSearch, isSearch: $isSearch)';
   }
 
   @override
@@ -643,11 +688,12 @@ class _$AppBarSearchStateImpl implements _AppBarSearchState {
             other is _$AppBarSearchStateImpl &&
             (identical(other.onSearch, onSearch) ||
                 other.onSearch == onSearch) &&
-            (identical(other.query, query) || other.query == query));
+            (identical(other.isSearch, isSearch) ||
+                other.isSearch == isSearch));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, onSearch, query);
+  int get hashCode => Object.hash(runtimeType, onSearch, isSearch);
 
   /// Create a copy of AppBarSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -662,12 +708,12 @@ class _$AppBarSearchStateImpl implements _AppBarSearchState {
 abstract class _AppBarSearchState implements AppBarSearchState {
   const factory _AppBarSearchState(
       {required final dynamic Function(String) onSearch,
-      final String? query}) = _$AppBarSearchStateImpl;
+      final bool isSearch}) = _$AppBarSearchStateImpl;
 
   @override
   dynamic Function(String) get onSearch;
   @override
-  String? get query;
+  bool get isSearch;
 
   /// Create a copy of AppBarSearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -679,7 +725,8 @@ abstract class _AppBarSearchState implements AppBarSearchState {
 
 /// @nodoc
 mixin _$AppBarEditState {
-  int get editCount => throw _privateConstructorUsedError;
+  dynamic get editCount => throw _privateConstructorUsedError;
+  bool get isEdit => throw _privateConstructorUsedError;
   dynamic Function() get onExit => throw _privateConstructorUsedError;
 
   /// Create a copy of AppBarEditState
@@ -695,7 +742,7 @@ abstract class $AppBarEditStateCopyWith<$Res> {
           AppBarEditState value, $Res Function(AppBarEditState) then) =
       _$AppBarEditStateCopyWithImpl<$Res, AppBarEditState>;
   @useResult
-  $Res call({int editCount, dynamic Function() onExit});
+  $Res call({dynamic editCount, bool isEdit, dynamic Function() onExit});
 }
 
 /// @nodoc
@@ -713,14 +760,19 @@ class _$AppBarEditStateCopyWithImpl<$Res, $Val extends AppBarEditState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? editCount = null,
+    Object? editCount = freezed,
+    Object? isEdit = null,
     Object? onExit = null,
   }) {
     return _then(_value.copyWith(
-      editCount: null == editCount
+      editCount: freezed == editCount
           ? _value.editCount
           : editCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as dynamic,
+      isEdit: null == isEdit
+          ? _value.isEdit
+          : isEdit // ignore: cast_nullable_to_non_nullable
+              as bool,
       onExit: null == onExit
           ? _value.onExit
           : onExit // ignore: cast_nullable_to_non_nullable
@@ -737,7 +789,7 @@ abstract class _$$AppBarEditStateImplCopyWith<$Res>
       __$$AppBarEditStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int editCount, dynamic Function() onExit});
+  $Res call({dynamic editCount, bool isEdit, dynamic Function() onExit});
 }
 
 /// @nodoc
@@ -753,14 +805,16 @@ class __$$AppBarEditStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? editCount = null,
+    Object? editCount = freezed,
+    Object? isEdit = null,
     Object? onExit = null,
   }) {
     return _then(_$AppBarEditStateImpl(
-      editCount: null == editCount
-          ? _value.editCount
-          : editCount // ignore: cast_nullable_to_non_nullable
-              as int,
+      editCount: freezed == editCount ? _value.editCount! : editCount,
+      isEdit: null == isEdit
+          ? _value.isEdit
+          : isEdit // ignore: cast_nullable_to_non_nullable
+              as bool,
       onExit: null == onExit
           ? _value.onExit
           : onExit // ignore: cast_nullable_to_non_nullable
@@ -772,17 +826,21 @@ class __$$AppBarEditStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AppBarEditStateImpl implements _AppBarEditState {
-  const _$AppBarEditStateImpl({this.editCount = 0, required this.onExit});
+  const _$AppBarEditStateImpl(
+      {this.editCount = 0, this.isEdit = false, required this.onExit});
 
   @override
   @JsonKey()
-  final int editCount;
+  final dynamic editCount;
+  @override
+  @JsonKey()
+  final bool isEdit;
   @override
   final dynamic Function() onExit;
 
   @override
   String toString() {
-    return 'AppBarEditState(editCount: $editCount, onExit: $onExit)';
+    return 'AppBarEditState(editCount: $editCount, isEdit: $isEdit, onExit: $onExit)';
   }
 
   @override
@@ -790,13 +848,14 @@ class _$AppBarEditStateImpl implements _AppBarEditState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AppBarEditStateImpl &&
-            (identical(other.editCount, editCount) ||
-                other.editCount == editCount) &&
+            const DeepCollectionEquality().equals(other.editCount, editCount) &&
+            (identical(other.isEdit, isEdit) || other.isEdit == isEdit) &&
             (identical(other.onExit, onExit) || other.onExit == onExit));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, editCount, onExit);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(editCount), isEdit, onExit);
 
   /// Create a copy of AppBarEditState
   /// with the given fields replaced by the non-null parameter values.
@@ -810,11 +869,14 @@ class _$AppBarEditStateImpl implements _AppBarEditState {
 
 abstract class _AppBarEditState implements AppBarEditState {
   const factory _AppBarEditState(
-      {final int editCount,
+      {final dynamic editCount,
+      final bool isEdit,
       required final dynamic Function() onExit}) = _$AppBarEditStateImpl;
 
   @override
-  int get editCount;
+  dynamic get editCount;
+  @override
+  bool get isEdit;
   @override
   dynamic Function() get onExit;
 

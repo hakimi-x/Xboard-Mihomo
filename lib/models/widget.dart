@@ -16,6 +16,7 @@ class CommonMessage with _$CommonMessage {
     required String id,
     required String text,
     @Default(Duration(seconds: 3)) Duration duration,
+    VoidCallback? onTap,
   }) = _CommonMessage;
 }
 
@@ -23,6 +24,7 @@ class CommonMessage with _$CommonMessage {
 class AppBarState with _$AppBarState {
   const factory AppBarState({
     @Default([]) List<Widget> actions,
+    Widget? leading,
     AppBarSearchState? searchState,
     AppBarEditState? editState,
   }) = _AppBarState;
@@ -32,14 +34,15 @@ class AppBarState with _$AppBarState {
 class AppBarSearchState with _$AppBarSearchState {
   const factory AppBarSearchState({
     required Function(String) onSearch,
-    @Default(null) String? query,
+    @Default(false) bool isSearch,
   }) = _AppBarSearchState;
 }
 
 @freezed
 class AppBarEditState with _$AppBarEditState {
   const factory AppBarEditState({
-    @Default(0) int editCount,
+    @Default(0) editCount,
+    @Default(false) bool isEdit,
     required Function() onExit,
   }) = _AppBarEditState;
 }

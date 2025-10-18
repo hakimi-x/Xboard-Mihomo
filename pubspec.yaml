@@ -1,7 +1,7 @@
 name: fl_clash
 description: A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free.
 publish_to: 'none'
-version: 0.8.87+2025072902
+version: 2.6.1+2025091115
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
@@ -59,16 +59,25 @@ dependencies:
     git:
       url: https://github.com/chen08209/flutter_js
       ref: master
-  #  yaml: ^3.1.3
+  yaml: ^3.1.3
   flutter_svg: ^2.1.0
   flutter_cache_manager: ^3.4.1
   crypto: ^3.0.3
-  flutter_acrylic: ^1.1.4
+  encrypt: ^5.0.1
+  pointycastle: ^3.9.1
+  http: ^1.1.0
+  flutter_html: ^3.0.0-beta.2
+  uuid: ^4.4.0
+  web_socket_channel: ^3.0.3
+  qr_flutter: ^4.1.0
+  flutter_xboard_sdk:
+    path: lib/sdk/flutter_xboard_sdk
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  #  ffigen: ^18.1.0
+  test: ^1.24.0
+  flutter_lints: ^5.0.0
+  ffigen: ^18.1.0
   json_serializable: ^6.7.1
   build_runner: ^2.4.13
   args: ^2.4.2
@@ -76,14 +85,18 @@ dev_dependencies:
   riverpod_generator: ^2.6.3
   riverpod_lint: ^2.6.3
   custom_lint: ^0.7.0
+  intl_utils: ^2.8.11
+  mockito: ^5.4.4
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/data/
     - assets/fonts/
     - assets/images/
     - assets/images/avatars/
+    - assets/config/xboard.config.yaml
   fonts:
     - family: JetBrainsMono
       fonts:
@@ -94,12 +107,12 @@ flutter:
     - family: Icons
       fonts:
         - asset: assets/fonts/Icons.ttf
-#ffigen:
-#  name: "ClashFFI"
-#  output: 'lib/clash/generated/clash_ffi.dart'
-#  headers:
-#    entry-points:
-#      - 'libclash/android/arm64-v8a/libclash.h'
+ffigen:
+  name: "ClashFFI"
+  output: 'lib/clash/generated/clash_ffi.dart'
+  headers:
+    entry-points:
+      - 'libclash/android/arm64-v8a/libclash.h'
 flutter_intl:
   enabled: true
   class_name: AppLocalizations

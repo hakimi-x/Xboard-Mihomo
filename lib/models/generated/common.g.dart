@@ -26,29 +26,15 @@ Map<String, dynamic> _$$PackageImplToJson(_$PackageImpl instance) =>
 
 _$MetadataImpl _$$MetadataImplFromJson(Map<String, dynamic> json) =>
     _$MetadataImpl(
-      uid: (json['uid'] as num?)?.toInt() ?? 0,
-      network: json['network'] as String? ?? '',
-      sourceIP: json['sourceIP'] as String? ?? '',
-      sourcePort: json['sourcePort'] as String? ?? '',
-      destinationIP: json['destinationIP'] as String? ?? '',
-      destinationPort: json['destinationPort'] as String? ?? '',
-      host: json['host'] as String? ?? '',
-      dnsMode: $enumDecodeNullable(_$DnsModeEnumMap, json['dnsMode']),
-      process: json['process'] as String? ?? '',
-      processPath: json['processPath'] as String? ?? '',
-      remoteDestination: json['remoteDestination'] as String? ?? '',
-      sourceGeoIP: (json['sourceGeoIP'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      destinationGeoIP: (json['destinationGeoIP'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      destinationIPASN: json['destinationIPASN'] as String? ?? '',
-      sourceIPASN: json['sourceIPASN'] as String? ?? '',
-      specialRules: json['specialRules'] as String? ?? '',
-      specialProxy: json['specialProxy'] as String? ?? '',
+      uid: (json['uid'] as num).toInt(),
+      network: json['network'] as String,
+      sourceIP: json['sourceIP'] as String,
+      sourcePort: json['sourcePort'] as String,
+      destinationIP: json['destinationIP'] as String,
+      destinationPort: json['destinationPort'] as String,
+      host: json['host'] as String,
+      process: json['process'] as String,
+      remoteDestination: json['remoteDestination'] as String,
     );
 
 Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
@@ -60,41 +46,22 @@ Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
       'destinationIP': instance.destinationIP,
       'destinationPort': instance.destinationPort,
       'host': instance.host,
-      'dnsMode': _$DnsModeEnumMap[instance.dnsMode],
       'process': instance.process,
-      'processPath': instance.processPath,
       'remoteDestination': instance.remoteDestination,
-      'sourceGeoIP': instance.sourceGeoIP,
-      'destinationGeoIP': instance.destinationGeoIP,
-      'destinationIPASN': instance.destinationIPASN,
-      'sourceIPASN': instance.sourceIPASN,
-      'specialRules': instance.specialRules,
-      'specialProxy': instance.specialProxy,
     };
 
-const _$DnsModeEnumMap = {
-  DnsMode.normal: 'normal',
-  DnsMode.fakeIp: 'fake-ip',
-  DnsMode.redirHost: 'redir-host',
-  DnsMode.hosts: 'hosts',
-};
-
-_$TrackerInfoImpl _$$TrackerInfoImplFromJson(Map<String, dynamic> json) =>
-    _$TrackerInfoImpl(
+_$ConnectionImpl _$$ConnectionImplFromJson(Map<String, dynamic> json) =>
+    _$ConnectionImpl(
       id: json['id'] as String,
-      upload: (json['upload'] as num?)?.toInt() ?? 0,
-      download: (json['download'] as num?)?.toInt() ?? 0,
+      upload: json['upload'] as num?,
+      download: json['download'] as num?,
       start: DateTime.parse(json['start'] as String),
       metadata: Metadata.fromJson(json['metadata'] as Map<String, dynamic>),
       chains:
           (json['chains'] as List<dynamic>).map((e) => e as String).toList(),
-      rule: json['rule'] as String,
-      rulePayload: json['rulePayload'] as String,
-      downloadSpeed: (json['downloadSpeed'] as num?)?.toInt(),
-      uploadSpeed: (json['uploadSpeed'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$TrackerInfoImplToJson(_$TrackerInfoImpl instance) =>
+Map<String, dynamic> _$$ConnectionImplToJson(_$ConnectionImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'upload': instance.upload,
@@ -102,16 +69,12 @@ Map<String, dynamic> _$$TrackerInfoImplToJson(_$TrackerInfoImpl instance) =>
       'start': instance.start.toIso8601String(),
       'metadata': instance.metadata,
       'chains': instance.chains,
-      'rule': instance.rule,
-      'rulePayload': instance.rulePayload,
-      'downloadSpeed': instance.downloadSpeed,
-      'uploadSpeed': instance.uploadSpeed,
     };
 
 _$LogImpl _$$LogImplFromJson(Map<String, dynamic> json) => _$LogImpl(
       logLevel: $enumDecodeNullable(_$LogLevelEnumMap, json['LogLevel']) ??
-          LogLevel.info,
-      payload: json['Payload'] as String? ?? '',
+          LogLevel.app,
+      payload: json['Payload'] as String? ?? "",
       dateTime: _logDateTime(json['dateTime']),
     );
 
@@ -127,6 +90,7 @@ const _$LogLevelEnumMap = {
   LogLevel.warning: 'warning',
   LogLevel.error: 'error',
   LogLevel.silent: 'silent',
+  LogLevel.app: 'app',
 };
 
 _$DAVImpl _$$DAVImplFromJson(Map<String, dynamic> json) => _$DAVImpl(
@@ -145,26 +109,14 @@ Map<String, dynamic> _$$DAVImplToJson(_$DAVImpl instance) => <String, dynamic>{
 
 _$VersionInfoImpl _$$VersionInfoImplFromJson(Map<String, dynamic> json) =>
     _$VersionInfoImpl(
-      clashName: json['clashName'] as String? ?? '',
-      version: json['version'] as String? ?? '',
+      clashName: json['clashName'] as String? ?? "",
+      version: json['version'] as String? ?? "",
     );
 
 Map<String, dynamic> _$$VersionInfoImplToJson(_$VersionInfoImpl instance) =>
     <String, dynamic>{
       'clashName': instance.clashName,
       'version': instance.version,
-    };
-
-_$TrafficImpl _$$TrafficImplFromJson(Map<String, dynamic> json) =>
-    _$TrafficImpl(
-      up: json['up'] as num? ?? 0,
-      down: json['down'] as num? ?? 0,
-    );
-
-Map<String, dynamic> _$$TrafficImplToJson(_$TrafficImpl instance) =>
-    <String, dynamic>{
-      'up': instance.up,
-      'down': instance.down,
     };
 
 _$ProxyImpl _$$ProxyImplFromJson(Map<String, dynamic> json) => _$ProxyImpl(
@@ -189,7 +141,7 @@ _$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
       now: json['now'] as String?,
       hidden: json['hidden'] as bool?,
       testUrl: json['testUrl'] as String?,
-      icon: json['icon'] as String? ?? '',
+      icon: json['icon'] as String? ?? "",
       name: json['name'] as String,
     );
 

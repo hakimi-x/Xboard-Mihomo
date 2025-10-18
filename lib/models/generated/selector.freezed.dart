@@ -1061,6 +1061,7 @@ abstract class _ProfilesSelectorState implements ProfilesSelectorState {
 /// @nodoc
 mixin _$NetworkDetectionState {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isTesting => throw _privateConstructorUsedError;
   IpInfo? get ipInfo => throw _privateConstructorUsedError;
 
   /// Create a copy of NetworkDetectionState
@@ -1076,7 +1077,7 @@ abstract class $NetworkDetectionStateCopyWith<$Res> {
           $Res Function(NetworkDetectionState) then) =
       _$NetworkDetectionStateCopyWithImpl<$Res, NetworkDetectionState>;
   @useResult
-  $Res call({bool isLoading, IpInfo? ipInfo});
+  $Res call({bool isLoading, bool isTesting, IpInfo? ipInfo});
 }
 
 /// @nodoc
@@ -1096,12 +1097,17 @@ class _$NetworkDetectionStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isTesting = null,
     Object? ipInfo = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isTesting: null == isTesting
+          ? _value.isTesting
+          : isTesting // ignore: cast_nullable_to_non_nullable
               as bool,
       ipInfo: freezed == ipInfo
           ? _value.ipInfo
@@ -1120,7 +1126,7 @@ abstract class _$$NetworkDetectionStateImplCopyWith<$Res>
       __$$NetworkDetectionStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, IpInfo? ipInfo});
+  $Res call({bool isLoading, bool isTesting, IpInfo? ipInfo});
 }
 
 /// @nodoc
@@ -1138,12 +1144,17 @@ class __$$NetworkDetectionStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isTesting = null,
     Object? ipInfo = freezed,
   }) {
     return _then(_$NetworkDetectionStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isTesting: null == isTesting
+          ? _value.isTesting
+          : isTesting // ignore: cast_nullable_to_non_nullable
               as bool,
       ipInfo: freezed == ipInfo
           ? _value.ipInfo
@@ -1157,16 +1168,18 @@ class __$$NetworkDetectionStateImplCopyWithImpl<$Res>
 
 class _$NetworkDetectionStateImpl implements _NetworkDetectionState {
   const _$NetworkDetectionStateImpl(
-      {required this.isLoading, required this.ipInfo});
+      {required this.isLoading, required this.isTesting, required this.ipInfo});
 
   @override
   final bool isLoading;
+  @override
+  final bool isTesting;
   @override
   final IpInfo? ipInfo;
 
   @override
   String toString() {
-    return 'NetworkDetectionState(isLoading: $isLoading, ipInfo: $ipInfo)';
+    return 'NetworkDetectionState(isLoading: $isLoading, isTesting: $isTesting, ipInfo: $ipInfo)';
   }
 
   @override
@@ -1176,11 +1189,13 @@ class _$NetworkDetectionStateImpl implements _NetworkDetectionState {
             other is _$NetworkDetectionStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isTesting, isTesting) ||
+                other.isTesting == isTesting) &&
             (identical(other.ipInfo, ipInfo) || other.ipInfo == ipInfo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, ipInfo);
+  int get hashCode => Object.hash(runtimeType, isLoading, isTesting, ipInfo);
 
   /// Create a copy of NetworkDetectionState
   /// with the given fields replaced by the non-null parameter values.
@@ -1195,10 +1210,13 @@ class _$NetworkDetectionStateImpl implements _NetworkDetectionState {
 abstract class _NetworkDetectionState implements NetworkDetectionState {
   const factory _NetworkDetectionState(
       {required final bool isLoading,
+      required final bool isTesting,
       required final IpInfo? ipInfo}) = _$NetworkDetectionStateImpl;
 
   @override
   bool get isLoading;
+  @override
+  bool get isTesting;
   @override
   IpInfo? get ipInfo;
 
@@ -1551,46 +1569,43 @@ abstract class _TrayState implements TrayState {
 }
 
 /// @nodoc
-mixin _$NavigationState {
+mixin _$HomeState {
   PageLabel get pageLabel => throw _privateConstructorUsedError;
   List<NavigationItem> get navigationItems =>
       throw _privateConstructorUsedError;
   ViewMode get viewMode => throw _privateConstructorUsedError;
   String? get locale => throw _privateConstructorUsedError;
-  int get currentIndex => throw _privateConstructorUsedError;
 
-  /// Create a copy of NavigationState
+  /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NavigationStateCopyWith<NavigationState> get copyWith =>
+  $HomeStateCopyWith<HomeState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NavigationStateCopyWith<$Res> {
-  factory $NavigationStateCopyWith(
-          NavigationState value, $Res Function(NavigationState) then) =
-      _$NavigationStateCopyWithImpl<$Res, NavigationState>;
+abstract class $HomeStateCopyWith<$Res> {
+  factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
+      _$HomeStateCopyWithImpl<$Res, HomeState>;
   @useResult
   $Res call(
       {PageLabel pageLabel,
       List<NavigationItem> navigationItems,
       ViewMode viewMode,
-      String? locale,
-      int currentIndex});
+      String? locale});
 }
 
 /// @nodoc
-class _$NavigationStateCopyWithImpl<$Res, $Val extends NavigationState>
-    implements $NavigationStateCopyWith<$Res> {
-  _$NavigationStateCopyWithImpl(this._value, this._then);
+class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
+    implements $HomeStateCopyWith<$Res> {
+  _$HomeStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of NavigationState
+  /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -1599,7 +1614,6 @@ class _$NavigationStateCopyWithImpl<$Res, $Val extends NavigationState>
     Object? navigationItems = null,
     Object? viewMode = null,
     Object? locale = freezed,
-    Object? currentIndex = null,
   }) {
     return _then(_value.copyWith(
       pageLabel: null == pageLabel
@@ -1618,39 +1632,34 @@ class _$NavigationStateCopyWithImpl<$Res, $Val extends NavigationState>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String?,
-      currentIndex: null == currentIndex
-          ? _value.currentIndex
-          : currentIndex // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$NavigationStateImplCopyWith<$Res>
-    implements $NavigationStateCopyWith<$Res> {
-  factory _$$NavigationStateImplCopyWith(_$NavigationStateImpl value,
-          $Res Function(_$NavigationStateImpl) then) =
-      __$$NavigationStateImplCopyWithImpl<$Res>;
+abstract class _$$HomeStateImplCopyWith<$Res>
+    implements $HomeStateCopyWith<$Res> {
+  factory _$$HomeStateImplCopyWith(
+          _$HomeStateImpl value, $Res Function(_$HomeStateImpl) then) =
+      __$$HomeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {PageLabel pageLabel,
       List<NavigationItem> navigationItems,
       ViewMode viewMode,
-      String? locale,
-      int currentIndex});
+      String? locale});
 }
 
 /// @nodoc
-class __$$NavigationStateImplCopyWithImpl<$Res>
-    extends _$NavigationStateCopyWithImpl<$Res, _$NavigationStateImpl>
-    implements _$$NavigationStateImplCopyWith<$Res> {
-  __$$NavigationStateImplCopyWithImpl(
-      _$NavigationStateImpl _value, $Res Function(_$NavigationStateImpl) _then)
+class __$$HomeStateImplCopyWithImpl<$Res>
+    extends _$HomeStateCopyWithImpl<$Res, _$HomeStateImpl>
+    implements _$$HomeStateImplCopyWith<$Res> {
+  __$$HomeStateImplCopyWithImpl(
+      _$HomeStateImpl _value, $Res Function(_$HomeStateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of NavigationState
+  /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -1659,9 +1668,8 @@ class __$$NavigationStateImplCopyWithImpl<$Res>
     Object? navigationItems = null,
     Object? viewMode = null,
     Object? locale = freezed,
-    Object? currentIndex = null,
   }) {
-    return _then(_$NavigationStateImpl(
+    return _then(_$HomeStateImpl(
       pageLabel: null == pageLabel
           ? _value.pageLabel
           : pageLabel // ignore: cast_nullable_to_non_nullable
@@ -1678,23 +1686,18 @@ class __$$NavigationStateImplCopyWithImpl<$Res>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String?,
-      currentIndex: null == currentIndex
-          ? _value.currentIndex
-          : currentIndex // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
 
 /// @nodoc
 
-class _$NavigationStateImpl implements _NavigationState {
-  const _$NavigationStateImpl(
+class _$HomeStateImpl implements _HomeState {
+  const _$HomeStateImpl(
       {required this.pageLabel,
       required final List<NavigationItem> navigationItems,
       required this.viewMode,
-      required this.locale,
-      required this.currentIndex})
+      required this.locale})
       : _navigationItems = navigationItems;
 
   @override
@@ -1711,56 +1714,45 @@ class _$NavigationStateImpl implements _NavigationState {
   final ViewMode viewMode;
   @override
   final String? locale;
-  @override
-  final int currentIndex;
 
   @override
   String toString() {
-    return 'NavigationState(pageLabel: $pageLabel, navigationItems: $navigationItems, viewMode: $viewMode, locale: $locale, currentIndex: $currentIndex)';
+    return 'HomeState(pageLabel: $pageLabel, navigationItems: $navigationItems, viewMode: $viewMode, locale: $locale)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NavigationStateImpl &&
+            other is _$HomeStateImpl &&
             (identical(other.pageLabel, pageLabel) ||
                 other.pageLabel == pageLabel) &&
             const DeepCollectionEquality()
                 .equals(other._navigationItems, _navigationItems) &&
             (identical(other.viewMode, viewMode) ||
                 other.viewMode == viewMode) &&
-            (identical(other.locale, locale) || other.locale == locale) &&
-            (identical(other.currentIndex, currentIndex) ||
-                other.currentIndex == currentIndex));
+            (identical(other.locale, locale) || other.locale == locale));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      pageLabel,
-      const DeepCollectionEquality().hash(_navigationItems),
-      viewMode,
-      locale,
-      currentIndex);
+  int get hashCode => Object.hash(runtimeType, pageLabel,
+      const DeepCollectionEquality().hash(_navigationItems), viewMode, locale);
 
-  /// Create a copy of NavigationState
+  /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NavigationStateImplCopyWith<_$NavigationStateImpl> get copyWith =>
-      __$$NavigationStateImplCopyWithImpl<_$NavigationStateImpl>(
-          this, _$identity);
+  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
+      __$$HomeStateImplCopyWithImpl<_$HomeStateImpl>(this, _$identity);
 }
 
-abstract class _NavigationState implements NavigationState {
-  const factory _NavigationState(
+abstract class _HomeState implements HomeState {
+  const factory _HomeState(
       {required final PageLabel pageLabel,
       required final List<NavigationItem> navigationItems,
       required final ViewMode viewMode,
-      required final String? locale,
-      required final int currentIndex}) = _$NavigationStateImpl;
+      required final String? locale}) = _$HomeStateImpl;
 
   @override
   PageLabel get pageLabel;
@@ -1770,14 +1762,310 @@ abstract class _NavigationState implements NavigationState {
   ViewMode get viewMode;
   @override
   String? get locale;
-  @override
-  int get currentIndex;
 
-  /// Create a copy of NavigationState
+  /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NavigationStateImplCopyWith<_$NavigationStateImpl> get copyWith =>
+  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$ProxiesSelectorState {
+  List<String> get groupNames => throw _privateConstructorUsedError;
+  String? get currentGroupName => throw _privateConstructorUsedError;
+
+  /// Create a copy of ProxiesSelectorState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ProxiesSelectorStateCopyWith<ProxiesSelectorState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ProxiesSelectorStateCopyWith<$Res> {
+  factory $ProxiesSelectorStateCopyWith(ProxiesSelectorState value,
+          $Res Function(ProxiesSelectorState) then) =
+      _$ProxiesSelectorStateCopyWithImpl<$Res, ProxiesSelectorState>;
+  @useResult
+  $Res call({List<String> groupNames, String? currentGroupName});
+}
+
+/// @nodoc
+class _$ProxiesSelectorStateCopyWithImpl<$Res,
+        $Val extends ProxiesSelectorState>
+    implements $ProxiesSelectorStateCopyWith<$Res> {
+  _$ProxiesSelectorStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of ProxiesSelectorState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? groupNames = null,
+    Object? currentGroupName = freezed,
+  }) {
+    return _then(_value.copyWith(
+      groupNames: null == groupNames
+          ? _value.groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      currentGroupName: freezed == currentGroupName
+          ? _value.currentGroupName
+          : currentGroupName // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ProxiesSelectorStateImplCopyWith<$Res>
+    implements $ProxiesSelectorStateCopyWith<$Res> {
+  factory _$$ProxiesSelectorStateImplCopyWith(_$ProxiesSelectorStateImpl value,
+          $Res Function(_$ProxiesSelectorStateImpl) then) =
+      __$$ProxiesSelectorStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<String> groupNames, String? currentGroupName});
+}
+
+/// @nodoc
+class __$$ProxiesSelectorStateImplCopyWithImpl<$Res>
+    extends _$ProxiesSelectorStateCopyWithImpl<$Res, _$ProxiesSelectorStateImpl>
+    implements _$$ProxiesSelectorStateImplCopyWith<$Res> {
+  __$$ProxiesSelectorStateImplCopyWithImpl(_$ProxiesSelectorStateImpl _value,
+      $Res Function(_$ProxiesSelectorStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ProxiesSelectorState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? groupNames = null,
+    Object? currentGroupName = freezed,
+  }) {
+    return _then(_$ProxiesSelectorStateImpl(
+      groupNames: null == groupNames
+          ? _value._groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      currentGroupName: freezed == currentGroupName
+          ? _value.currentGroupName
+          : currentGroupName // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ProxiesSelectorStateImpl implements _ProxiesSelectorState {
+  const _$ProxiesSelectorStateImpl(
+      {required final List<String> groupNames, required this.currentGroupName})
+      : _groupNames = groupNames;
+
+  final List<String> _groupNames;
+  @override
+  List<String> get groupNames {
+    if (_groupNames is EqualUnmodifiableListView) return _groupNames;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_groupNames);
+  }
+
+  @override
+  final String? currentGroupName;
+
+  @override
+  String toString() {
+    return 'ProxiesSelectorState(groupNames: $groupNames, currentGroupName: $currentGroupName)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProxiesSelectorStateImpl &&
+            const DeepCollectionEquality()
+                .equals(other._groupNames, _groupNames) &&
+            (identical(other.currentGroupName, currentGroupName) ||
+                other.currentGroupName == currentGroupName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_groupNames), currentGroupName);
+
+  /// Create a copy of ProxiesSelectorState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ProxiesSelectorStateImplCopyWith<_$ProxiesSelectorStateImpl>
+      get copyWith =>
+          __$$ProxiesSelectorStateImplCopyWithImpl<_$ProxiesSelectorStateImpl>(
+              this, _$identity);
+}
+
+abstract class _ProxiesSelectorState implements ProxiesSelectorState {
+  const factory _ProxiesSelectorState(
+      {required final List<String> groupNames,
+      required final String? currentGroupName}) = _$ProxiesSelectorStateImpl;
+
+  @override
+  List<String> get groupNames;
+  @override
+  String? get currentGroupName;
+
+  /// Create a copy of ProxiesSelectorState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ProxiesSelectorStateImplCopyWith<_$ProxiesSelectorStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$GroupNamesState {
+  List<String> get groupNames => throw _privateConstructorUsedError;
+
+  /// Create a copy of GroupNamesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $GroupNamesStateCopyWith<GroupNamesState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GroupNamesStateCopyWith<$Res> {
+  factory $GroupNamesStateCopyWith(
+          GroupNamesState value, $Res Function(GroupNamesState) then) =
+      _$GroupNamesStateCopyWithImpl<$Res, GroupNamesState>;
+  @useResult
+  $Res call({List<String> groupNames});
+}
+
+/// @nodoc
+class _$GroupNamesStateCopyWithImpl<$Res, $Val extends GroupNamesState>
+    implements $GroupNamesStateCopyWith<$Res> {
+  _$GroupNamesStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of GroupNamesState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? groupNames = null,
+  }) {
+    return _then(_value.copyWith(
+      groupNames: null == groupNames
+          ? _value.groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$GroupNamesStateImplCopyWith<$Res>
+    implements $GroupNamesStateCopyWith<$Res> {
+  factory _$$GroupNamesStateImplCopyWith(_$GroupNamesStateImpl value,
+          $Res Function(_$GroupNamesStateImpl) then) =
+      __$$GroupNamesStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<String> groupNames});
+}
+
+/// @nodoc
+class __$$GroupNamesStateImplCopyWithImpl<$Res>
+    extends _$GroupNamesStateCopyWithImpl<$Res, _$GroupNamesStateImpl>
+    implements _$$GroupNamesStateImplCopyWith<$Res> {
+  __$$GroupNamesStateImplCopyWithImpl(
+      _$GroupNamesStateImpl _value, $Res Function(_$GroupNamesStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of GroupNamesState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? groupNames = null,
+  }) {
+    return _then(_$GroupNamesStateImpl(
+      groupNames: null == groupNames
+          ? _value._groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$GroupNamesStateImpl implements _GroupNamesState {
+  const _$GroupNamesStateImpl({required final List<String> groupNames})
+      : _groupNames = groupNames;
+
+  final List<String> _groupNames;
+  @override
+  List<String> get groupNames {
+    if (_groupNames is EqualUnmodifiableListView) return _groupNames;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_groupNames);
+  }
+
+  @override
+  String toString() {
+    return 'GroupNamesState(groupNames: $groupNames)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GroupNamesStateImpl &&
+            const DeepCollectionEquality()
+                .equals(other._groupNames, _groupNames));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_groupNames));
+
+  /// Create a copy of GroupNamesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GroupNamesStateImplCopyWith<_$GroupNamesStateImpl> get copyWith =>
+      __$$GroupNamesStateImplCopyWithImpl<_$GroupNamesStateImpl>(
+          this, _$identity);
+}
+
+abstract class _GroupNamesState implements GroupNamesState {
+  const factory _GroupNamesState({required final List<String> groupNames}) =
+      _$GroupNamesStateImpl;
+
+  @override
+  List<String> get groupNames;
+
+  /// Create a copy of GroupNamesState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$GroupNamesStateImplCopyWith<_$GroupNamesStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2056,63 +2344,67 @@ abstract class _NavigationItemsState implements NavigationItemsState {
 }
 
 /// @nodoc
-mixin _$ProxiesListState {
-  List<Group> get groups => throw _privateConstructorUsedError;
+mixin _$ProxiesListSelectorState {
+  List<String> get groupNames => throw _privateConstructorUsedError;
   Set<String> get currentUnfoldSet => throw _privateConstructorUsedError;
   ProxiesSortType get proxiesSortType => throw _privateConstructorUsedError;
   ProxyCardType get proxyCardType => throw _privateConstructorUsedError;
   num get sortNum => throw _privateConstructorUsedError;
   int get columns => throw _privateConstructorUsedError;
+  String get query => throw _privateConstructorUsedError;
 
-  /// Create a copy of ProxiesListState
+  /// Create a copy of ProxiesListSelectorState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ProxiesListStateCopyWith<ProxiesListState> get copyWith =>
+  $ProxiesListSelectorStateCopyWith<ProxiesListSelectorState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProxiesListStateCopyWith<$Res> {
-  factory $ProxiesListStateCopyWith(
-          ProxiesListState value, $Res Function(ProxiesListState) then) =
-      _$ProxiesListStateCopyWithImpl<$Res, ProxiesListState>;
+abstract class $ProxiesListSelectorStateCopyWith<$Res> {
+  factory $ProxiesListSelectorStateCopyWith(ProxiesListSelectorState value,
+          $Res Function(ProxiesListSelectorState) then) =
+      _$ProxiesListSelectorStateCopyWithImpl<$Res, ProxiesListSelectorState>;
   @useResult
   $Res call(
-      {List<Group> groups,
+      {List<String> groupNames,
       Set<String> currentUnfoldSet,
       ProxiesSortType proxiesSortType,
       ProxyCardType proxyCardType,
       num sortNum,
-      int columns});
+      int columns,
+      String query});
 }
 
 /// @nodoc
-class _$ProxiesListStateCopyWithImpl<$Res, $Val extends ProxiesListState>
-    implements $ProxiesListStateCopyWith<$Res> {
-  _$ProxiesListStateCopyWithImpl(this._value, this._then);
+class _$ProxiesListSelectorStateCopyWithImpl<$Res,
+        $Val extends ProxiesListSelectorState>
+    implements $ProxiesListSelectorStateCopyWith<$Res> {
+  _$ProxiesListSelectorStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ProxiesListState
+  /// Create a copy of ProxiesListSelectorState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? groups = null,
+    Object? groupNames = null,
     Object? currentUnfoldSet = null,
     Object? proxiesSortType = null,
     Object? proxyCardType = null,
     Object? sortNum = null,
     Object? columns = null,
+    Object? query = null,
   }) {
     return _then(_value.copyWith(
-      groups: null == groups
-          ? _value.groups
-          : groups // ignore: cast_nullable_to_non_nullable
-              as List<Group>,
+      groupNames: null == groupNames
+          ? _value.groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       currentUnfoldSet: null == currentUnfoldSet
           ? _value.currentUnfoldSet
           : currentUnfoldSet // ignore: cast_nullable_to_non_nullable
@@ -2133,52 +2425,61 @@ class _$ProxiesListStateCopyWithImpl<$Res, $Val extends ProxiesListState>
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
               as int,
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$ProxiesListStateImplCopyWith<$Res>
-    implements $ProxiesListStateCopyWith<$Res> {
-  factory _$$ProxiesListStateImplCopyWith(_$ProxiesListStateImpl value,
-          $Res Function(_$ProxiesListStateImpl) then) =
-      __$$ProxiesListStateImplCopyWithImpl<$Res>;
+abstract class _$$ProxiesListSelectorStateImplCopyWith<$Res>
+    implements $ProxiesListSelectorStateCopyWith<$Res> {
+  factory _$$ProxiesListSelectorStateImplCopyWith(
+          _$ProxiesListSelectorStateImpl value,
+          $Res Function(_$ProxiesListSelectorStateImpl) then) =
+      __$$ProxiesListSelectorStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {List<Group> groups,
+      {List<String> groupNames,
       Set<String> currentUnfoldSet,
       ProxiesSortType proxiesSortType,
       ProxyCardType proxyCardType,
       num sortNum,
-      int columns});
+      int columns,
+      String query});
 }
 
 /// @nodoc
-class __$$ProxiesListStateImplCopyWithImpl<$Res>
-    extends _$ProxiesListStateCopyWithImpl<$Res, _$ProxiesListStateImpl>
-    implements _$$ProxiesListStateImplCopyWith<$Res> {
-  __$$ProxiesListStateImplCopyWithImpl(_$ProxiesListStateImpl _value,
-      $Res Function(_$ProxiesListStateImpl) _then)
+class __$$ProxiesListSelectorStateImplCopyWithImpl<$Res>
+    extends _$ProxiesListSelectorStateCopyWithImpl<$Res,
+        _$ProxiesListSelectorStateImpl>
+    implements _$$ProxiesListSelectorStateImplCopyWith<$Res> {
+  __$$ProxiesListSelectorStateImplCopyWithImpl(
+      _$ProxiesListSelectorStateImpl _value,
+      $Res Function(_$ProxiesListSelectorStateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ProxiesListState
+  /// Create a copy of ProxiesListSelectorState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? groups = null,
+    Object? groupNames = null,
     Object? currentUnfoldSet = null,
     Object? proxiesSortType = null,
     Object? proxyCardType = null,
     Object? sortNum = null,
     Object? columns = null,
+    Object? query = null,
   }) {
-    return _then(_$ProxiesListStateImpl(
-      groups: null == groups
-          ? _value._groups
-          : groups // ignore: cast_nullable_to_non_nullable
-              as List<Group>,
+    return _then(_$ProxiesListSelectorStateImpl(
+      groupNames: null == groupNames
+          ? _value._groupNames
+          : groupNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       currentUnfoldSet: null == currentUnfoldSet
           ? _value._currentUnfoldSet
           : currentUnfoldSet // ignore: cast_nullable_to_non_nullable
@@ -2199,29 +2500,34 @@ class __$$ProxiesListStateImplCopyWithImpl<$Res>
           ? _value.columns
           : columns // ignore: cast_nullable_to_non_nullable
               as int,
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _$ProxiesListStateImpl implements _ProxiesListState {
-  const _$ProxiesListStateImpl(
-      {required final List<Group> groups,
+class _$ProxiesListSelectorStateImpl implements _ProxiesListSelectorState {
+  const _$ProxiesListSelectorStateImpl(
+      {required final List<String> groupNames,
       required final Set<String> currentUnfoldSet,
       required this.proxiesSortType,
       required this.proxyCardType,
       required this.sortNum,
-      required this.columns})
-      : _groups = groups,
+      required this.columns,
+      required this.query})
+      : _groupNames = groupNames,
         _currentUnfoldSet = currentUnfoldSet;
 
-  final List<Group> _groups;
+  final List<String> _groupNames;
   @override
-  List<Group> get groups {
-    if (_groups is EqualUnmodifiableListView) return _groups;
+  List<String> get groupNames {
+    if (_groupNames is EqualUnmodifiableListView) return _groupNames;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_groups);
+    return EqualUnmodifiableListView(_groupNames);
   }
 
   final Set<String> _currentUnfoldSet;
@@ -2240,18 +2546,21 @@ class _$ProxiesListStateImpl implements _ProxiesListState {
   final num sortNum;
   @override
   final int columns;
+  @override
+  final String query;
 
   @override
   String toString() {
-    return 'ProxiesListState(groups: $groups, currentUnfoldSet: $currentUnfoldSet, proxiesSortType: $proxiesSortType, proxyCardType: $proxyCardType, sortNum: $sortNum, columns: $columns)';
+    return 'ProxiesListSelectorState(groupNames: $groupNames, currentUnfoldSet: $currentUnfoldSet, proxiesSortType: $proxiesSortType, proxyCardType: $proxyCardType, sortNum: $sortNum, columns: $columns, query: $query)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProxiesListStateImpl &&
-            const DeepCollectionEquality().equals(other._groups, _groups) &&
+            other is _$ProxiesListSelectorStateImpl &&
+            const DeepCollectionEquality()
+                .equals(other._groupNames, _groupNames) &&
             const DeepCollectionEquality()
                 .equals(other._currentUnfoldSet, _currentUnfoldSet) &&
             (identical(other.proxiesSortType, proxiesSortType) ||
@@ -2259,40 +2568,43 @@ class _$ProxiesListStateImpl implements _ProxiesListState {
             (identical(other.proxyCardType, proxyCardType) ||
                 other.proxyCardType == proxyCardType) &&
             (identical(other.sortNum, sortNum) || other.sortNum == sortNum) &&
-            (identical(other.columns, columns) || other.columns == columns));
+            (identical(other.columns, columns) || other.columns == columns) &&
+            (identical(other.query, query) || other.query == query));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_groups),
+      const DeepCollectionEquality().hash(_groupNames),
       const DeepCollectionEquality().hash(_currentUnfoldSet),
       proxiesSortType,
       proxyCardType,
       sortNum,
-      columns);
+      columns,
+      query);
 
-  /// Create a copy of ProxiesListState
+  /// Create a copy of ProxiesListSelectorState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProxiesListStateImplCopyWith<_$ProxiesListStateImpl> get copyWith =>
-      __$$ProxiesListStateImplCopyWithImpl<_$ProxiesListStateImpl>(
-          this, _$identity);
+  _$$ProxiesListSelectorStateImplCopyWith<_$ProxiesListSelectorStateImpl>
+      get copyWith => __$$ProxiesListSelectorStateImplCopyWithImpl<
+          _$ProxiesListSelectorStateImpl>(this, _$identity);
 }
 
-abstract class _ProxiesListState implements ProxiesListState {
-  const factory _ProxiesListState(
-      {required final List<Group> groups,
+abstract class _ProxiesListSelectorState implements ProxiesListSelectorState {
+  const factory _ProxiesListSelectorState(
+      {required final List<String> groupNames,
       required final Set<String> currentUnfoldSet,
       required final ProxiesSortType proxiesSortType,
       required final ProxyCardType proxyCardType,
       required final num sortNum,
-      required final int columns}) = _$ProxiesListStateImpl;
+      required final int columns,
+      required final String query}) = _$ProxiesListSelectorStateImpl;
 
   @override
-  List<Group> get groups;
+  List<String> get groupNames;
   @override
   Set<String> get currentUnfoldSet;
   @override
@@ -2303,263 +2615,15 @@ abstract class _ProxiesListState implements ProxiesListState {
   num get sortNum;
   @override
   int get columns;
+  @override
+  String get query;
 
-  /// Create a copy of ProxiesListState
+  /// Create a copy of ProxiesListSelectorState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ProxiesListStateImplCopyWith<_$ProxiesListStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$ProxiesTabState {
-  List<Group> get groups => throw _privateConstructorUsedError;
-  String? get currentGroupName => throw _privateConstructorUsedError;
-  ProxiesSortType get proxiesSortType => throw _privateConstructorUsedError;
-  ProxyCardType get proxyCardType => throw _privateConstructorUsedError;
-  num get sortNum => throw _privateConstructorUsedError;
-  int get columns => throw _privateConstructorUsedError;
-
-  /// Create a copy of ProxiesTabState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ProxiesTabStateCopyWith<ProxiesTabState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ProxiesTabStateCopyWith<$Res> {
-  factory $ProxiesTabStateCopyWith(
-          ProxiesTabState value, $Res Function(ProxiesTabState) then) =
-      _$ProxiesTabStateCopyWithImpl<$Res, ProxiesTabState>;
-  @useResult
-  $Res call(
-      {List<Group> groups,
-      String? currentGroupName,
-      ProxiesSortType proxiesSortType,
-      ProxyCardType proxyCardType,
-      num sortNum,
-      int columns});
-}
-
-/// @nodoc
-class _$ProxiesTabStateCopyWithImpl<$Res, $Val extends ProxiesTabState>
-    implements $ProxiesTabStateCopyWith<$Res> {
-  _$ProxiesTabStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ProxiesTabState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? groups = null,
-    Object? currentGroupName = freezed,
-    Object? proxiesSortType = null,
-    Object? proxyCardType = null,
-    Object? sortNum = null,
-    Object? columns = null,
-  }) {
-    return _then(_value.copyWith(
-      groups: null == groups
-          ? _value.groups
-          : groups // ignore: cast_nullable_to_non_nullable
-              as List<Group>,
-      currentGroupName: freezed == currentGroupName
-          ? _value.currentGroupName
-          : currentGroupName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      proxiesSortType: null == proxiesSortType
-          ? _value.proxiesSortType
-          : proxiesSortType // ignore: cast_nullable_to_non_nullable
-              as ProxiesSortType,
-      proxyCardType: null == proxyCardType
-          ? _value.proxyCardType
-          : proxyCardType // ignore: cast_nullable_to_non_nullable
-              as ProxyCardType,
-      sortNum: null == sortNum
-          ? _value.sortNum
-          : sortNum // ignore: cast_nullable_to_non_nullable
-              as num,
-      columns: null == columns
-          ? _value.columns
-          : columns // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$ProxiesTabStateImplCopyWith<$Res>
-    implements $ProxiesTabStateCopyWith<$Res> {
-  factory _$$ProxiesTabStateImplCopyWith(_$ProxiesTabStateImpl value,
-          $Res Function(_$ProxiesTabStateImpl) then) =
-      __$$ProxiesTabStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {List<Group> groups,
-      String? currentGroupName,
-      ProxiesSortType proxiesSortType,
-      ProxyCardType proxyCardType,
-      num sortNum,
-      int columns});
-}
-
-/// @nodoc
-class __$$ProxiesTabStateImplCopyWithImpl<$Res>
-    extends _$ProxiesTabStateCopyWithImpl<$Res, _$ProxiesTabStateImpl>
-    implements _$$ProxiesTabStateImplCopyWith<$Res> {
-  __$$ProxiesTabStateImplCopyWithImpl(
-      _$ProxiesTabStateImpl _value, $Res Function(_$ProxiesTabStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ProxiesTabState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? groups = null,
-    Object? currentGroupName = freezed,
-    Object? proxiesSortType = null,
-    Object? proxyCardType = null,
-    Object? sortNum = null,
-    Object? columns = null,
-  }) {
-    return _then(_$ProxiesTabStateImpl(
-      groups: null == groups
-          ? _value._groups
-          : groups // ignore: cast_nullable_to_non_nullable
-              as List<Group>,
-      currentGroupName: freezed == currentGroupName
-          ? _value.currentGroupName
-          : currentGroupName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      proxiesSortType: null == proxiesSortType
-          ? _value.proxiesSortType
-          : proxiesSortType // ignore: cast_nullable_to_non_nullable
-              as ProxiesSortType,
-      proxyCardType: null == proxyCardType
-          ? _value.proxyCardType
-          : proxyCardType // ignore: cast_nullable_to_non_nullable
-              as ProxyCardType,
-      sortNum: null == sortNum
-          ? _value.sortNum
-          : sortNum // ignore: cast_nullable_to_non_nullable
-              as num,
-      columns: null == columns
-          ? _value.columns
-          : columns // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$ProxiesTabStateImpl implements _ProxiesTabState {
-  const _$ProxiesTabStateImpl(
-      {required final List<Group> groups,
-      required this.currentGroupName,
-      required this.proxiesSortType,
-      required this.proxyCardType,
-      required this.sortNum,
-      required this.columns})
-      : _groups = groups;
-
-  final List<Group> _groups;
-  @override
-  List<Group> get groups {
-    if (_groups is EqualUnmodifiableListView) return _groups;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_groups);
-  }
-
-  @override
-  final String? currentGroupName;
-  @override
-  final ProxiesSortType proxiesSortType;
-  @override
-  final ProxyCardType proxyCardType;
-  @override
-  final num sortNum;
-  @override
-  final int columns;
-
-  @override
-  String toString() {
-    return 'ProxiesTabState(groups: $groups, currentGroupName: $currentGroupName, proxiesSortType: $proxiesSortType, proxyCardType: $proxyCardType, sortNum: $sortNum, columns: $columns)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ProxiesTabStateImpl &&
-            const DeepCollectionEquality().equals(other._groups, _groups) &&
-            (identical(other.currentGroupName, currentGroupName) ||
-                other.currentGroupName == currentGroupName) &&
-            (identical(other.proxiesSortType, proxiesSortType) ||
-                other.proxiesSortType == proxiesSortType) &&
-            (identical(other.proxyCardType, proxyCardType) ||
-                other.proxyCardType == proxyCardType) &&
-            (identical(other.sortNum, sortNum) || other.sortNum == sortNum) &&
-            (identical(other.columns, columns) || other.columns == columns));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_groups),
-      currentGroupName,
-      proxiesSortType,
-      proxyCardType,
-      sortNum,
-      columns);
-
-  /// Create a copy of ProxiesTabState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ProxiesTabStateImplCopyWith<_$ProxiesTabStateImpl> get copyWith =>
-      __$$ProxiesTabStateImplCopyWithImpl<_$ProxiesTabStateImpl>(
-          this, _$identity);
-}
-
-abstract class _ProxiesTabState implements ProxiesTabState {
-  const factory _ProxiesTabState(
-      {required final List<Group> groups,
-      required final String? currentGroupName,
-      required final ProxiesSortType proxiesSortType,
-      required final ProxyCardType proxyCardType,
-      required final num sortNum,
-      required final int columns}) = _$ProxiesTabStateImpl;
-
-  @override
-  List<Group> get groups;
-  @override
-  String? get currentGroupName;
-  @override
-  ProxiesSortType get proxiesSortType;
-  @override
-  ProxyCardType get proxyCardType;
-  @override
-  num get sortNum;
-  @override
-  int get columns;
-
-  /// Create a copy of ProxiesTabState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ProxiesTabStateImplCopyWith<_$ProxiesTabStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ProxiesListSelectorStateImplCopyWith<_$ProxiesListSelectorStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -47,9 +47,7 @@ extension IterableExt<T> on Iterable<T> {
 
 extension ListExt<T> on List<T> {
   void truncate(int maxLength) {
-    if (maxLength == 0) {
-      return;
-    }
+    assert(maxLength > 0);
     if (length > maxLength) {
       removeRange(0, length - maxLength);
     }
@@ -72,18 +70,10 @@ extension ListExt<T> on List<T> {
     return res;
   }
 
-  List<T> safeSublist(int start, [int? end]) {
+  List<T> safeSublist(int start) {
     if (start <= 0) return this;
     if (start > length) return [];
-    if (end != null) {
-      return sublist(start, end.clamp(start, length));
-    }
     return sublist(start);
-  }
-
-  T safeGet(int index) {
-    if (length > index) return this[index];
-    return last;
   }
 }
 
@@ -114,10 +104,10 @@ extension DoubleListExt on List<double> {
 }
 
 extension MapExt<K, V> on Map<K, V> {
-  V updateCacheValue(K key, V Function() callback) {
+  updateCacheValue(K key, V Function() callback) {
     if (this[key] == null) {
       this[key] = callback();
     }
-    return this[key]!;
+    return this[key];
   }
 }

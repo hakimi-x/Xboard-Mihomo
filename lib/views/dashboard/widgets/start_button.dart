@@ -49,7 +49,7 @@ class _StartButtonState extends ConsumerState<StartButton>
     super.dispose();
   }
 
-  void handleSwitchStart() {
+  handleSwitchStart() {
     isStart = !isStart;
     updateController();
     debouncer.call(
@@ -61,7 +61,7 @@ class _StartButtonState extends ConsumerState<StartButton>
     );
   }
 
-  void updateController() {
+  updateController() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isStart) {
         _controller.forward();
@@ -108,7 +108,7 @@ class _StartButtonState extends ConsumerState<StartButton>
               handleSwitchStart();
             },
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
                   height: 56,

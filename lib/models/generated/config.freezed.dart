@@ -981,7 +981,7 @@ class __$$WindowPropsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WindowPropsImpl implements _WindowProps {
   const _$WindowPropsImpl(
-      {this.width = 750, this.height = 600, this.top, this.left});
+      {this.width = 850, this.height = 800, this.top, this.left});
 
   factory _$WindowPropsImpl.fromJson(Map<String, dynamic> json) =>
       _$$WindowPropsImplFromJson(json);
@@ -1070,7 +1070,6 @@ mixin _$VpnProps {
   bool get systemProxy => throw _privateConstructorUsedError;
   bool get ipv6 => throw _privateConstructorUsedError;
   bool get allowBypass => throw _privateConstructorUsedError;
-  bool get dnsHijacking => throw _privateConstructorUsedError;
   AccessControl get accessControl => throw _privateConstructorUsedError;
 
   /// Serializes this VpnProps to a JSON map.
@@ -1093,7 +1092,6 @@ abstract class $VpnPropsCopyWith<$Res> {
       bool systemProxy,
       bool ipv6,
       bool allowBypass,
-      bool dnsHijacking,
       AccessControl accessControl});
 
   $AccessControlCopyWith<$Res> get accessControl;
@@ -1118,7 +1116,6 @@ class _$VpnPropsCopyWithImpl<$Res, $Val extends VpnProps>
     Object? systemProxy = null,
     Object? ipv6 = null,
     Object? allowBypass = null,
-    Object? dnsHijacking = null,
     Object? accessControl = null,
   }) {
     return _then(_value.copyWith(
@@ -1137,10 +1134,6 @@ class _$VpnPropsCopyWithImpl<$Res, $Val extends VpnProps>
       allowBypass: null == allowBypass
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
-              as bool,
-      dnsHijacking: null == dnsHijacking
-          ? _value.dnsHijacking
-          : dnsHijacking // ignore: cast_nullable_to_non_nullable
               as bool,
       accessControl: null == accessControl
           ? _value.accessControl
@@ -1173,7 +1166,6 @@ abstract class _$$VpnPropsImplCopyWith<$Res>
       bool systemProxy,
       bool ipv6,
       bool allowBypass,
-      bool dnsHijacking,
       AccessControl accessControl});
 
   @override
@@ -1197,7 +1189,6 @@ class __$$VpnPropsImplCopyWithImpl<$Res>
     Object? systemProxy = null,
     Object? ipv6 = null,
     Object? allowBypass = null,
-    Object? dnsHijacking = null,
     Object? accessControl = null,
   }) {
     return _then(_$VpnPropsImpl(
@@ -1217,10 +1208,6 @@ class __$$VpnPropsImplCopyWithImpl<$Res>
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
               as bool,
-      dnsHijacking: null == dnsHijacking
-          ? _value.dnsHijacking
-          : dnsHijacking // ignore: cast_nullable_to_non_nullable
-              as bool,
       accessControl: null == accessControl
           ? _value.accessControl
           : accessControl // ignore: cast_nullable_to_non_nullable
@@ -1237,7 +1224,6 @@ class _$VpnPropsImpl implements _VpnProps {
       this.systemProxy = true,
       this.ipv6 = false,
       this.allowBypass = true,
-      this.dnsHijacking = false,
       this.accessControl = defaultAccessControl});
 
   factory _$VpnPropsImpl.fromJson(Map<String, dynamic> json) =>
@@ -1257,14 +1243,11 @@ class _$VpnPropsImpl implements _VpnProps {
   final bool allowBypass;
   @override
   @JsonKey()
-  final bool dnsHijacking;
-  @override
-  @JsonKey()
   final AccessControl accessControl;
 
   @override
   String toString() {
-    return 'VpnProps(enable: $enable, systemProxy: $systemProxy, ipv6: $ipv6, allowBypass: $allowBypass, dnsHijacking: $dnsHijacking, accessControl: $accessControl)';
+    return 'VpnProps(enable: $enable, systemProxy: $systemProxy, ipv6: $ipv6, allowBypass: $allowBypass, accessControl: $accessControl)';
   }
 
   @override
@@ -1278,16 +1261,14 @@ class _$VpnPropsImpl implements _VpnProps {
             (identical(other.ipv6, ipv6) || other.ipv6 == ipv6) &&
             (identical(other.allowBypass, allowBypass) ||
                 other.allowBypass == allowBypass) &&
-            (identical(other.dnsHijacking, dnsHijacking) ||
-                other.dnsHijacking == dnsHijacking) &&
             (identical(other.accessControl, accessControl) ||
                 other.accessControl == accessControl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, enable, systemProxy, ipv6,
-      allowBypass, dnsHijacking, accessControl);
+  int get hashCode => Object.hash(
+      runtimeType, enable, systemProxy, ipv6, allowBypass, accessControl);
 
   /// Create a copy of VpnProps
   /// with the given fields replaced by the non-null parameter values.
@@ -1311,7 +1292,6 @@ abstract class _VpnProps implements VpnProps {
       final bool systemProxy,
       final bool ipv6,
       final bool allowBypass,
-      final bool dnsHijacking,
       final AccessControl accessControl}) = _$VpnPropsImpl;
 
   factory _VpnProps.fromJson(Map<String, dynamic> json) =
@@ -1325,8 +1305,6 @@ abstract class _VpnProps implements VpnProps {
   bool get ipv6;
   @override
   bool get allowBypass;
-  @override
-  bool get dnsHijacking;
   @override
   AccessControl get accessControl;
 
@@ -1846,8 +1824,8 @@ TextScale _$TextScaleFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TextScale {
-  bool get enable => throw _privateConstructorUsedError;
-  double get scale => throw _privateConstructorUsedError;
+  dynamic get enable => throw _privateConstructorUsedError;
+  dynamic get scale => throw _privateConstructorUsedError;
 
   /// Serializes this TextScale to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1864,7 +1842,7 @@ abstract class $TextScaleCopyWith<$Res> {
   factory $TextScaleCopyWith(TextScale value, $Res Function(TextScale) then) =
       _$TextScaleCopyWithImpl<$Res, TextScale>;
   @useResult
-  $Res call({bool enable, double scale});
+  $Res call({dynamic enable, dynamic scale});
 }
 
 /// @nodoc
@@ -1882,18 +1860,18 @@ class _$TextScaleCopyWithImpl<$Res, $Val extends TextScale>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? enable = null,
-    Object? scale = null,
+    Object? enable = freezed,
+    Object? scale = freezed,
   }) {
     return _then(_value.copyWith(
-      enable: null == enable
+      enable: freezed == enable
           ? _value.enable
           : enable // ignore: cast_nullable_to_non_nullable
-              as bool,
-      scale: null == scale
+              as dynamic,
+      scale: freezed == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
-              as double,
+              as dynamic,
     ) as $Val);
   }
 }
@@ -1906,7 +1884,7 @@ abstract class _$$TextScaleImplCopyWith<$Res>
       __$$TextScaleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool enable, double scale});
+  $Res call({dynamic enable, dynamic scale});
 }
 
 /// @nodoc
@@ -1922,18 +1900,12 @@ class __$$TextScaleImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? enable = null,
-    Object? scale = null,
+    Object? enable = freezed,
+    Object? scale = freezed,
   }) {
     return _then(_$TextScaleImpl(
-      enable: null == enable
-          ? _value.enable
-          : enable // ignore: cast_nullable_to_non_nullable
-              as bool,
-      scale: null == scale
-          ? _value.scale
-          : scale // ignore: cast_nullable_to_non_nullable
-              as double,
+      enable: freezed == enable ? _value.enable! : enable,
+      scale: freezed == scale ? _value.scale! : scale,
     ));
   }
 }
@@ -1948,10 +1920,10 @@ class _$TextScaleImpl implements _TextScale {
 
   @override
   @JsonKey()
-  final bool enable;
+  final dynamic enable;
   @override
   @JsonKey()
-  final double scale;
+  final dynamic scale;
 
   @override
   String toString() {
@@ -1963,13 +1935,16 @@ class _$TextScaleImpl implements _TextScale {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TextScaleImpl &&
-            (identical(other.enable, enable) || other.enable == enable) &&
-            (identical(other.scale, scale) || other.scale == scale));
+            const DeepCollectionEquality().equals(other.enable, enable) &&
+            const DeepCollectionEquality().equals(other.scale, scale));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, enable, scale);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(enable),
+      const DeepCollectionEquality().hash(scale));
 
   /// Create a copy of TextScale
   /// with the given fields replaced by the non-null parameter values.
@@ -1988,16 +1963,16 @@ class _$TextScaleImpl implements _TextScale {
 }
 
 abstract class _TextScale implements TextScale {
-  const factory _TextScale({final bool enable, final double scale}) =
+  const factory _TextScale({final dynamic enable, final dynamic scale}) =
       _$TextScaleImpl;
 
   factory _TextScale.fromJson(Map<String, dynamic> json) =
       _$TextScaleImpl.fromJson;
 
   @override
-  bool get enable;
+  dynamic get enable;
   @override
-  double get scale;
+  dynamic get scale;
 
   /// Create a copy of TextScale
   /// with the given fields replaced by the non-null parameter values.
@@ -2183,7 +2158,7 @@ class _$ThemePropsImpl implements _ThemeProps {
   const _$ThemePropsImpl(
       {this.primaryColor,
       final List<int> primaryColors = defaultPrimaryColors,
-      this.themeMode = ThemeMode.dark,
+      this.themeMode = ThemeMode.system,
       this.schemeVariant = DynamicSchemeVariant.content,
       this.pureBlack = false,
       this.textScale = const TextScale()})

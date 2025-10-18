@@ -11,23 +11,23 @@ part 'generated/config.freezed.dart';
 part 'generated/config.g.dart';
 
 const defaultBypassDomain = [
-  '*zhihu.com',
-  '*zhimg.com',
-  '*jd.com',
-  '100ime-iat-api.xfyun.cn',
-  '*360buyimg.com',
-  'localhost',
-  '*.local',
-  '127.*',
-  '10.*',
-  '172.16.*',
-  '172.17.*',
-  '172.18.*',
-  '172.19.*',
-  '172.2*',
-  '172.30.*',
-  '172.31.*',
-  '192.168.*'
+  "*zhihu.com",
+  "*zhimg.com",
+  "*jd.com",
+  "100ime-iat-api.xfyun.cn",
+  "*360buyimg.com",
+  "localhost",
+  "*.local",
+  "127.*",
+  "10.*",
+  "172.16.*",
+  "172.17.*",
+  "172.18.*",
+  "172.19.*",
+  "172.2*",
+  "172.30.*",
+  "172.31.*",
+  "192.168.*"
 ];
 
 const defaultAppSettingProps = AppSettingProps();
@@ -123,8 +123,8 @@ extension AccessControlExt on AccessControl {
 @freezed
 class WindowProps with _$WindowProps {
   const factory WindowProps({
-    @Default(750) double width,
-    @Default(600) double height,
+    @Default(850) double width,
+    @Default(800) double height,
     double? top,
     double? left,
   }) = _WindowProps;
@@ -140,7 +140,6 @@ class VpnProps with _$VpnProps {
     @Default(true) bool systemProxy,
     @Default(false) bool ipv6,
     @Default(true) bool allowBypass,
-    @Default(false) bool dnsHijacking,
     @Default(defaultAccessControl) AccessControl accessControl,
   }) = _VpnProps;
 
@@ -179,8 +178,8 @@ class ProxiesStyle with _$ProxiesStyle {
 @freezed
 class TextScale with _$TextScale {
   const factory TextScale({
-    @Default(false) bool enable,
-    @Default(1.0) double scale,
+    @Default(false) enable,
+    @Default(1.0) scale,
   }) = _TextScale;
 
   factory TextScale.fromJson(Map<String, Object?> json) =>
@@ -192,7 +191,7 @@ class ThemeProps with _$ThemeProps {
   const factory ThemeProps({
     int? primaryColor,
     @Default(defaultPrimaryColors) List<int> primaryColors,
-    @Default(ThemeMode.dark) ThemeMode themeMode,
+    @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(DynamicSchemeVariant.content) DynamicSchemeVariant schemeVariant,
     @Default(false) bool pureBlack,
     @Default(TextScale()) TextScale textScale,
@@ -266,12 +265,12 @@ class Config with _$Config {
 
   factory Config.compatibleFromJson(Map<String, Object?> json) {
     try {
-      final accessControlMap = json['accessControl'];
-      final isAccessControl = json['isAccessControl'];
+      final accessControlMap = json["accessControl"];
+      final isAccessControl = json["isAccessControl"];
       if (accessControlMap != null) {
-        (accessControlMap as Map)['enable'] = isAccessControl;
-        if (json['vpnProps'] != null) {
-          (json['vpnProps'] as Map)['accessControl'] = accessControlMap;
+        (accessControlMap as Map)["enable"] = isAccessControl;
+        if (json["vpnProps"] != null) {
+          (json["vpnProps"] as Map)["accessControl"] = accessControlMap;
         }
       }
     } catch (_) {}

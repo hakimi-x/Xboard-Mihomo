@@ -29,13 +29,11 @@ class ExtendProps {
   final double? maxWidth;
   final bool useSafeArea;
   final bool blur;
-  final bool forceFull;
 
   const ExtendProps({
     this.maxWidth,
     this.useSafeArea = true,
     this.blur = true,
-    this.forceFull = false,
   });
 }
 
@@ -86,7 +84,7 @@ Future<T?> showExtend<T>(
   ExtendProps props = const ExtendProps(),
 }) {
   final isMobile = globalState.appState.viewMode == ViewMode.mobile;
-  return switch (isMobile || props.forceFull) {
+  return switch (isMobile) {
     true => BaseNavigator.push(
         context,
         builder(context, SheetType.page),
@@ -150,9 +148,11 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
       final handleSize = Size(32, 4);
       return Container(
         clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -163,8 +163,10 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
                 alignment: Alignment.center,
                 height: handleSize.height,
                 width: handleSize.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(handleSize.height / 2),
+                decoration: ShapeDecoration(
+                  shape: RoundedSuperellipseBorder(
+                    borderRadius: BorderRadius.circular(handleSize.height / 2),
+                  ),
                   color: context.colorScheme.onSurfaceVariant,
                 ),
               ),

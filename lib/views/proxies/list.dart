@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:fl_clash/state.dart';
@@ -24,8 +25,12 @@ class ProxiesListView extends StatefulWidget {
 
 class _ProxiesListViewState extends State<ProxiesListView> {
   final _controller = ScrollController();
-  final _headerStateNotifier =
-      ValueNotifier<ProxiesListHeaderSelectorState?>(null);
+  final _headerStateNotifier = ValueNotifier<ProxiesListHeaderSelectorState>(
+    const ProxiesListHeaderSelectorState(
+      offset: 0,
+      currentIndex: 0,
+    ),
+  );
   List<double> _headerOffset = [];
   GroupNameProxiesMap _lastGroupNameProxiesMap = {};
 
@@ -33,25 +38,23 @@ class _ProxiesListViewState extends State<ProxiesListView> {
   void initState() {
     super.initState();
     _controller.addListener(_adjustHeader);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _adjustHeader();
-    });
   }
 
-  ProxiesListHeaderSelectorState _getProxiesListHeaderSelectorState(
-      double initOffset) {
-    final index = _headerOffset.findInterval(initOffset);
+  _adjustHeader() {
+    final offset = _controller.offset;
+    final index = _headerOffset.findInterval(offset);
     final currentIndex = index;
     double headerOffset = 0.0;
-    return ProxiesListHeaderSelectorState(
-      offset: max(headerOffset, 0),
+    if (index + 1 <= _headerOffset.length - 1) {
+      final endOffset = _headerOffset[index + 1];
+      final startOffset = endOffset - listHeaderHeight - 8;
+      if (offset > startOffset && offset < endOffset) {
+        headerOffset = offset - startOffset;
+      }
+    }
+    _headerStateNotifier.value = _headerStateNotifier.value.copyWith(
       currentIndex: currentIndex,
-    );
-  }
-
-  void _adjustHeader() {
-    _headerStateNotifier.value = _getProxiesListHeaderSelectorState(
-      !_controller.hasClients ? 0 : _controller.offset,
+      offset: max(headerOffset, 0),
     );
   }
 
@@ -71,7 +74,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
     super.dispose();
   }
 
-  void _handleChange(Set<String> currentUnfoldSet, String groupName) {
+  _handleChange(Set<String> currentUnfoldSet, String groupName) {
     final tempUnfoldSet = Set<String>.from(currentUnfoldSet);
     if (tempUnfoldSet.contains(groupName)) {
       tempUnfoldSet.remove(groupName);
@@ -107,20 +110,28 @@ class _ProxiesListViewState extends State<ProxiesListView> {
 
   List<Widget> _buildItems(
     WidgetRef ref, {
-    required List<Group> groups,
+    required List<String> groupNames,
     required int columns,
     required Set<String> currentUnfoldSet,
-    required ProxyCardType cardType,
-    required ProxiesSortType sortType,
+    required ProxyCardType type,
+    required String query,
   }) {
     final items = <Widget>[];
     final GroupNameProxiesMap groupNameProxiesMap = {};
-    for (final group in groups) {
-      final groupName = group.name;
+    for (final groupName in groupNames) {
+      final group = ref.read(
+        groupsProvider.select(
+          (state) => state.getGroup(groupName),
+        ),
+      );
+      if (group == null) {
+        continue;
+      }
       final isExpand = currentUnfoldSet.contains(groupName);
       items.addAll([
         ListHeader(
           onScrollToSelected: _scrollToGroupSelected,
+          key: Key(groupName),
           isExpand: isExpand,
           group: group,
           onChange: (String groupName) {
@@ -133,9 +144,10 @@ class _ProxiesListViewState extends State<ProxiesListView> {
       ]);
       if (isExpand) {
         final sortedProxies = globalState.appController.getSortProxies(
-          proxies: group.all,
-          sortType: sortType,
-          testUrl: group.testUrl,
+          group.all
+              .where((item) => item.name.toLowerCase().contains(query))
+              .toList(),
+          group.testUrl,
         );
         groupNameProxiesMap[groupName] = sortedProxies;
         final chunks = sortedProxies.chunks(columns);
@@ -145,7 +157,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                 (proxy) => Flexible(
                   child: ProxyCard(
                     testUrl: group.testUrl,
-                    type: cardType,
+                    type: type,
                     groupType: group.type,
                     key: ValueKey('$groupName.${proxy.name}'),
                     proxy: proxy,
@@ -187,12 +199,16 @@ class _ProxiesListViewState extends State<ProxiesListView> {
     return items;
   }
 
-  Widget _buildHeader(
+  _buildHeader(
     WidgetRef ref, {
-    required Group group,
+    required String groupName,
     required Set<String> currentUnfoldSet,
   }) {
-    final groupName = group.name;
+    final group =
+        ref.read(groupsProvider.select((state) => state.getGroup(groupName)));
+    if (group == null) {
+      return SizedBox();
+    }
     final isExpand = currentUnfoldSet.contains(groupName);
     return SizedBox(
       height: listHeaderHeight,
@@ -209,7 +225,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
     );
   }
 
-  void _scrollToGroupSelected(String groupName) {
+  _scrollToGroupSelected(String groupName) {
     if (_controller.position.maxScrollExtent == 0) {
       return;
     }
@@ -239,33 +255,30 @@ class _ProxiesListViewState extends State<ProxiesListView> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, ref, __) {
-        final state = ref.watch(proxiesListStateProvider);
+        final state = ref.watch(proxiesListSelectorStateProvider);
         ref.watch(themeSettingProvider.select((state) => state.textScale));
-        if (state.groups.isEmpty) {
+        if (state.groupNames.isEmpty) {
           return NullStatus(
             label: appLocalizations.nullTip(appLocalizations.proxies),
           );
         }
         final items = _buildItems(
           ref,
-          groups: state.groups,
+          groupNames: state.groupNames,
           currentUnfoldSet: state.currentUnfoldSet,
           columns: state.columns,
-          cardType: state.proxyCardType,
-          sortType: state.proxiesSortType,
+          type: state.proxyCardType,
+          query: state.query,
         );
         final itemsOffset = _getItemHeightList(items, state.proxyCardType);
         return CommonScrollBar(
           controller: _controller,
-          thumbVisibility: true,
-          trackVisibility: true,
           child: Stack(
             children: [
               Positioned.fill(
                 child: ScrollConfiguration(
                   behavior: HiddenBarScrollBehavior(),
                   child: ListView.builder(
-                    key: proxiesListStoreKey,
                     padding: const EdgeInsets.all(16),
                     controller: _controller,
                     itemExtentBuilder: (index, __) {
@@ -282,14 +295,11 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                 return ValueListenableBuilder(
                   valueListenable: _headerStateNotifier,
                   builder: (_, headerState, ___) {
-                    if (headerState == null) {
-                      return SizedBox();
-                    }
                     final index =
-                        headerState.currentIndex > state.groups.length - 1
+                        headerState.currentIndex > state.groupNames.length - 1
                             ? 0
                             : headerState.currentIndex;
-                    if (index < 0 || state.groups.isEmpty) {
+                    if (index < 0 || state.groupNames.isEmpty) {
                       return Container();
                     }
                     return Stack(
@@ -307,7 +317,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                             ),
                             child: _buildHeader(
                               ref,
-                              group: state.groups[index],
+                              groupName: state.groupNames[index],
                               currentUnfoldSet: state.currentUnfoldSet,
                             ),
                           ),
@@ -358,7 +368,7 @@ class _ListHeaderState extends State<ListHeader> {
 
   bool get isExpand => widget.isExpand;
 
-  Future<void> _delayTest() async {
+  _delayTest() async {
     if (isLock) return;
     isLock = true;
     await delayTest(
@@ -368,7 +378,7 @@ class _ListHeaderState extends State<ListHeader> {
     isLock = false;
   }
 
-  void _handleChange(String groupName) {
+  _handleChange(String groupName) {
     widget.onChange(groupName);
   }
 
@@ -408,8 +418,10 @@ class _ListHeaderState extends State<ListHeader> {
                       width: constraints.maxWidth,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(6.ap),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
+                      decoration: ShapeDecoration(
+                        shape: RoundedSuperellipseBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         color: context.colorScheme.secondaryContainer,
                       ),
                       clipBehavior: Clip.antiAlias,
@@ -491,7 +503,7 @@ class _ListHeaderState extends State<ListHeader> {
                                         .watch(getSelectedProxyNameProvider(
                                           groupName,
                                         ))
-                                        .getSafeValue('');
+                                        .getSafeValue("");
                                     return Row(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
@@ -504,7 +516,7 @@ class _ListHeaderState extends State<ListHeader> {
                                             flex: 1,
                                             child: EmojiText(
                                               overflow: TextOverflow.ellipsis,
-                                              ' · $proxyName',
+                                              " · $proxyName",
                                               style: context.textTheme
                                                   .labelMedium?.toLight,
                                             ),

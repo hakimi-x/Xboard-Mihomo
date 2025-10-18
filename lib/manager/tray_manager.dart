@@ -39,7 +39,7 @@ class _TrayContainerState extends ConsumerState<TrayManager> with TrayListener {
 
   @override
   void onTrayIconRightMouseDown() {
-    trayManager.popUpContextMenu(bringAppToFront: true);
+    trayManager.popUpContextMenu();
   }
 
   @override

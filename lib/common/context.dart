@@ -7,11 +7,11 @@ extension BuildContextExtension on BuildContext {
     return findAncestorStateOfType<CommonScaffoldState>();
   }
 
-  Future<void>? showNotifier(String text) {
-    return findAncestorStateOfType<MessageManagerState>()?.message(text);
+  showNotifier(String text, {VoidCallback? onTap}) {
+    return findAncestorStateOfType<MessageManagerState>()?.message(text, onTap: onTap);
   }
 
-  void showSnackBar(
+  showSnackBar(
     String message, {
     SnackBarAction? action,
   }) {
@@ -70,20 +70,5 @@ extension BuildContextExtension on BuildContext {
 
     visitor(this as Element);
     return state;
-  }
-}
-
-class BackHandleInherited extends InheritedWidget {
-  final Function handleBack;
-
-  const BackHandleInherited(
-      {super.key, required this.handleBack, required super.child});
-
-  static BackHandleInherited? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<BackHandleInherited>();
-
-  @override
-  bool updateShouldNotify(BackHandleInherited oldWidget) {
-    return handleBack != oldWidget.handleBack;
   }
 }

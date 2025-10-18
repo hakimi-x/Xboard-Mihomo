@@ -8,3 +8,6 @@
 	branch = FlClash
 
 
+[submodule "lib/sdk/flutter_xboard_sdk"]
+	path = lib/sdk/flutter_xboard_sdk
+	url = https://github.com/hakimi-x/flutter_xboard_sdk.git

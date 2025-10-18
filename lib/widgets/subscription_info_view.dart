@@ -22,8 +22,8 @@ class SubscriptionInfoView extends StatelessWidget {
     final total = subscriptionInfo!.total;
     final progress = use / total;
 
-    final useShow = use.traffic.show;
-    final totalShow = total.traffic.show;
+    final useShow = TrafficValue(value: use).show;
+    final totalShow = TrafficValue(value: total).show;
     final expireShow = subscriptionInfo?.expire != null &&
             subscriptionInfo!.expire != 0
         ? DateTime.fromMillisecondsSinceEpoch(subscriptionInfo!.expire * 1000)
@@ -41,7 +41,7 @@ class SubscriptionInfoView extends StatelessWidget {
           height: 8,
         ),
         Text(
-          '$useShow / $totalShow · $expireShow',
+          "$useShow / $totalShow · $expireShow",
           style: context.textTheme.labelMedium?.toLight,
         ),
         const SizedBox(

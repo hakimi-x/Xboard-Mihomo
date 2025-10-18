@@ -5,6 +5,8 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/widgets/widgets.dart';
+import 'package:fl_clash/xboard/features/shared/widgets/node_selector_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,17 +21,33 @@ class DashboardView extends ConsumerStatefulWidget {
   ConsumerState<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends ConsumerState<DashboardView> {
+class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
   final key = GlobalKey<SuperGridState>();
   final _isEditNotifier = ValueNotifier<bool>(false);
   final _addedWidgetsNotifier = ValueNotifier<List<GridItem>>([]);
 
   @override
+  initState() {
+    ref.listenManual(
+      isCurrentPageProvider(PageLabel.dashboard),
+      (prev, next) {
+        if (prev != next && next == true) {
+          initPageState();
+        }
+      },
+      fireImmediately: true,
+    );
+    return super.initState();
+  }
+
+  @override
   dispose() {
     _isEditNotifier.dispose();
-    _addedWidgetsNotifier.dispose();
     super.dispose();
   }
+
+  @override
+  Widget? get floatingActionButton => const StartButton();
 
   Widget _buildIsEdit(_IsEditWidgetBuilder builder) {
     return ValueListenableBuilder(
@@ -40,43 +58,42 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     );
   }
 
-  List<Widget> _buildActions() {
-    return [
-      _buildIsEdit((isEdit) {
-        return isEdit
-            ? ValueListenableBuilder(
-                valueListenable: _addedWidgetsNotifier,
-                builder: (_, addedChildren, child) {
-                  if (addedChildren.isEmpty) {
-                    return Container();
-                  }
-                  return child!;
-                },
-                child: IconButton(
-                  onPressed: () {
-                    _showAddWidgetsModal();
-                  },
-                  icon: Icon(
-                    Icons.add_circle,
-                  ),
-                ),
-              )
-            : SizedBox();
-      }),
-      IconButton(
-        icon: _buildIsEdit((isEdit) {
+  @override
+  List<Widget> get actions => [
+        _buildIsEdit((isEdit) {
           return isEdit
-              ? Icon(Icons.save)
-              : Icon(
-                  Icons.edit,
-                );
+              ? ValueListenableBuilder(
+                  valueListenable: _addedWidgetsNotifier,
+                  builder: (_, addedChildren, child) {
+                    if (addedChildren.isEmpty) {
+                      return Container();
+                    }
+                    return child!;
+                  },
+                  child: IconButton(
+                    onPressed: () {
+                      _showAddWidgetsModal();
+                    },
+                    icon: Icon(
+                      Icons.add_circle,
+                    ),
+                  ),
+                )
+              : SizedBox();
         }),
-        onPressed: _handleUpdateIsEdit,
-      ),
-    ];
-  }
+        IconButton(
+          icon: _buildIsEdit((isEdit) {
+            return isEdit
+                ? Icon(Icons.save)
+                : Icon(
+                    Icons.edit,
+                  );
+          }),
+          onPressed: _handleUpdateIsEdit,
+        ),
+      ];
 
-  void _showAddWidgetsModal() {
+  _showAddWidgetsModal() {
     showSheet(
       builder: (_, type) {
         return ValueListenableBuilder(
@@ -99,14 +116,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
     );
   }
 
-  void _handleUpdateIsEdit() {
+  _handleUpdateIsEdit() {
     if (_isEditNotifier.value == true) {
       _handleSave();
     }
     _isEditNotifier.value = !_isEditNotifier.value;
   }
 
-  void _handleSave() {
+  _handleSave() {
     final children = key.currentState?.children;
     if (children == null) {
       return;
@@ -151,53 +168,56 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
           .map((item) => item.widget)
           .toList();
     });
-    return CommonScaffold(
-      title: appLocalizations.dashboard,
-      actions: _buildActions(),
-      floatingActionButton: const StartButton(),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16).copyWith(
-              bottom: 88,
-            ),
-            child: _buildIsEdit((isEdit) {
-              return isEdit
-                  ? SystemBackBlock(
-                      child: CommonPopScope(
-                        child: SuperGrid(
-                          key: key,
-                          crossAxisCount: columns,
-                          crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing,
-                          children: [
-                            ...dashboardState.dashboardWidgets
-                                .where(
-                                  (item) => item.platforms.contains(
-                                    SupportPlatform.currentPlatform,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16).copyWith(
+            bottom: 88,
+          ),
+          child: Column(
+            children: [
+              // 添加节点选择器横条进行测试
+              const NodeSelectorBar(),
+              const SizedBox(height: 16),
+              _buildIsEdit((isEdit) {
+                return isEdit
+                    ? SystemBackBlock(
+                        child: CommonPopScope(
+                          child: SuperGrid(
+                            key: key,
+                            crossAxisCount: columns,
+                            crossAxisSpacing: spacing,
+                            mainAxisSpacing: spacing,
+                            children: [
+                              ...dashboardState.dashboardWidgets
+                                  .where(
+                                    (item) => item.platforms.contains(
+                                      SupportPlatform.currentPlatform,
+                                    ),
+                                  )
+                                  .map(
+                                    (item) => item.widget,
                                   ),
-                                )
-                                .map(
-                                  (item) => item.widget,
-                                ),
-                          ],
-                          onUpdate: () {
-                            _handleSave();
+                            ],
+                            onUpdate: () {
+                              _handleSave();
+                            },
+                          ),
+                          onPop: () {
+                            _handleUpdateIsEdit();
+                            return false;
                           },
                         ),
-                        onPop: () {
-                          _handleUpdateIsEdit();
-                          return false;
-                        },
-                      ),
-                    )
-                  : Grid(
-                      crossAxisCount: columns,
-                      crossAxisSpacing: spacing,
-                      mainAxisSpacing: spacing,
-                      children: children,
-                    );
-            })),
+                      )
+                    : Grid(
+                        crossAxisCount: columns,
+                        crossAxisSpacing: spacing,
+                        mainAxisSpacing: spacing,
+                        children: children,
+                      );
+              }),
+            ],
+          ),
       ),
     );
   }
@@ -268,7 +288,7 @@ class _AddedContainerState extends State<_AddedContainer> {
     if (oldWidget.child != widget.child) {}
   }
 
-  Future<void> _handleAdd() async {
+  _handleAdd() async {
     widget.onAdd();
   }
 

@@ -20,9 +20,9 @@ class Picker {
     final path = await FilePicker.platform.saveFile(
       fileName: fileName,
       initialDirectory: await appPath.downloadDirPath,
-      bytes: system.isAndroid ? bytes : null,
+      bytes: Platform.isAndroid ? bytes : null,
     );
-    if (!system.isAndroid && path != null) {
+    if (!Platform.isAndroid && path != null) {
       final file = await File(path).create(recursive: true);
       await file.writeAsBytes(bytes);
     }

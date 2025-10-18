@@ -24,9 +24,8 @@ val isRelease = mStoreFile.exists()
 
 android {
     namespace = "com.follow.clash"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    ndkVersion = libs.versions.ndkVersion.get()
-
+    compileSdk = 35
+    ndkVersion = "28.0.13004108"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -40,7 +39,7 @@ android {
     defaultConfig {
         applicationId = "com.follow.clash"
         minSdk = flutter.minSdkVersion
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -66,11 +65,8 @@ android {
             isMinifyEnabled = true
             isDebuggable = false
 
-            signingConfig = if (isRelease) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            // 强制使用 debug 签名，不使用 release 签名
+            signingConfig = signingConfigs.getByName("debug")
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -85,11 +81,10 @@ flutter {
 }
 
 dependencies {
-    implementation(project(":service"))
-    implementation(project(":common"))
-    implementation(libs.core.splashscreen)
-    implementation(libs.gson)
-    implementation(libs.smali.dexlib2) {
+    implementation(project(":core"))
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.android.tools.smali:smali-dexlib2:3.0.9") {
         exclude(group = "com.google.guava", module = "guava")
     }
 }

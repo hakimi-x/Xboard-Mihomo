@@ -20,11 +20,11 @@ SetupParams _$SetupParamsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SetupParams {
-  @JsonKey(name: 'config')
+  @JsonKey(name: "config")
   Map<String, dynamic> get config => throw _privateConstructorUsedError;
-  @JsonKey(name: 'selected-map')
+  @JsonKey(name: "selected-map")
   Map<String, String> get selectedMap => throw _privateConstructorUsedError;
-  @JsonKey(name: 'test-url')
+  @JsonKey(name: "test-url")
   String get testUrl => throw _privateConstructorUsedError;
 
   /// Serializes this SetupParams to a JSON map.
@@ -44,9 +44,9 @@ abstract class $SetupParamsCopyWith<$Res> {
       _$SetupParamsCopyWithImpl<$Res, SetupParams>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'config') Map<String, dynamic> config,
-      @JsonKey(name: 'selected-map') Map<String, String> selectedMap,
-      @JsonKey(name: 'test-url') String testUrl});
+      {@JsonKey(name: "config") Map<String, dynamic> config,
+      @JsonKey(name: "selected-map") Map<String, String> selectedMap,
+      @JsonKey(name: "test-url") String testUrl});
 }
 
 /// @nodoc
@@ -94,9 +94,9 @@ abstract class _$$SetupParamsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'config') Map<String, dynamic> config,
-      @JsonKey(name: 'selected-map') Map<String, String> selectedMap,
-      @JsonKey(name: 'test-url') String testUrl});
+      {@JsonKey(name: "config") Map<String, dynamic> config,
+      @JsonKey(name: "selected-map") Map<String, String> selectedMap,
+      @JsonKey(name: "test-url") String testUrl});
 }
 
 /// @nodoc
@@ -137,10 +137,10 @@ class __$$SetupParamsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SetupParamsImpl implements _SetupParams {
   const _$SetupParamsImpl(
-      {@JsonKey(name: 'config') required final Map<String, dynamic> config,
-      @JsonKey(name: 'selected-map')
+      {@JsonKey(name: "config") required final Map<String, dynamic> config,
+      @JsonKey(name: "selected-map")
       required final Map<String, String> selectedMap,
-      @JsonKey(name: 'test-url') required this.testUrl})
+      @JsonKey(name: "test-url") required this.testUrl})
       : _config = config,
         _selectedMap = selectedMap;
 
@@ -149,7 +149,7 @@ class _$SetupParamsImpl implements _SetupParams {
 
   final Map<String, dynamic> _config;
   @override
-  @JsonKey(name: 'config')
+  @JsonKey(name: "config")
   Map<String, dynamic> get config {
     if (_config is EqualUnmodifiableMapView) return _config;
     // ignore: implicit_dynamic_type
@@ -158,7 +158,7 @@ class _$SetupParamsImpl implements _SetupParams {
 
   final Map<String, String> _selectedMap;
   @override
-  @JsonKey(name: 'selected-map')
+  @JsonKey(name: "selected-map")
   Map<String, String> get selectedMap {
     if (_selectedMap is EqualUnmodifiableMapView) return _selectedMap;
     // ignore: implicit_dynamic_type
@@ -166,7 +166,7 @@ class _$SetupParamsImpl implements _SetupParams {
   }
 
   @override
-  @JsonKey(name: 'test-url')
+  @JsonKey(name: "test-url")
   final String testUrl;
 
   @override
@@ -211,23 +211,23 @@ class _$SetupParamsImpl implements _SetupParams {
 
 abstract class _SetupParams implements SetupParams {
   const factory _SetupParams(
-          {@JsonKey(name: 'config') required final Map<String, dynamic> config,
-          @JsonKey(name: 'selected-map')
+          {@JsonKey(name: "config") required final Map<String, dynamic> config,
+          @JsonKey(name: "selected-map")
           required final Map<String, String> selectedMap,
-          @JsonKey(name: 'test-url') required final String testUrl}) =
+          @JsonKey(name: "test-url") required final String testUrl}) =
       _$SetupParamsImpl;
 
   factory _SetupParams.fromJson(Map<String, dynamic> json) =
       _$SetupParamsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'config')
+  @JsonKey(name: "config")
   Map<String, dynamic> get config;
   @override
-  @JsonKey(name: 'selected-map')
+  @JsonKey(name: "selected-map")
   Map<String, String> get selectedMap;
   @override
-  @JsonKey(name: 'test-url')
+  @JsonKey(name: "test-url")
   String get testUrl;
 
   /// Create a copy of SetupParams
@@ -631,76 +631,333 @@ abstract class _UpdateParams implements UpdateParams {
       throw _privateConstructorUsedError;
 }
 
-VpnOptions _$VpnOptionsFromJson(Map<String, dynamic> json) {
-  return _VpnOptions.fromJson(json);
+CoreState _$CoreStateFromJson(Map<String, dynamic> json) {
+  return _CoreState.fromJson(json);
 }
 
 /// @nodoc
-mixin _$VpnOptions {
-  bool get enable => throw _privateConstructorUsedError;
-  int get port => throw _privateConstructorUsedError;
-  bool get ipv6 => throw _privateConstructorUsedError;
-  bool get dnsHijacking => throw _privateConstructorUsedError;
-  AccessControl get accessControl => throw _privateConstructorUsedError;
-  bool get allowBypass => throw _privateConstructorUsedError;
-  bool get systemProxy => throw _privateConstructorUsedError;
+mixin _$CoreState {
+  @JsonKey(name: "vpn-props")
+  VpnProps get vpnProps => throw _privateConstructorUsedError;
+  @JsonKey(name: "only-statistics-proxy")
+  bool get onlyStatisticsProxy => throw _privateConstructorUsedError;
+  @JsonKey(name: "current-profile-name")
+  String get currentProfileName => throw _privateConstructorUsedError;
+  @JsonKey(name: "bypass-domain")
   List<String> get bypassDomain => throw _privateConstructorUsedError;
-  List<String> get routeAddress => throw _privateConstructorUsedError;
 
-  /// Serializes this VpnOptions to a JSON map.
+  /// Serializes this CoreState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of CoreState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $VpnOptionsCopyWith<VpnOptions> get copyWith =>
+  $CoreStateCopyWith<CoreState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $VpnOptionsCopyWith<$Res> {
-  factory $VpnOptionsCopyWith(
-          VpnOptions value, $Res Function(VpnOptions) then) =
-      _$VpnOptionsCopyWithImpl<$Res, VpnOptions>;
+abstract class $CoreStateCopyWith<$Res> {
+  factory $CoreStateCopyWith(CoreState value, $Res Function(CoreState) then) =
+      _$CoreStateCopyWithImpl<$Res, CoreState>;
   @useResult
   $Res call(
-      {bool enable,
-      int port,
-      bool ipv6,
-      bool dnsHijacking,
-      AccessControl accessControl,
-      bool allowBypass,
-      bool systemProxy,
-      List<String> bypassDomain,
-      List<String> routeAddress});
+      {@JsonKey(name: "vpn-props") VpnProps vpnProps,
+      @JsonKey(name: "only-statistics-proxy") bool onlyStatisticsProxy,
+      @JsonKey(name: "current-profile-name") String currentProfileName,
+      @JsonKey(name: "bypass-domain") List<String> bypassDomain});
 
-  $AccessControlCopyWith<$Res> get accessControl;
+  $VpnPropsCopyWith<$Res> get vpnProps;
 }
 
 /// @nodoc
-class _$VpnOptionsCopyWithImpl<$Res, $Val extends VpnOptions>
-    implements $VpnOptionsCopyWith<$Res> {
-  _$VpnOptionsCopyWithImpl(this._value, this._then);
+class _$CoreStateCopyWithImpl<$Res, $Val extends CoreState>
+    implements $CoreStateCopyWith<$Res> {
+  _$CoreStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of CoreState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? vpnProps = null,
+    Object? onlyStatisticsProxy = null,
+    Object? currentProfileName = null,
+    Object? bypassDomain = null,
+  }) {
+    return _then(_value.copyWith(
+      vpnProps: null == vpnProps
+          ? _value.vpnProps
+          : vpnProps // ignore: cast_nullable_to_non_nullable
+              as VpnProps,
+      onlyStatisticsProxy: null == onlyStatisticsProxy
+          ? _value.onlyStatisticsProxy
+          : onlyStatisticsProxy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      currentProfileName: null == currentProfileName
+          ? _value.currentProfileName
+          : currentProfileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      bypassDomain: null == bypassDomain
+          ? _value.bypassDomain
+          : bypassDomain // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
+  }
+
+  /// Create a copy of CoreState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $VpnPropsCopyWith<$Res> get vpnProps {
+    return $VpnPropsCopyWith<$Res>(_value.vpnProps, (value) {
+      return _then(_value.copyWith(vpnProps: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$CoreStateImplCopyWith<$Res>
+    implements $CoreStateCopyWith<$Res> {
+  factory _$$CoreStateImplCopyWith(
+          _$CoreStateImpl value, $Res Function(_$CoreStateImpl) then) =
+      __$$CoreStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: "vpn-props") VpnProps vpnProps,
+      @JsonKey(name: "only-statistics-proxy") bool onlyStatisticsProxy,
+      @JsonKey(name: "current-profile-name") String currentProfileName,
+      @JsonKey(name: "bypass-domain") List<String> bypassDomain});
+
+  @override
+  $VpnPropsCopyWith<$Res> get vpnProps;
+}
+
+/// @nodoc
+class __$$CoreStateImplCopyWithImpl<$Res>
+    extends _$CoreStateCopyWithImpl<$Res, _$CoreStateImpl>
+    implements _$$CoreStateImplCopyWith<$Res> {
+  __$$CoreStateImplCopyWithImpl(
+      _$CoreStateImpl _value, $Res Function(_$CoreStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CoreState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? vpnProps = null,
+    Object? onlyStatisticsProxy = null,
+    Object? currentProfileName = null,
+    Object? bypassDomain = null,
+  }) {
+    return _then(_$CoreStateImpl(
+      vpnProps: null == vpnProps
+          ? _value.vpnProps
+          : vpnProps // ignore: cast_nullable_to_non_nullable
+              as VpnProps,
+      onlyStatisticsProxy: null == onlyStatisticsProxy
+          ? _value.onlyStatisticsProxy
+          : onlyStatisticsProxy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      currentProfileName: null == currentProfileName
+          ? _value.currentProfileName
+          : currentProfileName // ignore: cast_nullable_to_non_nullable
+              as String,
+      bypassDomain: null == bypassDomain
+          ? _value._bypassDomain
+          : bypassDomain // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CoreStateImpl implements _CoreState {
+  const _$CoreStateImpl(
+      {@JsonKey(name: "vpn-props") required this.vpnProps,
+      @JsonKey(name: "only-statistics-proxy") required this.onlyStatisticsProxy,
+      @JsonKey(name: "current-profile-name") required this.currentProfileName,
+      @JsonKey(name: "bypass-domain")
+      final List<String> bypassDomain = const []})
+      : _bypassDomain = bypassDomain;
+
+  factory _$CoreStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CoreStateImplFromJson(json);
+
+  @override
+  @JsonKey(name: "vpn-props")
+  final VpnProps vpnProps;
+  @override
+  @JsonKey(name: "only-statistics-proxy")
+  final bool onlyStatisticsProxy;
+  @override
+  @JsonKey(name: "current-profile-name")
+  final String currentProfileName;
+  final List<String> _bypassDomain;
+  @override
+  @JsonKey(name: "bypass-domain")
+  List<String> get bypassDomain {
+    if (_bypassDomain is EqualUnmodifiableListView) return _bypassDomain;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_bypassDomain);
+  }
+
+  @override
+  String toString() {
+    return 'CoreState(vpnProps: $vpnProps, onlyStatisticsProxy: $onlyStatisticsProxy, currentProfileName: $currentProfileName, bypassDomain: $bypassDomain)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CoreStateImpl &&
+            (identical(other.vpnProps, vpnProps) ||
+                other.vpnProps == vpnProps) &&
+            (identical(other.onlyStatisticsProxy, onlyStatisticsProxy) ||
+                other.onlyStatisticsProxy == onlyStatisticsProxy) &&
+            (identical(other.currentProfileName, currentProfileName) ||
+                other.currentProfileName == currentProfileName) &&
+            const DeepCollectionEquality()
+                .equals(other._bypassDomain, _bypassDomain));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, vpnProps, onlyStatisticsProxy,
+      currentProfileName, const DeepCollectionEquality().hash(_bypassDomain));
+
+  /// Create a copy of CoreState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CoreStateImplCopyWith<_$CoreStateImpl> get copyWith =>
+      __$$CoreStateImplCopyWithImpl<_$CoreStateImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CoreStateImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CoreState implements CoreState {
+  const factory _CoreState(
+          {@JsonKey(name: "vpn-props") required final VpnProps vpnProps,
+          @JsonKey(name: "only-statistics-proxy")
+          required final bool onlyStatisticsProxy,
+          @JsonKey(name: "current-profile-name")
+          required final String currentProfileName,
+          @JsonKey(name: "bypass-domain") final List<String> bypassDomain}) =
+      _$CoreStateImpl;
+
+  factory _CoreState.fromJson(Map<String, dynamic> json) =
+      _$CoreStateImpl.fromJson;
+
+  @override
+  @JsonKey(name: "vpn-props")
+  VpnProps get vpnProps;
+  @override
+  @JsonKey(name: "only-statistics-proxy")
+  bool get onlyStatisticsProxy;
+  @override
+  @JsonKey(name: "current-profile-name")
+  String get currentProfileName;
+  @override
+  @JsonKey(name: "bypass-domain")
+  List<String> get bypassDomain;
+
+  /// Create a copy of CoreState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CoreStateImplCopyWith<_$CoreStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+AndroidVpnOptions _$AndroidVpnOptionsFromJson(Map<String, dynamic> json) {
+  return _AndroidVpnOptions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AndroidVpnOptions {
+  bool get enable => throw _privateConstructorUsedError;
+  int get port => throw _privateConstructorUsedError;
+  AccessControl? get accessControl => throw _privateConstructorUsedError;
+  bool get allowBypass => throw _privateConstructorUsedError;
+  bool get systemProxy => throw _privateConstructorUsedError;
+  List<String> get bypassDomain => throw _privateConstructorUsedError;
+  String get ipv4Address => throw _privateConstructorUsedError;
+  String get ipv6Address => throw _privateConstructorUsedError;
+  List<String> get routeAddress => throw _privateConstructorUsedError;
+  String get dnsServerAddress => throw _privateConstructorUsedError;
+
+  /// Serializes this AndroidVpnOptions to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of AndroidVpnOptions
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AndroidVpnOptionsCopyWith<AndroidVpnOptions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AndroidVpnOptionsCopyWith<$Res> {
+  factory $AndroidVpnOptionsCopyWith(
+          AndroidVpnOptions value, $Res Function(AndroidVpnOptions) then) =
+      _$AndroidVpnOptionsCopyWithImpl<$Res, AndroidVpnOptions>;
+  @useResult
+  $Res call(
+      {bool enable,
+      int port,
+      AccessControl? accessControl,
+      bool allowBypass,
+      bool systemProxy,
+      List<String> bypassDomain,
+      String ipv4Address,
+      String ipv6Address,
+      List<String> routeAddress,
+      String dnsServerAddress});
+
+  $AccessControlCopyWith<$Res>? get accessControl;
+}
+
+/// @nodoc
+class _$AndroidVpnOptionsCopyWithImpl<$Res, $Val extends AndroidVpnOptions>
+    implements $AndroidVpnOptionsCopyWith<$Res> {
+  _$AndroidVpnOptionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AndroidVpnOptions
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? enable = null,
     Object? port = null,
-    Object? ipv6 = null,
-    Object? dnsHijacking = null,
-    Object? accessControl = null,
+    Object? accessControl = freezed,
     Object? allowBypass = null,
     Object? systemProxy = null,
     Object? bypassDomain = null,
+    Object? ipv4Address = null,
+    Object? ipv6Address = null,
     Object? routeAddress = null,
+    Object? dnsServerAddress = null,
   }) {
     return _then(_value.copyWith(
       enable: null == enable
@@ -711,18 +968,10 @@ class _$VpnOptionsCopyWithImpl<$Res, $Val extends VpnOptions>
           ? _value.port
           : port // ignore: cast_nullable_to_non_nullable
               as int,
-      ipv6: null == ipv6
-          ? _value.ipv6
-          : ipv6 // ignore: cast_nullable_to_non_nullable
-              as bool,
-      dnsHijacking: null == dnsHijacking
-          ? _value.dnsHijacking
-          : dnsHijacking // ignore: cast_nullable_to_non_nullable
-              as bool,
-      accessControl: null == accessControl
+      accessControl: freezed == accessControl
           ? _value.accessControl
           : accessControl // ignore: cast_nullable_to_non_nullable
-              as AccessControl,
+              as AccessControl?,
       allowBypass: null == allowBypass
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
@@ -735,71 +984,89 @@ class _$VpnOptionsCopyWithImpl<$Res, $Val extends VpnOptions>
           ? _value.bypassDomain
           : bypassDomain // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      ipv4Address: null == ipv4Address
+          ? _value.ipv4Address
+          : ipv4Address // ignore: cast_nullable_to_non_nullable
+              as String,
+      ipv6Address: null == ipv6Address
+          ? _value.ipv6Address
+          : ipv6Address // ignore: cast_nullable_to_non_nullable
+              as String,
       routeAddress: null == routeAddress
           ? _value.routeAddress
           : routeAddress // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      dnsServerAddress: null == dnsServerAddress
+          ? _value.dnsServerAddress
+          : dnsServerAddress // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of AndroidVpnOptions
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $AccessControlCopyWith<$Res> get accessControl {
-    return $AccessControlCopyWith<$Res>(_value.accessControl, (value) {
+  $AccessControlCopyWith<$Res>? get accessControl {
+    if (_value.accessControl == null) {
+      return null;
+    }
+
+    return $AccessControlCopyWith<$Res>(_value.accessControl!, (value) {
       return _then(_value.copyWith(accessControl: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$VpnOptionsImplCopyWith<$Res>
-    implements $VpnOptionsCopyWith<$Res> {
-  factory _$$VpnOptionsImplCopyWith(
-          _$VpnOptionsImpl value, $Res Function(_$VpnOptionsImpl) then) =
-      __$$VpnOptionsImplCopyWithImpl<$Res>;
+abstract class _$$AndroidVpnOptionsImplCopyWith<$Res>
+    implements $AndroidVpnOptionsCopyWith<$Res> {
+  factory _$$AndroidVpnOptionsImplCopyWith(_$AndroidVpnOptionsImpl value,
+          $Res Function(_$AndroidVpnOptionsImpl) then) =
+      __$$AndroidVpnOptionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {bool enable,
       int port,
-      bool ipv6,
-      bool dnsHijacking,
-      AccessControl accessControl,
+      AccessControl? accessControl,
       bool allowBypass,
       bool systemProxy,
       List<String> bypassDomain,
-      List<String> routeAddress});
+      String ipv4Address,
+      String ipv6Address,
+      List<String> routeAddress,
+      String dnsServerAddress});
 
   @override
-  $AccessControlCopyWith<$Res> get accessControl;
+  $AccessControlCopyWith<$Res>? get accessControl;
 }
 
 /// @nodoc
-class __$$VpnOptionsImplCopyWithImpl<$Res>
-    extends _$VpnOptionsCopyWithImpl<$Res, _$VpnOptionsImpl>
-    implements _$$VpnOptionsImplCopyWith<$Res> {
-  __$$VpnOptionsImplCopyWithImpl(
-      _$VpnOptionsImpl _value, $Res Function(_$VpnOptionsImpl) _then)
+class __$$AndroidVpnOptionsImplCopyWithImpl<$Res>
+    extends _$AndroidVpnOptionsCopyWithImpl<$Res, _$AndroidVpnOptionsImpl>
+    implements _$$AndroidVpnOptionsImplCopyWith<$Res> {
+  __$$AndroidVpnOptionsImplCopyWithImpl(_$AndroidVpnOptionsImpl _value,
+      $Res Function(_$AndroidVpnOptionsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of AndroidVpnOptions
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? enable = null,
     Object? port = null,
-    Object? ipv6 = null,
-    Object? dnsHijacking = null,
-    Object? accessControl = null,
+    Object? accessControl = freezed,
     Object? allowBypass = null,
     Object? systemProxy = null,
     Object? bypassDomain = null,
+    Object? ipv4Address = null,
+    Object? ipv6Address = null,
     Object? routeAddress = null,
+    Object? dnsServerAddress = null,
   }) {
-    return _then(_$VpnOptionsImpl(
+    return _then(_$AndroidVpnOptionsImpl(
       enable: null == enable
           ? _value.enable
           : enable // ignore: cast_nullable_to_non_nullable
@@ -808,18 +1075,10 @@ class __$$VpnOptionsImplCopyWithImpl<$Res>
           ? _value.port
           : port // ignore: cast_nullable_to_non_nullable
               as int,
-      ipv6: null == ipv6
-          ? _value.ipv6
-          : ipv6 // ignore: cast_nullable_to_non_nullable
-              as bool,
-      dnsHijacking: null == dnsHijacking
-          ? _value.dnsHijacking
-          : dnsHijacking // ignore: cast_nullable_to_non_nullable
-              as bool,
-      accessControl: null == accessControl
+      accessControl: freezed == accessControl
           ? _value.accessControl
           : accessControl // ignore: cast_nullable_to_non_nullable
-              as AccessControl,
+              as AccessControl?,
       allowBypass: null == allowBypass
           ? _value.allowBypass
           : allowBypass // ignore: cast_nullable_to_non_nullable
@@ -832,43 +1091,52 @@ class __$$VpnOptionsImplCopyWithImpl<$Res>
           ? _value._bypassDomain
           : bypassDomain // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      ipv4Address: null == ipv4Address
+          ? _value.ipv4Address
+          : ipv4Address // ignore: cast_nullable_to_non_nullable
+              as String,
+      ipv6Address: null == ipv6Address
+          ? _value.ipv6Address
+          : ipv6Address // ignore: cast_nullable_to_non_nullable
+              as String,
       routeAddress: null == routeAddress
           ? _value._routeAddress
           : routeAddress // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      dnsServerAddress: null == dnsServerAddress
+          ? _value.dnsServerAddress
+          : dnsServerAddress // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$VpnOptionsImpl implements _VpnOptions {
-  const _$VpnOptionsImpl(
+class _$AndroidVpnOptionsImpl implements _AndroidVpnOptions {
+  const _$AndroidVpnOptionsImpl(
       {required this.enable,
       required this.port,
-      required this.ipv6,
-      required this.dnsHijacking,
       required this.accessControl,
       required this.allowBypass,
       required this.systemProxy,
       required final List<String> bypassDomain,
-      final List<String> routeAddress = const []})
+      required this.ipv4Address,
+      required this.ipv6Address,
+      final List<String> routeAddress = const [],
+      required this.dnsServerAddress})
       : _bypassDomain = bypassDomain,
         _routeAddress = routeAddress;
 
-  factory _$VpnOptionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$VpnOptionsImplFromJson(json);
+  factory _$AndroidVpnOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AndroidVpnOptionsImplFromJson(json);
 
   @override
   final bool enable;
   @override
   final int port;
   @override
-  final bool ipv6;
-  @override
-  final bool dnsHijacking;
-  @override
-  final AccessControl accessControl;
+  final AccessControl? accessControl;
   @override
   final bool allowBypass;
   @override
@@ -881,6 +1149,10 @@ class _$VpnOptionsImpl implements _VpnOptions {
     return EqualUnmodifiableListView(_bypassDomain);
   }
 
+  @override
+  final String ipv4Address;
+  @override
+  final String ipv6Address;
   final List<String> _routeAddress;
   @override
   @JsonKey()
@@ -891,20 +1163,20 @@ class _$VpnOptionsImpl implements _VpnOptions {
   }
 
   @override
+  final String dnsServerAddress;
+
+  @override
   String toString() {
-    return 'VpnOptions(enable: $enable, port: $port, ipv6: $ipv6, dnsHijacking: $dnsHijacking, accessControl: $accessControl, allowBypass: $allowBypass, systemProxy: $systemProxy, bypassDomain: $bypassDomain, routeAddress: $routeAddress)';
+    return 'AndroidVpnOptions(enable: $enable, port: $port, accessControl: $accessControl, allowBypass: $allowBypass, systemProxy: $systemProxy, bypassDomain: $bypassDomain, ipv4Address: $ipv4Address, ipv6Address: $ipv6Address, routeAddress: $routeAddress, dnsServerAddress: $dnsServerAddress)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$VpnOptionsImpl &&
+            other is _$AndroidVpnOptionsImpl &&
             (identical(other.enable, enable) || other.enable == enable) &&
             (identical(other.port, port) || other.port == port) &&
-            (identical(other.ipv6, ipv6) || other.ipv6 == ipv6) &&
-            (identical(other.dnsHijacking, dnsHijacking) ||
-                other.dnsHijacking == dnsHijacking) &&
             (identical(other.accessControl, accessControl) ||
                 other.accessControl == accessControl) &&
             (identical(other.allowBypass, allowBypass) ||
@@ -913,8 +1185,14 @@ class _$VpnOptionsImpl implements _VpnOptions {
                 other.systemProxy == systemProxy) &&
             const DeepCollectionEquality()
                 .equals(other._bypassDomain, _bypassDomain) &&
+            (identical(other.ipv4Address, ipv4Address) ||
+                other.ipv4Address == ipv4Address) &&
+            (identical(other.ipv6Address, ipv6Address) ||
+                other.ipv6Address == ipv6Address) &&
             const DeepCollectionEquality()
-                .equals(other._routeAddress, _routeAddress));
+                .equals(other._routeAddress, _routeAddress) &&
+            (identical(other.dnsServerAddress, dnsServerAddress) ||
+                other.dnsServerAddress == dnsServerAddress));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -923,55 +1201,54 @@ class _$VpnOptionsImpl implements _VpnOptions {
       runtimeType,
       enable,
       port,
-      ipv6,
-      dnsHijacking,
       accessControl,
       allowBypass,
       systemProxy,
       const DeepCollectionEquality().hash(_bypassDomain),
-      const DeepCollectionEquality().hash(_routeAddress));
+      ipv4Address,
+      ipv6Address,
+      const DeepCollectionEquality().hash(_routeAddress),
+      dnsServerAddress);
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of AndroidVpnOptions
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$VpnOptionsImplCopyWith<_$VpnOptionsImpl> get copyWith =>
-      __$$VpnOptionsImplCopyWithImpl<_$VpnOptionsImpl>(this, _$identity);
+  _$$AndroidVpnOptionsImplCopyWith<_$AndroidVpnOptionsImpl> get copyWith =>
+      __$$AndroidVpnOptionsImplCopyWithImpl<_$AndroidVpnOptionsImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VpnOptionsImplToJson(
+    return _$$AndroidVpnOptionsImplToJson(
       this,
     );
   }
 }
 
-abstract class _VpnOptions implements VpnOptions {
-  const factory _VpnOptions(
+abstract class _AndroidVpnOptions implements AndroidVpnOptions {
+  const factory _AndroidVpnOptions(
       {required final bool enable,
       required final int port,
-      required final bool ipv6,
-      required final bool dnsHijacking,
-      required final AccessControl accessControl,
+      required final AccessControl? accessControl,
       required final bool allowBypass,
       required final bool systemProxy,
       required final List<String> bypassDomain,
-      final List<String> routeAddress}) = _$VpnOptionsImpl;
+      required final String ipv4Address,
+      required final String ipv6Address,
+      final List<String> routeAddress,
+      required final String dnsServerAddress}) = _$AndroidVpnOptionsImpl;
 
-  factory _VpnOptions.fromJson(Map<String, dynamic> json) =
-      _$VpnOptionsImpl.fromJson;
+  factory _AndroidVpnOptions.fromJson(Map<String, dynamic> json) =
+      _$AndroidVpnOptionsImpl.fromJson;
 
   @override
   bool get enable;
   @override
   int get port;
   @override
-  bool get ipv6;
-  @override
-  bool get dnsHijacking;
-  @override
-  AccessControl get accessControl;
+  AccessControl? get accessControl;
   @override
   bool get allowBypass;
   @override
@@ -979,13 +1256,19 @@ abstract class _VpnOptions implements VpnOptions {
   @override
   List<String> get bypassDomain;
   @override
+  String get ipv4Address;
+  @override
+  String get ipv6Address;
+  @override
   List<String> get routeAddress;
+  @override
+  String get dnsServerAddress;
 
-  /// Create a copy of VpnOptions
+  /// Create a copy of AndroidVpnOptions
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$VpnOptionsImplCopyWith<_$VpnOptionsImpl> get copyWith =>
+  _$$AndroidVpnOptionsImplCopyWith<_$AndroidVpnOptionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -995,7 +1278,7 @@ InitParams _$InitParamsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$InitParams {
-  @JsonKey(name: 'home-dir')
+  @JsonKey(name: "home-dir")
   String get homeDir => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
 
@@ -1015,7 +1298,7 @@ abstract class $InitParamsCopyWith<$Res> {
           InitParams value, $Res Function(InitParams) then) =
       _$InitParamsCopyWithImpl<$Res, InitParams>;
   @useResult
-  $Res call({@JsonKey(name: 'home-dir') String homeDir, int version});
+  $Res call({@JsonKey(name: "home-dir") String homeDir, int version});
 }
 
 /// @nodoc
@@ -1057,7 +1340,7 @@ abstract class _$$InitParamsImplCopyWith<$Res>
       __$$InitParamsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: 'home-dir') String homeDir, int version});
+  $Res call({@JsonKey(name: "home-dir") String homeDir, int version});
 }
 
 /// @nodoc
@@ -1093,14 +1376,14 @@ class __$$InitParamsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$InitParamsImpl implements _InitParams {
   const _$InitParamsImpl(
-      {@JsonKey(name: 'home-dir') required this.homeDir,
+      {@JsonKey(name: "home-dir") required this.homeDir,
       required this.version});
 
   factory _$InitParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$InitParamsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'home-dir')
+  @JsonKey(name: "home-dir")
   final String homeDir;
   @override
   final int version;
@@ -1141,14 +1424,14 @@ class _$InitParamsImpl implements _InitParams {
 
 abstract class _InitParams implements InitParams {
   const factory _InitParams(
-      {@JsonKey(name: 'home-dir') required final String homeDir,
+      {@JsonKey(name: "home-dir") required final String homeDir,
       required final int version}) = _$InitParamsImpl;
 
   factory _InitParams.fromJson(Map<String, dynamic> json) =
       _$InitParamsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'home-dir')
+  @JsonKey(name: "home-dir")
   String get homeDir;
   @override
   int get version;
@@ -1167,9 +1450,9 @@ ChangeProxyParams _$ChangeProxyParamsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChangeProxyParams {
-  @JsonKey(name: 'group-name')
+  @JsonKey(name: "group-name")
   String get groupName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'proxy-name')
+  @JsonKey(name: "proxy-name")
   String get proxyName => throw _privateConstructorUsedError;
 
   /// Serializes this ChangeProxyParams to a JSON map.
@@ -1189,8 +1472,8 @@ abstract class $ChangeProxyParamsCopyWith<$Res> {
       _$ChangeProxyParamsCopyWithImpl<$Res, ChangeProxyParams>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'group-name') String groupName,
-      @JsonKey(name: 'proxy-name') String proxyName});
+      {@JsonKey(name: "group-name") String groupName,
+      @JsonKey(name: "proxy-name") String proxyName});
 }
 
 /// @nodoc
@@ -1233,8 +1516,8 @@ abstract class _$$ChangeProxyParamsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'group-name') String groupName,
-      @JsonKey(name: 'proxy-name') String proxyName});
+      {@JsonKey(name: "group-name") String groupName,
+      @JsonKey(name: "proxy-name") String proxyName});
 }
 
 /// @nodoc
@@ -1270,17 +1553,17 @@ class __$$ChangeProxyParamsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ChangeProxyParamsImpl implements _ChangeProxyParams {
   const _$ChangeProxyParamsImpl(
-      {@JsonKey(name: 'group-name') required this.groupName,
-      @JsonKey(name: 'proxy-name') required this.proxyName});
+      {@JsonKey(name: "group-name") required this.groupName,
+      @JsonKey(name: "proxy-name") required this.proxyName});
 
   factory _$ChangeProxyParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChangeProxyParamsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'group-name')
+  @JsonKey(name: "group-name")
   final String groupName;
   @override
-  @JsonKey(name: 'proxy-name')
+  @JsonKey(name: "proxy-name")
   final String proxyName;
 
   @override
@@ -1322,18 +1605,18 @@ class _$ChangeProxyParamsImpl implements _ChangeProxyParams {
 
 abstract class _ChangeProxyParams implements ChangeProxyParams {
   const factory _ChangeProxyParams(
-          {@JsonKey(name: 'group-name') required final String groupName,
-          @JsonKey(name: 'proxy-name') required final String proxyName}) =
+          {@JsonKey(name: "group-name") required final String groupName,
+          @JsonKey(name: "proxy-name") required final String proxyName}) =
       _$ChangeProxyParamsImpl;
 
   factory _ChangeProxyParams.fromJson(Map<String, dynamic> json) =
       _$ChangeProxyParamsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'group-name')
+  @JsonKey(name: "group-name")
   String get groupName;
   @override
-  @JsonKey(name: 'proxy-name')
+  @JsonKey(name: "proxy-name")
   String get proxyName;
 
   /// Create a copy of ChangeProxyParams
@@ -1350,9 +1633,9 @@ UpdateGeoDataParams _$UpdateGeoDataParamsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UpdateGeoDataParams {
-  @JsonKey(name: 'geo-type')
+  @JsonKey(name: "geo-type")
   String get geoType => throw _privateConstructorUsedError;
-  @JsonKey(name: 'geo-name')
+  @JsonKey(name: "geo-name")
   String get geoName => throw _privateConstructorUsedError;
 
   /// Serializes this UpdateGeoDataParams to a JSON map.
@@ -1372,8 +1655,8 @@ abstract class $UpdateGeoDataParamsCopyWith<$Res> {
       _$UpdateGeoDataParamsCopyWithImpl<$Res, UpdateGeoDataParams>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'geo-type') String geoType,
-      @JsonKey(name: 'geo-name') String geoName});
+      {@JsonKey(name: "geo-type") String geoType,
+      @JsonKey(name: "geo-name") String geoName});
 }
 
 /// @nodoc
@@ -1416,8 +1699,8 @@ abstract class _$$UpdateGeoDataParamsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'geo-type') String geoType,
-      @JsonKey(name: 'geo-name') String geoName});
+      {@JsonKey(name: "geo-type") String geoType,
+      @JsonKey(name: "geo-name") String geoName});
 }
 
 /// @nodoc
@@ -1453,17 +1736,17 @@ class __$$UpdateGeoDataParamsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UpdateGeoDataParamsImpl implements _UpdateGeoDataParams {
   const _$UpdateGeoDataParamsImpl(
-      {@JsonKey(name: 'geo-type') required this.geoType,
-      @JsonKey(name: 'geo-name') required this.geoName});
+      {@JsonKey(name: "geo-type") required this.geoType,
+      @JsonKey(name: "geo-name") required this.geoName});
 
   factory _$UpdateGeoDataParamsImpl.fromJson(Map<String, dynamic> json) =>
       _$$UpdateGeoDataParamsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'geo-type')
+  @JsonKey(name: "geo-type")
   final String geoType;
   @override
-  @JsonKey(name: 'geo-name')
+  @JsonKey(name: "geo-name")
   final String geoName;
 
   @override
@@ -1503,18 +1786,18 @@ class _$UpdateGeoDataParamsImpl implements _UpdateGeoDataParams {
 
 abstract class _UpdateGeoDataParams implements UpdateGeoDataParams {
   const factory _UpdateGeoDataParams(
-          {@JsonKey(name: 'geo-type') required final String geoType,
-          @JsonKey(name: 'geo-name') required final String geoName}) =
+          {@JsonKey(name: "geo-type") required final String geoType,
+          @JsonKey(name: "geo-name") required final String geoName}) =
       _$UpdateGeoDataParamsImpl;
 
   factory _UpdateGeoDataParams.fromJson(Map<String, dynamic> json) =
       _$UpdateGeoDataParamsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'geo-type')
+  @JsonKey(name: "geo-type")
   String get geoType;
   @override
-  @JsonKey(name: 'geo-name')
+  @JsonKey(name: "geo-name")
   String get geoName;
 
   /// Create a copy of UpdateGeoDataParams
@@ -2206,13 +2489,13 @@ ProviderSubscriptionInfo _$ProviderSubscriptionInfoFromJson(
 
 /// @nodoc
 mixin _$ProviderSubscriptionInfo {
-  @JsonKey(name: 'UPLOAD')
+  @JsonKey(name: "UPLOAD")
   int get upload => throw _privateConstructorUsedError;
-  @JsonKey(name: 'DOWNLOAD')
+  @JsonKey(name: "DOWNLOAD")
   int get download => throw _privateConstructorUsedError;
-  @JsonKey(name: 'TOTAL')
+  @JsonKey(name: "TOTAL")
   int get total => throw _privateConstructorUsedError;
-  @JsonKey(name: 'EXPIRE')
+  @JsonKey(name: "EXPIRE")
   int get expire => throw _privateConstructorUsedError;
 
   /// Serializes this ProviderSubscriptionInfo to a JSON map.
@@ -2232,10 +2515,10 @@ abstract class $ProviderSubscriptionInfoCopyWith<$Res> {
       _$ProviderSubscriptionInfoCopyWithImpl<$Res, ProviderSubscriptionInfo>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'UPLOAD') int upload,
-      @JsonKey(name: 'DOWNLOAD') int download,
-      @JsonKey(name: 'TOTAL') int total,
-      @JsonKey(name: 'EXPIRE') int expire});
+      {@JsonKey(name: "UPLOAD") int upload,
+      @JsonKey(name: "DOWNLOAD") int download,
+      @JsonKey(name: "TOTAL") int total,
+      @JsonKey(name: "EXPIRE") int expire});
 }
 
 /// @nodoc
@@ -2290,10 +2573,10 @@ abstract class _$$ProviderSubscriptionInfoImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'UPLOAD') int upload,
-      @JsonKey(name: 'DOWNLOAD') int download,
-      @JsonKey(name: 'TOTAL') int total,
-      @JsonKey(name: 'EXPIRE') int expire});
+      {@JsonKey(name: "UPLOAD") int upload,
+      @JsonKey(name: "DOWNLOAD") int download,
+      @JsonKey(name: "TOTAL") int total,
+      @JsonKey(name: "EXPIRE") int expire});
 }
 
 /// @nodoc
@@ -2341,25 +2624,25 @@ class __$$ProviderSubscriptionInfoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProviderSubscriptionInfoImpl implements _ProviderSubscriptionInfo {
   const _$ProviderSubscriptionInfoImpl(
-      {@JsonKey(name: 'UPLOAD') this.upload = 0,
-      @JsonKey(name: 'DOWNLOAD') this.download = 0,
-      @JsonKey(name: 'TOTAL') this.total = 0,
-      @JsonKey(name: 'EXPIRE') this.expire = 0});
+      {@JsonKey(name: "UPLOAD") this.upload = 0,
+      @JsonKey(name: "DOWNLOAD") this.download = 0,
+      @JsonKey(name: "TOTAL") this.total = 0,
+      @JsonKey(name: "EXPIRE") this.expire = 0});
 
   factory _$ProviderSubscriptionInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProviderSubscriptionInfoImplFromJson(json);
 
   @override
-  @JsonKey(name: 'UPLOAD')
+  @JsonKey(name: "UPLOAD")
   final int upload;
   @override
-  @JsonKey(name: 'DOWNLOAD')
+  @JsonKey(name: "DOWNLOAD")
   final int download;
   @override
-  @JsonKey(name: 'TOTAL')
+  @JsonKey(name: "TOTAL")
   final int total;
   @override
-  @JsonKey(name: 'EXPIRE')
+  @JsonKey(name: "EXPIRE")
   final int expire;
 
   @override
@@ -2402,26 +2685,26 @@ class _$ProviderSubscriptionInfoImpl implements _ProviderSubscriptionInfo {
 
 abstract class _ProviderSubscriptionInfo implements ProviderSubscriptionInfo {
   const factory _ProviderSubscriptionInfo(
-          {@JsonKey(name: 'UPLOAD') final int upload,
-          @JsonKey(name: 'DOWNLOAD') final int download,
-          @JsonKey(name: 'TOTAL') final int total,
-          @JsonKey(name: 'EXPIRE') final int expire}) =
+          {@JsonKey(name: "UPLOAD") final int upload,
+          @JsonKey(name: "DOWNLOAD") final int download,
+          @JsonKey(name: "TOTAL") final int total,
+          @JsonKey(name: "EXPIRE") final int expire}) =
       _$ProviderSubscriptionInfoImpl;
 
   factory _ProviderSubscriptionInfo.fromJson(Map<String, dynamic> json) =
       _$ProviderSubscriptionInfoImpl.fromJson;
 
   @override
-  @JsonKey(name: 'UPLOAD')
+  @JsonKey(name: "UPLOAD")
   int get upload;
   @override
-  @JsonKey(name: 'DOWNLOAD')
+  @JsonKey(name: "DOWNLOAD")
   int get download;
   @override
-  @JsonKey(name: 'TOTAL')
+  @JsonKey(name: "TOTAL")
   int get total;
   @override
-  @JsonKey(name: 'EXPIRE')
+  @JsonKey(name: "EXPIRE")
   int get expire;
 
   /// Create a copy of ProviderSubscriptionInfo
@@ -2442,12 +2725,12 @@ mixin _$ExternalProvider {
   String get type => throw _privateConstructorUsedError;
   String? get path => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
-  @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+  @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
   SubscriptionInfo? get subscriptionInfo => throw _privateConstructorUsedError;
   bool get isUpdating => throw _privateConstructorUsedError;
-  @JsonKey(name: 'vehicle-type')
+  @JsonKey(name: "vehicle-type")
   String get vehicleType => throw _privateConstructorUsedError;
-  @JsonKey(name: 'update-at')
+  @JsonKey(name: "update-at")
   DateTime get updateAt => throw _privateConstructorUsedError;
 
   /// Serializes this ExternalProvider to a JSON map.
@@ -2471,11 +2754,11 @@ abstract class $ExternalProviderCopyWith<$Res> {
       String type,
       String? path,
       int count,
-      @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+      @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
       SubscriptionInfo? subscriptionInfo,
       bool isUpdating,
-      @JsonKey(name: 'vehicle-type') String vehicleType,
-      @JsonKey(name: 'update-at') DateTime updateAt});
+      @JsonKey(name: "vehicle-type") String vehicleType,
+      @JsonKey(name: "update-at") DateTime updateAt});
 
   $SubscriptionInfoCopyWith<$Res>? get subscriptionInfo;
 }
@@ -2568,11 +2851,11 @@ abstract class _$$ExternalProviderImplCopyWith<$Res>
       String type,
       String? path,
       int count,
-      @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+      @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
       SubscriptionInfo? subscriptionInfo,
       bool isUpdating,
-      @JsonKey(name: 'vehicle-type') String vehicleType,
-      @JsonKey(name: 'update-at') DateTime updateAt});
+      @JsonKey(name: "vehicle-type") String vehicleType,
+      @JsonKey(name: "update-at") DateTime updateAt});
 
   @override
   $SubscriptionInfoCopyWith<$Res>? get subscriptionInfo;
@@ -2645,11 +2928,11 @@ class _$ExternalProviderImpl implements _ExternalProvider {
       required this.type,
       this.path,
       required this.count,
-      @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+      @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
       this.subscriptionInfo,
       this.isUpdating = false,
-      @JsonKey(name: 'vehicle-type') required this.vehicleType,
-      @JsonKey(name: 'update-at') required this.updateAt});
+      @JsonKey(name: "vehicle-type") required this.vehicleType,
+      @JsonKey(name: "update-at") required this.updateAt});
 
   factory _$ExternalProviderImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExternalProviderImplFromJson(json);
@@ -2663,16 +2946,16 @@ class _$ExternalProviderImpl implements _ExternalProvider {
   @override
   final int count;
   @override
-  @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+  @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
   final SubscriptionInfo? subscriptionInfo;
   @override
   @JsonKey()
   final bool isUpdating;
   @override
-  @JsonKey(name: 'vehicle-type')
+  @JsonKey(name: "vehicle-type")
   final String vehicleType;
   @override
-  @JsonKey(name: 'update-at')
+  @JsonKey(name: "update-at")
   final DateTime updateAt;
 
   @override
@@ -2727,11 +3010,11 @@ abstract class _ExternalProvider implements ExternalProvider {
       required final String type,
       final String? path,
       required final int count,
-      @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+      @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
       final SubscriptionInfo? subscriptionInfo,
       final bool isUpdating,
-      @JsonKey(name: 'vehicle-type') required final String vehicleType,
-      @JsonKey(name: 'update-at')
+      @JsonKey(name: "vehicle-type") required final String vehicleType,
+      @JsonKey(name: "update-at")
       required final DateTime updateAt}) = _$ExternalProviderImpl;
 
   factory _ExternalProvider.fromJson(Map<String, dynamic> json) =
@@ -2746,15 +3029,15 @@ abstract class _ExternalProvider implements ExternalProvider {
   @override
   int get count;
   @override
-  @JsonKey(name: 'subscription-info', fromJson: subscriptionInfoFormCore)
+  @JsonKey(name: "subscription-info", fromJson: subscriptionInfoFormCore)
   SubscriptionInfo? get subscriptionInfo;
   @override
   bool get isUpdating;
   @override
-  @JsonKey(name: 'vehicle-type')
+  @JsonKey(name: "vehicle-type")
   String get vehicleType;
   @override
-  @JsonKey(name: 'update-at')
+  @JsonKey(name: "update-at")
   DateTime get updateAt;
 
   /// Create a copy of ExternalProvider

@@ -10,29 +10,34 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: ${{ startsWith(matrix.platform, 'windows') && 'bash' || 'bash' }}
     strategy:
+      fail-fast: false
+      max-parallel: 1
       matrix:
         include:
-          - platform: android
-            os: ubuntu-latest
           - platform: windows
-            os: windows-latest
+            os: self-hosted
             arch: amd64
-          - platform: linux
-            os: ubuntu-22.04
-            arch: amd64
+          # - platform: windows
+          #   os: windows-11-arm
+          #   arch: arm64
           - platform: macos
             os: macos-13
             arch: amd64
           - platform: macos
             os: macos-latest
             arch: arm64
-          - platform: windows
-            os: windows-11-arm
-            arch: arm64
+          - platform: android
+            os: ubuntu-latest
           - platform: linux
-            os: ubuntu-24.04-arm
-            arch: arm64
+            os: ubuntu-22.04
+            arch: amd64
+          # - platform: linux
+          #   os: ubuntu-24.04-arm
+          #   arch: arm64
 
     steps:
       - name: Setup rust
@@ -56,12 +61,110 @@ jobs:
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/local.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/local.properties
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.24.0'
-          cache-dependency-path: |
-            core/go.sum
+      # Windows-specific setup improvements
+      - name: Setup Windows Build Environment
+        if: startsWith(matrix.platform, 'windows')
+        shell: bash
+        run: |
+          # 创建持久化工具目录
+          TOOLS_DIR="/c/runner-tools"
+          mkdir -p "$TOOLS_DIR"
+          
+          # 检查并安装jq（优先使用chocolatey，备用缓存）
+          if command -v jq &> /dev/null; then
+            echo "✓ jq already available in system"
+            jq --version
+          else
+            echo "Installing jq..."
+            # 首先尝试chocolatey安装（更可靠）
+            if choco install jq -y --no-progress; then
+              echo "✓ jq installed via chocolatey"
+              # 刷新PATH以使jq可用
+              export PATH="/c/ProgramData/chocolatey/bin:$PATH"
+              echo "/c/ProgramData/chocolatey/bin" >> $GITHUB_PATH
+            else
+              echo "Chocolatey failed, trying manual download..."
+              JQ_PATH="$TOOLS_DIR/jq.exe"
+              # 删除可能存在的损坏文件
+              rm -f "$JQ_PATH"
+              # 下载并验证
+              if curl -L "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe" -o "$JQ_PATH" && [ -s "$JQ_PATH" ]; then
+                chmod +x "$JQ_PATH"
+                export PATH="$TOOLS_DIR:$PATH"
+                echo "$TOOLS_DIR" >> $GITHUB_PATH
+                echo "✓ jq downloaded to cache"
+              else
+                echo "⚠ jq installation failed, but continuing build..."
+              fi
+            fi
+            
+            # 最终验证
+            if command -v jq &> /dev/null; then
+              jq --version
+            else
+              echo "jq not available, some features may not work"
+            fi
+          fi
+          
+          # 检查并安装Rust/Cargo（已经有缓存机制）
+          if ! command -v cargo &> /dev/null; then
+            echo "Installing Rust..."
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            source "$HOME/.cargo/env"
+            echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+            echo "Rust installed"
+          else
+            echo "✓ Rust/Cargo already available"
+          fi
+          cargo --version
+          
+          # 检查ATL组件是否已安装
+          ATL_HEADER="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/*/atlmfc/include/atlstr.h"
+          if ls $ATL_HEADER 1> /dev/null 2>&1; then
+            echo "✓ Visual Studio Build Tools with ATL already installed"
+            ls $ATL_HEADER
+          else
+            echo "Installing Visual Studio Build Tools with ATL support..."
+            # 检查是否已有Build Tools安装
+            if [ -f "/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" ]; then
+              echo "Modifying existing Visual Studio Build Tools installation..."
+              "/c/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe" modify --installPath "/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools" --add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.ATLMFC --quiet || echo "Modify failed, trying full install..."
+            fi
+            
+            # 如果修改失败或没有现有安装，尝试完整安装
+            if ! ls $ATL_HEADER 1> /dev/null 2>&1; then
+              echo "Installing via chocolatey..."
+              choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.ATLMFC --includeRecommended --quiet" -y --force
+            fi
+          fi
+          
+          # 检查并安装Inno Setup（持久化缓存）
+          INNO_SETUP_PATH="/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
+          if [ -f "$INNO_SETUP_PATH" ]; then
+            echo "✓ Inno Setup already cached and available"
+            "$INNO_SETUP_PATH" /? 2>&1 | head -1 || true
+          else
+            echo "Installing Inno Setup to persistent location..."
+            choco install innosetup -y --no-progress
+            echo "Inno Setup installation completed"
+            # 验证安装
+            if [ -f "$INNO_SETUP_PATH" ]; then
+              echo "✓ Inno Setup installed and cached successfully"
+              # 将Inno Setup添加到PATH
+              echo "/c/Program Files (x86)/Inno Setup 6" >> $GITHUB_PATH
+            else
+              echo "✗ Inno Setup installation failed"
+              exit 1
+            fi
+          fi
+
+      - name: Verify Go Installation
+        run: |
+          echo "=== Go Environment ==="
+          go version
+          go env GOPATH
+          go env GOCACHE
+          go env GOMODCACHE
 
       - name: Setup Flutter Master
         if: startsWith(matrix.os, 'windows-11-arm') || startsWith(matrix.os, 'ubuntu-24.04-arm')
@@ -70,15 +173,74 @@ jobs:
           channel: 'master'
           cache: true
       - name: Setup Flutter
-        if: ${{ !(startsWith(matrix.os, 'windows-11-arm') || startsWith(matrix.os, 'ubuntu-24.04-arm')) }}
+        if: ${{ !(startsWith(matrix.os, 'windows-11-arm') || startsWith(matrix.os, 'ubuntu-24.04-arm') || matrix.os == 'self-hosted') }}
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
+      
+      - name: Use Local Flutter (Self-hosted Windows)
+        if: matrix.os == 'self-hosted' && startsWith(matrix.platform, 'windows')
+        shell: bash
+        run: |
+          echo "Using local Flutter installation"
+          flutter --version
+          flutter doctor
       #          flutter-version: 3.29.3
 
       - name: Get Flutter Dependency
         run: flutter pub get
+
+      - name: Generate SDK Code
+        run: |
+          cd lib/sdk/flutter_xboard_sdk
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          cd ../../..
+
+      - name: Generate Main Project Code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Clean Swift Package Manager cache
+        if: startsWith(matrix.platform, 'macos')
+        run: |
+          find macos -name "Package.resolved" -delete
+          rm -rf macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+          rm -rf macos/Runner.xcworkspace/xcshareddata/swiftpm/
+
+      # Windows-specific build preparation
+      - name: Prepare Windows Build Environment
+        if: startsWith(matrix.platform, 'windows')
+        shell: bash
+        run: |
+          # 确保PATH包含Pub Cache bin和Inno Setup
+          PUB_CACHE_BIN="/c/Users/$(whoami)/AppData/Local/Pub/Cache/bin"
+          INNO_SETUP_DIR="/c/Program Files (x86)/Inno Setup 6"
+          export PATH="$PUB_CACHE_BIN:$INNO_SETUP_DIR:$PATH"
+          echo "$PUB_CACHE_BIN" >> $GITHUB_PATH
+          echo "$INNO_SETUP_DIR" >> $GITHUB_PATH
+          
+          # 验证flutter_distributor是否可用（使用缓存）
+          if command -v flutter_distributor &> /dev/null; then
+            echo "✓ flutter_distributor found in cache"
+            flutter_distributor --version
+          else
+            echo "Installing flutter_distributor to persistent cache..."
+            dart pub global activate flutter_distributor
+            export PATH="$PUB_CACHE_BIN:$PATH"
+            echo "✓ flutter_distributor installed and cached"
+          fi
+          
+          # 验证Inno Setup编译器
+          if command -v ISCC &> /dev/null; then
+            echo "✓ Inno Setup compiler (ISCC) found in PATH"
+            ISCC /? || true
+          else
+            echo "✗ Inno Setup compiler (ISCC) not found in PATH"
+            echo "Current PATH: $PATH"
+            # 尝试直接找到ISCC
+            find "/c/Program Files (x86)" -name "ISCC.exe" 2>/dev/null || echo "ISCC.exe not found"
+          fi
 
       - name: Setup
         run: dart setup.dart ${{ matrix.platform }} ${{ matrix.arch && format('--arch {0}', matrix.arch) }} ${{ env.IS_STABLE == 'true' && '--env stable' || '' }}
@@ -205,23 +367,23 @@ jobs:
             currentTag=$tag
           done
 
-      - name: Push to telegram
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TAG: ${{ github.ref_name }}
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
-          python release_telegram.py
+      # Distribution steps disabled - only build artifacts
+      # - name: Push to telegram
+      #   env:
+      #     TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      #     TAG: ${{ github.ref_name }}
+      #     RUN_ID: ${{ github.run_id }}
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install requests
+      #     python release_telegram.py
 
-      - name: Patch release.md
-        run: |
-          version=$(echo "${{ github.ref_name }}" | sed 's/^v//')
-          sed "s|VERSION|$version|g" ./.github/release_template.md >> release.md
+      # - name: Patch release.md
+      #   run: |
+      #     version=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+      #     sed "s|VERSION|$version|g" ./.github/release_template.md >> release.md
 
       - name: Generate sha256
-        if: env.IS_STABLE == 'true'
         run: |
           cd ./dist
           for file in $(find . -type f -not -name "*.sha256"); do
@@ -235,25 +397,24 @@ jobs:
           files: ./dist/*
           body_path: './release.md'
 
-      - name: Create Fdroid Source Dir
-        if: ${{ env.IS_STABLE == 'true' }}
-        run: |
-          mkdir -p ./tmp
-          cp ./dist/*android-arm64-v8a* ./tmp/ || true
-          echo "Files copied successfully"
+      # - name: Create Fdroid Source Dir
+      #   if: ${{ env.IS_STABLE == 'true' }}
+      #   run: |
+      #     mkdir -p ./tmp
+      #     cp ./dist/*android-arm64-v8a* ./tmp/ || true
+      #     echo "Files copied successfully"
 
-      - name: Push to fdroid repo
-        if: ${{ env.IS_STABLE == 'true' }}
-        uses: cpina/github-action-push-to-another-repository@v1.7.2
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-        with:
-          source-directory: ./tmp/
-          destination-github-username: chen08209
-          destination-repository-name: FlClash-fdroid-repo
-          user-name: 'github-actions[bot]'
-          user-email: 'github-actions[bot]@users.noreply.github.com'
-          target-branch: main
-          commit-message: Update from ${{ github.ref_name }}
-          target-directory: /tmp/
-
+      # - name: Push to fdroid repo
+      #   if: ${{ env.IS_STABLE == 'true' }}
+      #   uses: cpina/github-action-push-to-another-repository@v1.7.2
+      #   env:
+      #     SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+      #   with:
+      #     source-directory: ./tmp/
+      #     destination-github-username: chen08209
+      #     destination-repository-name: FlClash-fdroid-repo
+      #     user-name: 'github-actions[bot]'
+      #     user-email: 'github-actions[bot]@users.noreply.github.com'
+      #     target-branch: main
+      #     commit-message: Update from ${{ github.ref_name }}
+      #     target-directory: /tmp/

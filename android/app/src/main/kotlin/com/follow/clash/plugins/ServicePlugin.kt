@@ -1,56 +1,49 @@
 package com.follow.clash.plugins
 
-import com.follow.clash.Service
-import com.follow.clash.State
-import com.follow.clash.awaitResult
-import com.follow.clash.common.Components
-import com.follow.clash.common.GlobalState
-import com.follow.clash.service.models.VpnOptions
+import com.follow.clash.GlobalState
+import com.follow.clash.models.VpnOptions
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 
-class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
-    private val service = Service(GlobalState.application, ::handleServiceCrash)
+data object ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
+
     private lateinit var flutterMethodChannel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        flutterMethodChannel = MethodChannel(
-            flutterPluginBinding.binaryMessenger, "${Components.PACKAGE_NAME}/service"
-        )
+        flutterMethodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "service")
         flutterMethodChannel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        service.unbind()
         flutterMethodChannel.setMethodCallHandler(null)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) = when (call.method) {
+        "startVpn" -> {
+            val data = call.argument<String>("data")
+            val options = Gson().fromJson(data, VpnOptions::class.java)
+            GlobalState.getCurrentVPNPlugin()?.handleStart(options)
+            result.success(true)
+        }
+
+        "stopVpn" -> {
+            GlobalState.getCurrentVPNPlugin()?.handleStop()
+            result.success(true)
+        }
+
         "init" -> {
-            handleInit(result)
+            GlobalState.getCurrentAppPlugin()
+                ?.requestNotificationsPermission()
+            GlobalState.initServiceEngine()
+            result.success(true)
         }
 
-        "invokeAction" -> {
-            handleInvokeAction(call, result)
-        }
-
-        "getRunTime" -> {
-            handleGetRunTime(result)
-        }
-
-        "start" -> {
-            handleStart(result)
-        }
-
-        "stop" -> {
-            handleStop(result)
+        "destroy" -> {
+            handleDestroy()
+            result.success(true)
         }
 
         else -> {
@@ -58,65 +51,8 @@ class ServicePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         }
     }
 
-    private fun handleInvokeAction(call: MethodCall, result: MethodChannel.Result) {
-        GlobalState.launch {
-            val data = call.arguments<String>()!!
-            service.invokeAction(data) {
-                result.success(it)
-            }
-        }
-    }
 
-    private fun handleStart(result: MethodChannel.Result) {
-        State.handleStartService()
-        result.success(true)
-    }
-
-    private fun handleServiceCrash() {
-
-    }
-
-    private fun handleStop(result: MethodChannel.Result) {
-        State.handleStopService()
-        result.success(true)
-    }
-
-    suspend fun handleGetVpnOptions(): VpnOptions? {
-        val res = flutterMethodChannel.awaitResult<String>("getVpnOptions", null)
-        return Gson().fromJson(res, VpnOptions::class.java)
-    }
-
-    suspend fun startService(options: VpnOptions, inApp: Boolean) {
-        service.startService(options, inApp)
-    }
-
-    suspend fun stopService() {
-        service.stopService()
-    }
-
-    val semaphore = Semaphore(10)
-
-    fun handleSendMessage(value: String?) {
-        GlobalState.launch(Dispatchers.Main) {
-            semaphore.withPermit {
-                flutterMethodChannel.invokeMethod("message", value)
-            }
-        }
-    }
-
-    fun handleInit(result: MethodChannel.Result) {
-        GlobalState.launch {
-            service.bind()
-            service.setMessageCallback {
-                GlobalState.launch(Dispatchers.Main) {
-                    handleSendMessage(it)
-                }
-            }
-            result.success(true)
-        }
-    }
-
-    private fun handleGetRunTime(result: MethodChannel.Result) {
-        return result.success(State.runTime)
+    private fun handleDestroy() {
+        GlobalState.destroyServiceEngine()
     }
 }

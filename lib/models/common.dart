@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'dart:math';
+
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,7 @@ class NavigationItem with _$NavigationItem {
     required Icon icon,
     required PageLabel label,
     final String? description,
-    required WidgetBuilder builder,
+    required Widget view,
     @Default(true) bool keep,
     String? path,
     @Default([NavigationItemMode.mobile, NavigationItemMode.desktop])
@@ -39,23 +41,15 @@ class Package with _$Package {
 @freezed
 class Metadata with _$Metadata {
   const factory Metadata({
-    @Default(0) int uid,
-    @Default('') String network,
-    @Default('') String sourceIP,
-    @Default('') String sourcePort,
-    @Default('') String destinationIP,
-    @Default('') String destinationPort,
-    @Default('') String host,
-    DnsMode? dnsMode,
-    @Default('') String process,
-    @Default('') String processPath,
-    @Default('') String remoteDestination,
-    @Default([]) List<String> sourceGeoIP,
-    @Default([]) List<String> destinationGeoIP,
-    @Default('') String destinationIPASN,
-    @Default('') String sourceIPASN,
-    @Default('') String specialRules,
-    @Default('') String specialProxy,
+    required int uid,
+    required String network,
+    required String sourceIP,
+    required String sourcePort,
+    required String destinationIP,
+    required String destinationPort,
+    required String host,
+    required String process,
+    required String remoteDestination,
   }) = _Metadata;
 
   factory Metadata.fromJson(Map<String, Object?> json) =>
@@ -63,48 +57,35 @@ class Metadata with _$Metadata {
 }
 
 @freezed
-class TrackerInfo with _$TrackerInfo {
-  const factory TrackerInfo({
+class Connection with _$Connection {
+  const factory Connection({
     required String id,
-    @Default(0) int upload,
-    @Default(0) int download,
+    num? upload,
+    num? download,
     required DateTime start,
     required Metadata metadata,
     required List<String> chains,
-    required String rule,
-    required String rulePayload,
-    int? downloadSpeed,
-    int? uploadSpeed,
-  }) = _TrackerInfo;
+  }) = _Connection;
 
-  factory TrackerInfo.fromJson(Map<String, Object?> json) =>
-      _$TrackerInfoFromJson(json);
+  factory Connection.fromJson(Map<String, Object?> json) =>
+      _$ConnectionFromJson(json);
 }
 
-extension TrackerInfoExt on TrackerInfo {
+extension ConnectionExt on Connection {
   String get desc {
-    var text = '${metadata.network}://';
+    var text = "${metadata.network}://";
     final ips = [
       metadata.host,
       metadata.destinationIP,
     ].where((ip) => ip.isNotEmpty);
-    text += ips.join('/');
-    text += ':${metadata.destinationPort}';
+    text += ips.join("/");
+    text += ":${metadata.destinationPort}";
     return text;
-  }
-
-  String get progressText {
-    final process = metadata.process;
-    final uid = metadata.uid;
-    if (uid != 0) {
-      return '$process($uid)';
-    }
-    return process;
   }
 }
 
-String _logDateTime(dynamic _) {
-  return DateTime.now().showFull;
+String _logDateTime(_) {
+  return DateTime.now().toString();
 }
 
 // String _logId(_) {
@@ -114,9 +95,8 @@ String _logDateTime(dynamic _) {
 @freezed
 class Log with _$Log {
   const factory Log({
-    // @JsonKey(fromJson: _logId) required String id,
-    @JsonKey(name: 'LogLevel') @Default(LogLevel.info) LogLevel logLevel,
-    @JsonKey(name: 'Payload') @Default('') String payload,
+    @JsonKey(name: "LogLevel") @Default(LogLevel.app) LogLevel logLevel,
+    @JsonKey(name: "Payload") @Default("") String payload,
     @JsonKey(fromJson: _logDateTime) required String dateTime,
   }) = _Log;
 
@@ -138,8 +118,8 @@ class LogsState with _$LogsState {
   const factory LogsState({
     @Default([]) List<Log> logs,
     @Default([]) List<String> keywords,
-    @Default('') String query,
-    @Default(true) bool autoScrollToEnd,
+    @Default("") String query,
+    @Default(false) bool loading,
   }) = _LogsState;
 }
 
@@ -158,28 +138,27 @@ extension LogsStateExt on LogsState {
 }
 
 @freezed
-class TrackerInfosState with _$TrackerInfosState {
-  const factory TrackerInfosState({
-    @Default([]) List<TrackerInfo> trackerInfos,
+class ConnectionsState with _$ConnectionsState {
+  const factory ConnectionsState({
+    @Default([]) List<Connection> connections,
     @Default([]) List<String> keywords,
-    @Default('') String query,
-    @Default(true) bool autoScrollToEnd,
-  }) = _TrackerInfosState;
+    @Default("") String query,
+    @Default(false) bool loading,
+  }) = _ConnectionsState;
 }
 
-extension TrackerInfosStateExt on TrackerInfosState {
-  List<TrackerInfo> get list {
+extension ConnectionsStateExt on ConnectionsState {
+  List<Connection> get list {
     final lowerQuery = query.toLowerCase().trim();
     final lowQuery = query.toLowerCase();
-    return trackerInfos.where((trackerInfo) {
-      final chains = trackerInfo.chains;
-      final process = trackerInfo.metadata.process;
-      final networkText = trackerInfo.metadata.network.toLowerCase();
-      final hostText = trackerInfo.metadata.host.toLowerCase();
-      final destinationIPText =
-          trackerInfo.metadata.destinationIP.toLowerCase();
-      final processText = trackerInfo.metadata.process.toLowerCase();
-      final chainsText = chains.join('').toLowerCase();
+    return connections.where((connection) {
+      final chains = connection.chains;
+      final process = connection.metadata.process;
+      final networkText = connection.metadata.network.toLowerCase();
+      final hostText = connection.metadata.host.toLowerCase();
+      final destinationIPText = connection.metadata.destinationIP.toLowerCase();
+      final processText = connection.metadata.process.toLowerCase();
+      final chainsText = chains.join("").toLowerCase();
       return {...chains, process}.containsAll(keywords) &&
           (networkText.contains(lowerQuery) ||
               hostText.contains(lowerQuery) ||
@@ -190,7 +169,7 @@ extension TrackerInfosStateExt on TrackerInfosState {
   }
 }
 
-const defaultDavFileName = 'backup.zip';
+const defaultDavFileName = "backup.zip";
 
 @freezed
 class DAV with _$DAV {
@@ -214,53 +193,66 @@ class FileInfo with _$FileInfo {
 
 extension FileInfoExt on FileInfo {
   String get desc =>
-      '${size.traffic.show}  ·  ${lastModified.lastUpdateTimeDesc}';
+      "${TrafficValue(value: size).show}  ·  ${lastModified.lastUpdateTimeDesc}";
 }
 
 @freezed
 class VersionInfo with _$VersionInfo {
   const factory VersionInfo({
-    @Default('') String clashName,
-    @Default('') String version,
+    @Default("") String clashName,
+    @Default("") String version,
   }) = _VersionInfo;
 
   factory VersionInfo.fromJson(Map<String, Object?> json) =>
       _$VersionInfoFromJson(json);
 }
 
-@freezed
-class Traffic with _$Traffic {
-  const factory Traffic({
-    @Default(0) num up,
-    @Default(0) num down,
-  }) = _Traffic;
+class Traffic {
+  int id;
+  TrafficValue up;
+  TrafficValue down;
 
-  factory Traffic.fromJson(Map<String, Object?> json) =>
-      _$TrafficFromJson(json);
-}
+  Traffic({int? up, int? down})
+      : id = DateTime.now().millisecondsSinceEpoch,
+        up = TrafficValue(value: up),
+        down = TrafficValue(value: down);
 
-extension TrafficExt on Traffic {
-  String get speedText {
-    return '↑ ${up.traffic.show}/s   ↓ ${down.traffic.show}/s';
+  num get speed => up.value + down.value;
+
+  factory Traffic.fromMap(Map<String, dynamic> map) {
+    return Traffic(
+      up: map['up'],
+      down: map['down'],
+    );
   }
 
-  String get desc {
-    return '${up.traffic.show}↑ ${down.traffic.show}↓';
+  @override
+  String toString() {
+    return '$up↑ $down↓';
   }
 
-  num get speed => up + down;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Traffic &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          up == other.up &&
+          down == other.down;
+
+  @override
+  int get hashCode => id.hashCode ^ up.hashCode ^ down.hashCode;
 }
 
-@freezed
-class TrafficShow with _$TrafficShow {
-  const factory TrafficShow({
-    required String value,
-    required String unit,
-  }) = _TrafficShow;
-}
+@immutable
+class TrafficValueShow {
+  final double value;
+  final TrafficUnit unit;
 
-extension TrafficShowExt on TrafficShow {
-  String get show => '$value $unit';
+  const TrafficValueShow({
+    required this.value,
+    required this.unit,
+  });
 }
 
 @freezed
@@ -282,7 +274,7 @@ class Group with _$Group {
     String? now,
     bool? hidden,
     String? testUrl,
-    @Default('') String icon,
+    @Default("") String icon,
     required String name,
   }) = _Group;
 
@@ -297,7 +289,7 @@ extension GroupsExt on List<Group> {
 }
 
 extension GroupExt on Group {
-  String get realNow => now ?? '';
+  String get realNow => now ?? "";
 
   String getCurrentSelectedName(String proxyName) {
     if (type.isComputedSelected) {
@@ -305,6 +297,68 @@ extension GroupExt on Group {
     }
     return proxyName.isNotEmpty ? proxyName : realNow;
   }
+}
+
+@immutable
+class TrafficValue {
+  final int _value;
+
+  const TrafficValue({int? value}) : _value = value ?? 0;
+
+  int get value => _value;
+
+  String get show => "$showValue $showUnit";
+
+  String get shortShow =>
+      "${trafficValueShow.value.fixed(decimals: 1)} $showUnit";
+
+  String get showValue => trafficValueShow.value.fixed();
+
+  String get showUnit => trafficValueShow.unit.name;
+
+  TrafficValueShow get trafficValueShow {
+    if (_value > pow(1024, 4)) {
+      return TrafficValueShow(
+        value: _value / pow(1024, 4),
+        unit: TrafficUnit.TB,
+      );
+    }
+    if (_value > pow(1024, 3)) {
+      return TrafficValueShow(
+        value: _value / pow(1024, 3),
+        unit: TrafficUnit.GB,
+      );
+    }
+    if (_value > pow(1024, 2)) {
+      return TrafficValueShow(
+          value: _value / pow(1024, 2), unit: TrafficUnit.MB);
+    }
+    if (_value > pow(1024, 1)) {
+      return TrafficValueShow(
+        value: _value / pow(1024, 1),
+        unit: TrafficUnit.KB,
+      );
+    }
+    return TrafficValueShow(
+      value: _value.toDouble(),
+      unit: TrafficUnit.B,
+    );
+  }
+
+  @override
+  String toString() {
+    return "$showValue$showUnit";
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TrafficValue &&
+          runtimeType == other.runtimeType &&
+          _value == other._value;
+
+  @override
+  int get hashCode => _value.hashCode;
 }
 
 @freezed
@@ -357,56 +411,56 @@ class IpInfo {
   static IpInfo fromIpInfoIoJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'ip': final String ip,
-        'country': final String country,
+        "ip": final String ip,
+        "country": final String country,
       } =>
         IpInfo(
           ip: ip,
           countryCode: country,
         ),
-      _ => throw const FormatException('invalid json'),
+      _ => throw const FormatException("invalid json"),
     };
   }
 
   static IpInfo fromIpApiCoJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'ip': final String ip,
-        'country_code': final String countryCode,
+        "ip": final String ip,
+        "country_code": final String countryCode,
       } =>
         IpInfo(
           ip: ip,
           countryCode: countryCode,
         ),
-      _ => throw const FormatException('invalid json'),
+      _ => throw const FormatException("invalid json"),
     };
   }
 
   static IpInfo fromIpSbJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'ip': final String ip,
-        'country_code': final String countryCode,
+        "ip": final String ip,
+        "country_code": final String countryCode,
       } =>
         IpInfo(
           ip: ip,
           countryCode: countryCode,
         ),
-      _ => throw const FormatException('invalid json'),
+      _ => throw const FormatException("invalid json"),
     };
   }
 
   static IpInfo fromIpwhoIsJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'ip': final String ip,
-        'country_code': final String countryCode,
+        "ip": final String ip,
+        "country_code": final String countryCode,
       } =>
         IpInfo(
           ip: ip,
           countryCode: countryCode,
         ),
-      _ => throw const FormatException('invalid json'),
+      _ => throw const FormatException("invalid json"),
     };
   }
 
@@ -485,7 +539,7 @@ class Result<T> with _$Result<T> {
   factory Result.success(T data) => Result(
         data: data,
         type: ResultType.success,
-        message: '',
+        message: "",
       );
 
   factory Result.error(String message) => Result(

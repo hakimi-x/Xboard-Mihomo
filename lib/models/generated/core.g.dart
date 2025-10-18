@@ -68,6 +68,7 @@ const _$LogLevelEnumMap = {
   LogLevel.warning: 'warning',
   LogLevel.error: 'error',
   LogLevel.silent: 'silent',
+  LogLevel.app: 'app',
 };
 
 const _$ExternalControllerStatusEnumMap = {
@@ -75,36 +76,61 @@ const _$ExternalControllerStatusEnumMap = {
   ExternalControllerStatus.open: '127.0.0.1:9090',
 };
 
-_$VpnOptionsImpl _$$VpnOptionsImplFromJson(Map<String, dynamic> json) =>
-    _$VpnOptionsImpl(
-      enable: json['enable'] as bool,
-      port: (json['port'] as num).toInt(),
-      ipv6: json['ipv6'] as bool,
-      dnsHijacking: json['dnsHijacking'] as bool,
-      accessControl:
-          AccessControl.fromJson(json['accessControl'] as Map<String, dynamic>),
-      allowBypass: json['allowBypass'] as bool,
-      systemProxy: json['systemProxy'] as bool,
-      bypassDomain: (json['bypassDomain'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      routeAddress: (json['routeAddress'] as List<dynamic>?)
+_$CoreStateImpl _$$CoreStateImplFromJson(Map<String, dynamic> json) =>
+    _$CoreStateImpl(
+      vpnProps: VpnProps.fromJson(json['vpn-props'] as Map<String, dynamic>?),
+      onlyStatisticsProxy: json['only-statistics-proxy'] as bool,
+      currentProfileName: json['current-profile-name'] as String,
+      bypassDomain: (json['bypass-domain'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$$VpnOptionsImplToJson(_$VpnOptionsImpl instance) =>
+Map<String, dynamic> _$$CoreStateImplToJson(_$CoreStateImpl instance) =>
+    <String, dynamic>{
+      'vpn-props': instance.vpnProps,
+      'only-statistics-proxy': instance.onlyStatisticsProxy,
+      'current-profile-name': instance.currentProfileName,
+      'bypass-domain': instance.bypassDomain,
+    };
+
+_$AndroidVpnOptionsImpl _$$AndroidVpnOptionsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AndroidVpnOptionsImpl(
+      enable: json['enable'] as bool,
+      port: (json['port'] as num).toInt(),
+      accessControl: json['accessControl'] == null
+          ? null
+          : AccessControl.fromJson(
+              json['accessControl'] as Map<String, dynamic>),
+      allowBypass: json['allowBypass'] as bool,
+      systemProxy: json['systemProxy'] as bool,
+      bypassDomain: (json['bypassDomain'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      ipv4Address: json['ipv4Address'] as String,
+      ipv6Address: json['ipv6Address'] as String,
+      routeAddress: (json['routeAddress'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      dnsServerAddress: json['dnsServerAddress'] as String,
+    );
+
+Map<String, dynamic> _$$AndroidVpnOptionsImplToJson(
+        _$AndroidVpnOptionsImpl instance) =>
     <String, dynamic>{
       'enable': instance.enable,
       'port': instance.port,
-      'ipv6': instance.ipv6,
-      'dnsHijacking': instance.dnsHijacking,
       'accessControl': instance.accessControl,
       'allowBypass': instance.allowBypass,
       'systemProxy': instance.systemProxy,
       'bypassDomain': instance.bypassDomain,
+      'ipv4Address': instance.ipv4Address,
+      'ipv6Address': instance.ipv6Address,
       'routeAddress': instance.routeAddress,
+      'dnsServerAddress': instance.dnsServerAddress,
     };
 
 _$InitParamsImpl _$$InitParamsImplFromJson(Map<String, dynamic> json) =>

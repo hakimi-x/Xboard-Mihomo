@@ -23,7 +23,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
   final _controller = ScrollController();
   double _currentMaxWidth = 0;
 
-  void _initState(WidgetRef ref) {
+  _initState(WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 300), () async {
         final rawConfig = await globalState.getProfileConfig(widget.profileId);
@@ -41,7 +41,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
     });
   }
 
-  void _handleSave(WidgetRef ref, OverrideData overrideData) {
+  _handleSave(WidgetRef ref, OverrideData overrideData) {
     ref.read(profilesProvider.notifier).updateProfile(
           widget.profileId,
           (state) => state.copyWith(
@@ -51,7 +51,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
     globalState.appController.setupClashConfigDebounce();
   }
 
-  Future<void> _handleDelete(WidgetRef ref) async {
+  _handleDelete(WidgetRef ref) async {
     final res = await globalState.showMessage(
       title: appLocalizations.tip,
       message: TextSpan(
@@ -89,7 +89,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
         );
   }
 
-  Widget _buildContent() {
+  _buildContent() {
     return Consumer(
       builder: (_, ref, child) {
         final isInit = ref.watch(
@@ -113,7 +113,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
       child: LayoutBuilder(
         builder: (_, constraints) {
           _currentMaxWidth = constraints.maxWidth - 104;
-          return CommonScrollBar(
+          return CommonAutoHiddenScrollBar(
             controller: _controller,
             child: CustomScrollView(
               controller: _controller,
@@ -297,7 +297,8 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                     ),
                   )
               ],
-              editState: AppBarEditState(
+              appBarEditState: AppBarEditState(
+                isEdit: isEdit,
                 editCount: editCount,
                 onExit: () {
                   ref.read(profileOverrideStateProvider.notifier).updateState(
@@ -360,7 +361,7 @@ class RuleTitle extends ConsumerWidget {
     required this.profileId,
   });
 
-  void _handleChangeType(WidgetRef ref, isOverrideRule) {
+  _handleChangeType(WidgetRef ref, isOverrideRule) {
     ref.read(profileOverrideStateProvider.notifier).updateState(
           (state) => state.copyWith.overrideData!.rule(
             type: isOverrideRule
@@ -527,7 +528,7 @@ class RuleContent extends ConsumerWidget {
     );
   }
 
-  void _handleSelect(WidgetRef ref, String ruleId) {
+  _handleSelect(WidgetRef ref, String ruleId) {
     ref.read(profileOverrideStateProvider.notifier).updateState(
       (state) {
         final newSelectedRules = Set<String>.from(state.selectedRules);
@@ -677,7 +678,7 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
     super.initState();
   }
 
-  void _initState() {
+  _initState() {
     _targetItems = [
       ...widget.snippet.proxyGroups.map(
         (item) => DropdownMenuEntry(
@@ -711,10 +712,10 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
     if (widget.rule != null) {
       final parsedRule = ParsedRule.parseString(widget.rule!.value);
       _ruleAction = parsedRule.ruleAction;
-      _contentController.text = parsedRule.content ?? '';
-      _ruleTargetController.text = parsedRule.ruleTarget ?? '';
-      _ruleProviderController.text = parsedRule.ruleProvider ?? '';
-      _subRuleController.text = parsedRule.subRule ?? '';
+      _contentController.text = parsedRule.content ?? "";
+      _ruleTargetController.text = parsedRule.ruleTarget ?? "";
+      _ruleProviderController.text = parsedRule.ruleProvider ?? "";
+      _subRuleController.text = parsedRule.subRule ?? "";
       _noResolve = parsedRule.noResolve;
       _src = parsedRule.src;
       return;
@@ -739,7 +740,7 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
     }
   }
 
-  void _handleSubmit() {
+  _handleSubmit() {
     final res = _formKey.currentState?.validate();
     if (res == false) {
       return;

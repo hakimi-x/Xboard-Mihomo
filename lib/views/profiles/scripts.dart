@@ -21,7 +21,7 @@ class ScriptsView extends ConsumerStatefulWidget {
 }
 
 class _ScriptsViewState extends ConsumerState<ScriptsView> {
-  Future<void> _handleDelScript(String label) async {
+  _handleDelScript(String label) async {
     final res = await globalState.showMessage(
       message:
           TextSpan(text: appLocalizations.deleteTip(appLocalizations.script)),
@@ -116,8 +116,7 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
     });
   }
 
-  Future<void> _handleEditorSave(BuildContext _, String title, String content,
-      {Script? script}) async {
+  _handleEditorSave(_, String title, String content, {Script? script}) async {
     Script newScript = script?.copyWith(
           label: title,
           content: content,
@@ -130,7 +129,7 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
       final res = await globalState.showCommonDialog<String>(
         child: InputDialog(
           title: appLocalizations.save,
-          value: '',
+          value: "",
           hintText: appLocalizations.pleaseEnterScriptName,
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -173,7 +172,7 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
   }
 
   Future<bool> _handleEditorPop(
-    BuildContext _,
+    _,
     String title,
     String content,
     String raw, {
@@ -200,10 +199,10 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
     return false;
   }
 
-  void _handleToEditor({Script? script}) {
-    final title = script?.label ?? '';
+  _handleToEditor({Script? script}) {
+    final title = script?.label ?? "";
     final raw = script?.content ?? scriptTemplate;
-    BaseNavigator.push(
+    BaseNavigator.modal(
       context,
       EditorPage(
         titleEditable: true,

@@ -10,13 +10,14 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         flutterEngine.plugins.add(AppPlugin())
-        flutterEngine.plugins.add(ServicePlugin())
+        flutterEngine.plugins.add(ServicePlugin)
         flutterEngine.plugins.add(TilePlugin())
-        State.flutterEngine = flutterEngine
+        GlobalState.flutterEngine = flutterEngine
     }
 
     override fun onDestroy() {
-        State.flutterEngine = null
+        GlobalState.flutterEngine = null
+        GlobalState.runState.value = RunState.STOP
         super.onDestroy()
     }
 }

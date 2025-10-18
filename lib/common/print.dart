@@ -12,8 +12,8 @@ class CommonPrint {
     return _instance!;
   }
 
-  void log(String? text) {
-    final payload = '[APP] $text';
+  log(String? text) {
+    final payload = "[FlClash] $text";
     debugPrint(payload);
     if (!globalState.isInit) {
       return;

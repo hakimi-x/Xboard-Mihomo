@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
-import 'package:fl_clash/plugins/service.dart';
 import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/providers/state.dart';
@@ -25,7 +22,7 @@ class ClashManager extends ConsumerStatefulWidget {
 }
 
 class _ClashContainerState extends ConsumerState<ClashManager>
-    with AppMessageListener, ServiceListener {
+    with AppMessageListener {
   @override
   Widget build(BuildContext context) {
     return widget.child;
@@ -35,10 +32,14 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   void initState() {
     super.initState();
     clashMessage.addListener(this);
-    service?.addListener(this);
     ref.listenManual(needSetupProvider, (prev, next) {
       if (prev != next) {
         globalState.appController.handleChangeProfile();
+      }
+    });
+    ref.listenManual(coreStateProvider, (prev, next) async {
+      if (prev != next) {
+        await clashCore.setState(next);
       }
     });
     ref.listenManual(updateParamsProvider, (prev, next) {
@@ -62,14 +63,7 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   @override
   Future<void> dispose() async {
     clashMessage.removeListener(this);
-    service?.removeListener(this);
     super.dispose();
-  }
-
-  @override
-  void onServiceMessage(String message) {
-    clashMessage.controller.add(json.decode(message));
-    super.onServiceMessage(message);
   }
 
   @override
@@ -80,7 +74,7 @@ class _ClashContainerState extends ConsumerState<ClashManager>
     debouncer.call(
       FunctionTag.updateDelay,
       () async {
-        appController.updateGroupsDebounce();
+        await appController.updateGroupsDebounce();
       },
       duration: const Duration(milliseconds: 5000),
     );
@@ -96,9 +90,9 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   }
 
   @override
-  void onRequest(TrackerInfo trackerInfo) async {
-    ref.read(requestsProvider.notifier).addRequest(trackerInfo);
-    super.onRequest(trackerInfo);
+  void onRequest(Connection connection) async {
+    ref.read(requestsProvider.notifier).addRequest(connection);
+    super.onRequest(connection);
   }
 
   @override
@@ -108,7 +102,7 @@ class _ClashContainerState extends ConsumerState<ClashManager>
             providerName,
           ),
         );
-    globalState.appController.updateGroupsDebounce();
+    await globalState.appController.updateGroupsDebounce();
     super.onLoaded(providerName);
   }
 }

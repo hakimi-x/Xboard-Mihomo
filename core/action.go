@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"unsafe"
 )
 
 type Action struct {
@@ -12,11 +11,11 @@ type Action struct {
 }
 
 type ActionResult struct {
-	Id       string      `json:"id"`
-	Method   Method      `json:"method"`
-	Data     interface{} `json:"data"`
-	Code     int         `json:"code"`
-	callback unsafe.Pointer
+	Id     string      `json:"id"`
+	Method Method      `json:"method"`
+	Data   interface{} `json:"data"`
+	Code   int         `json:"code"`
+	Port   int64
 }
 
 func (result ActionResult) Json() ([]byte, error) {
@@ -46,7 +45,7 @@ func handleAction(action *Action, result ActionResult) {
 		result.success(handleGetIsInit())
 		return
 	case forceGcMethod:
-		handleForceGC()
+		handleForceGc()
 		result.success(true)
 		return
 	case shutdownMethod:
@@ -74,12 +73,10 @@ func handleAction(action *Action, result ActionResult) {
 		})
 		return
 	case getTrafficMethod:
-		data := action.Data.(bool)
-		result.success(handleGetTraffic(data))
+		result.success(handleGetTraffic())
 		return
 	case getTotalTrafficMethod:
-		data := action.Data.(bool)
-		result.success(handleGetTotalTraffic(data))
+		result.success(handleGetTotalTraffic())
 		return
 	case resetTrafficMethod:
 		handleResetTraffic()
@@ -178,6 +175,10 @@ func handleAction(action *Action, result ActionResult) {
 			result.success(value)
 		})
 		return
+	case setStateMethod:
+		data := action.Data.(string)
+		handleSetState(data)
+		result.success(true)
 	case crashMethod:
 		result.success(true)
 		handleCrash()

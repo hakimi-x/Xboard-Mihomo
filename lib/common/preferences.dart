@@ -49,12 +49,12 @@ class Preferences {
         false;
   }
 
-  Future<void> clearClashConfig() async {
+  clearClashConfig() async {
     final preferences = await sharedPreferencesCompleter.future;
     preferences?.remove(clashConfigKey);
   }
 
-  Future<void> clearPreferences() async {
+  clearPreferences() async {
     final sharedPreferencesIns = await sharedPreferencesCompleter.future;
     sharedPreferencesIns?.clear();
   }

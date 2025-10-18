@@ -66,6 +66,7 @@ class ProfilesSelectorState with _$ProfilesSelectorState {
 class NetworkDetectionState with _$NetworkDetectionState {
   const factory NetworkDetectionState({
     required bool isLoading,
+    required bool isTesting,
     required IpInfo? ipInfo,
   }) = _NetworkDetectionState;
 }
@@ -87,14 +88,28 @@ class TrayState with _$TrayState {
 }
 
 @freezed
-class NavigationState with _$NavigationState {
-  const factory NavigationState({
+class HomeState with _$HomeState {
+  const factory HomeState({
     required PageLabel pageLabel,
     required List<NavigationItem> navigationItems,
     required ViewMode viewMode,
     required String? locale,
-    required int currentIndex,
-  }) = _NavigationState;
+  }) = _HomeState;
+}
+
+@freezed
+class ProxiesSelectorState with _$ProxiesSelectorState {
+  const factory ProxiesSelectorState({
+    required List<String> groupNames,
+    required String? currentGroupName,
+  }) = _ProxiesSelectorState;
+}
+
+@freezed
+class GroupNamesState with _$GroupNamesState {
+  const factory GroupNamesState({
+    required List<String> groupNames,
+  }) = _GroupNamesState;
 }
 
 @freezed
@@ -112,27 +127,16 @@ class NavigationItemsState with _$NavigationItemsState {
 }
 
 @freezed
-class ProxiesListState with _$ProxiesListState {
-  const factory ProxiesListState({
-    required List<Group> groups,
+class ProxiesListSelectorState with _$ProxiesListSelectorState {
+  const factory ProxiesListSelectorState({
+    required List<String> groupNames,
     required Set<String> currentUnfoldSet,
     required ProxiesSortType proxiesSortType,
     required ProxyCardType proxyCardType,
     required num sortNum,
     required int columns,
-  }) = _ProxiesListState;
-}
-
-@freezed
-class ProxiesTabState with _$ProxiesTabState {
-  const factory ProxiesTabState({
-    required List<Group> groups,
-    required String? currentGroupName,
-    required ProxiesSortType proxiesSortType,
-    required ProxyCardType proxyCardType,
-    required num sortNum,
-    required int columns,
-  }) = _ProxiesTabState;
+    required String query,
+  }) = _ProxiesListSelectorState;
 }
 
 @freezed

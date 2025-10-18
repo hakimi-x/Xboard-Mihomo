@@ -19,7 +19,7 @@ class AppSetting extends _$AppSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(AppSettingProps Function(AppSettingProps state) builder) {
+  updateState(AppSettingProps Function(AppSettingProps state) builder) {
     state = builder(state);
   }
 }
@@ -38,7 +38,7 @@ class WindowSetting extends _$WindowSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(WindowProps Function(WindowProps state) builder) {
+  updateState(WindowProps Function(WindowProps state) builder) {
     state = builder(state);
   }
 }
@@ -57,7 +57,7 @@ class VpnSetting extends _$VpnSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(VpnProps Function(VpnProps state) builder) {
+  updateState(VpnProps Function(VpnProps state) builder) {
     state = builder(state);
   }
 }
@@ -76,7 +76,7 @@ class NetworkSetting extends _$NetworkSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(NetworkProps Function(NetworkProps state) builder) {
+  updateState(NetworkProps Function(NetworkProps state) builder) {
     state = builder(state);
   }
 }
@@ -95,7 +95,7 @@ class ThemeSetting extends _$ThemeSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(ThemeProps Function(ThemeProps state) builder) {
+  updateState(ThemeProps Function(ThemeProps state) builder) {
     state = builder(state);
   }
 }
@@ -126,7 +126,7 @@ class Profiles extends _$Profiles with AutoDisposeNotifierMixin {
     }
   }
 
-  void setProfile(Profile profile) {
+  setProfile(Profile profile) {
     final List<Profile> profilesTemp = List.from(state);
     final index =
         profilesTemp.indexWhere((element) => element.id == profile.id);
@@ -141,8 +141,7 @@ class Profiles extends _$Profiles with AutoDisposeNotifierMixin {
     state = profilesTemp;
   }
 
-  void updateProfile(
-      String profileId, Profile Function(Profile profile) builder) {
+  updateProfile(String profileId, Profile Function(Profile profile) builder) {
     final List<Profile> profilesTemp = List.from(state);
     final index = profilesTemp.indexWhere((element) => element.id == profileId);
     if (index != -1) {
@@ -151,7 +150,7 @@ class Profiles extends _$Profiles with AutoDisposeNotifierMixin {
     state = profilesTemp;
   }
 
-  void deleteProfileById(String id) {
+  deleteProfileById(String id) {
     state = state.where((element) => element.id != id).toList();
   }
 }
@@ -186,7 +185,7 @@ class AppDAVSetting extends _$AppDAVSetting with AutoDisposeNotifierMixin {
     );
   }
 
-  void updateState(DAV? Function(DAV? state) builder) {
+  updateState(DAV? Function(DAV? state) builder) {
     state = builder(state);
   }
 }
@@ -236,7 +235,7 @@ class ProxiesStyleSetting extends _$ProxiesStyleSetting
     );
   }
 
-  void updateState(ProxiesStyle Function(ProxiesStyle state) builder) {
+  updateState(ProxiesStyle Function(ProxiesStyle state) builder) {
     state = builder(state);
   }
 }
@@ -255,7 +254,7 @@ class ScriptState extends _$ScriptState with AutoDisposeNotifierMixin {
     );
   }
 
-  void setScript(Script script) {
+  setScript(Script script) {
     final list = List<Script>.from(state.scripts);
     final index = list.indexWhere((item) => item.id == script.id);
     if (index != -1) {
@@ -268,13 +267,13 @@ class ScriptState extends _$ScriptState with AutoDisposeNotifierMixin {
     );
   }
 
-  void setId(String id) {
+  setId(String id) {
     state = state.copyWith(
       currentId: state.currentId != id ? id : null,
     );
   }
 
-  void del(String id) {
+  del(String id) {
     final list = List<Script>.from(state.scripts);
     final index = list.indexWhere((item) => item.label == id);
     if (index != -1) {
@@ -287,7 +286,7 @@ class ScriptState extends _$ScriptState with AutoDisposeNotifierMixin {
     );
   }
 
-  bool isExits(String label) {
+  isExits(String label) {
     return state.scripts.indexWhere((item) => item.label == label) != -1;
   }
 }
@@ -300,7 +299,7 @@ class PatchClashConfig extends _$PatchClashConfig
     return globalState.config.patchClashConfig;
   }
 
-  void updateState(ClashConfig? Function(ClashConfig state) builder) {
+  updateState(ClashConfig? Function(ClashConfig state) builder) {
     final newState = builder(state);
     if (newState == null) {
       return;

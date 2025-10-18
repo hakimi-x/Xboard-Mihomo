@@ -90,15 +90,11 @@ class ColorSchemeBox extends StatelessWidget {
 class PrimaryColorBox extends ConsumerWidget {
   final Color? primaryColor;
   final Widget child;
-  final Brightness? brightness;
-  final bool ignoreConfig;
 
   const PrimaryColorBox({
     super.key,
     required this.primaryColor,
     required this.child,
-    this.brightness,
-    this.ignoreConfig = true,
   });
 
   @override
@@ -106,9 +102,9 @@ class PrimaryColorBox extends ConsumerWidget {
     final themeData = Theme.of(context);
     final colorScheme = ref.watch(
       genColorSchemeProvider(
-        brightness ?? themeData.brightness,
+        themeData.brightness,
         color: primaryColor,
-        ignoreConfig: ignoreConfig,
+        ignoreConfig: true,
       ),
     );
     return Theme(

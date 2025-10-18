@@ -34,17 +34,18 @@ class MessageManagerState extends State<MessageManager> {
     super.dispose();
   }
 
-  Future<void> message(String text) async {
+  Future<void> message(String text, {VoidCallback? onTap}) async {
     final commonMessage = CommonMessage(
       id: utils.uuidV4,
       text: text,
+      onTap: onTap,
     );
     commonPrint.log(text);
     _bufferMessages.add(commonMessage);
     await _showMessage();
   }
 
-  Future<void> _showMessage() async {
+  _showMessage() async {
     if (_pushing == true) {
       return;
     }
@@ -65,7 +66,7 @@ class MessageManagerState extends State<MessageManager> {
     }
   }
 
-  Future<void> _handleRemove(CommonMessage commonMessage) async {
+  _handleRemove(CommonMessage commonMessage) async {
     _messagesNotifier.value = List<CommonMessage>.from(_messagesNotifier.value)
       ..remove(commonMessage);
   }
@@ -90,27 +91,54 @@ class MessageManagerState extends State<MessageManager> {
                   : LayoutBuilder(
                       key: Key(messages.last.id),
                       builder: (_, constraints) {
+                        final message = messages.last;
+
+                        // 构建卡片内容
+                        final cardContent = Container(
+                          width: min(
+                            constraints.maxWidth,
+                            500,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
+                          ),
+                          child: Text(
+                            message.text,
+                          ),
+                        );
+
+                        // 如果有点击回调，整个卡片都可点击
+                        if (message.onTap != null) {
+                          return GestureDetector(
+                            onTap: () {
+                              message.onTap?.call();
+                              _handleRemove(message);
+                            },
+                            behavior: HitTestBehavior.opaque, // 整个区域可点击，包括空白处
+                            child: Card(
+                              shape: const RoundedSuperellipseBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                              elevation: 10,
+                              color: context.colorScheme.surfaceContainerHigh,
+                              child: cardContent,
+                            ),
+                          );
+                        }
+
+                        // 没有点击回调的普通卡片
                         return Card(
-                          shape: const RoundedRectangleBorder(
+                          shape: const RoundedSuperellipseBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(12.0),
                             ),
                           ),
                           elevation: 10,
                           color: context.colorScheme.surfaceContainerHigh,
-                          child: Container(
-                            width: min(
-                              constraints.maxWidth,
-                              500,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
-                            ),
-                            child: Text(
-                              messages.last.text,
-                            ),
-                          ),
+                          child: cardContent,
                         );
                       },
                     ),

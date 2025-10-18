@@ -29,12 +29,31 @@ class DeveloperView extends ConsumerWidget {
           title: Text(appLocalizations.logsTest),
           onTap: () {
             for (int i = 0; i < 1000; i++) {
+              ref.read(requestsProvider.notifier).addRequest(Connection(
+                    id: utils.id,
+                    start: DateTime.now(),
+                    metadata: Metadata(
+                      uid: i * i,
+                      network: utils.generateRandomString(
+                        maxLength: 1000,
+                        minLength: 20,
+                      ),
+                      sourceIP: '',
+                      sourcePort: '',
+                      destinationIP: '',
+                      destinationPort: '',
+                      host: '',
+                      process: '',
+                      remoteDestination: "",
+                    ),
+                    chains: ["chains"],
+                  ));
               globalState.appController.addLog(
                 Log.app(
-                  '[$i]${utils.generateRandomString(
+                  utils.generateRandomString(
                     maxLength: 200,
                     minLength: 20,
-                  )}',
+                  ),
                 ),
               );
             }
@@ -51,13 +70,7 @@ class DeveloperView extends ConsumerWidget {
           onTap: () async {
             await globalState.appController.handleClear();
           },
-        ),
-        ListItem(
-          title: Text('loading'),
-          onTap: () {
-            ref.read(loadingProvider.notifier).value = true;
-          },
-        ),
+        )
       ],
     );
   }

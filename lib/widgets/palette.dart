@@ -42,7 +42,7 @@ class _PaletteState extends State<Palette> {
     _focusNode = FocusNode();
   }
 
-  void _handleChange() {
+  _handleChange() {
     widget.controller.value = HSVColor.fromAHSV(
       color.alpha,
       colorHue,

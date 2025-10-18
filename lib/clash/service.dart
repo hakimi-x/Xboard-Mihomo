@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/clash/interface.dart';
 import 'package:fl_clash/common/common.dart';
-import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/core.dart';
 import 'package:fl_clash/state.dart';
 
@@ -16,7 +14,7 @@ class ClashService extends ClashHandlerInterface {
 
   Completer<Socket> socketCompleter = Completer();
 
-  Map<String, Completer> callbackCompleterMap = {};
+  bool isStarting = false;
 
   Process? process;
 
@@ -27,20 +25,12 @@ class ClashService extends ClashHandlerInterface {
 
   ClashService._internal() {
     _initServer();
+    reStart();
   }
 
-  Future<void> handleResult(ActionResult result) async {
-    final completer = callbackCompleterMap[result.id];
-    final data = parasResult(result);
-    if (result.id?.isEmpty == true) {
-      clashMessage.controller.add(result.data);
-    }
-    completer?.complete(data);
-  }
-
-  Future<void> _initServer() async {
-    await runZonedGuarded(() async {
-      final address = !system.isWindows
+  _initServer() async {
+    runZonedGuarded(() async {
+      final address = !Platform.isWindows
           ? InternetAddress(
               unixSocketPath,
               type: InternetAddressType.unix,
@@ -77,21 +67,26 @@ class ClashService extends ClashHandlerInterface {
       commonPrint.log(error.toString());
       if (error is SocketException) {
         globalState.showNotifier(error.toString());
+        // globalState.appController.restartCore();
       }
     });
-    await start();
   }
 
-  Future<void> start() async {
+  @override
+  reStart() async {
+    if (isStarting == true) {
+      return;
+    }
+    isStarting = true;
     socketCompleter = Completer();
     if (process != null) {
       await shutdown();
     }
     final serverSocket = await serverCompleter.future;
-    final arg = system.isWindows
-        ? '${serverSocket.port}'
+    final arg = Platform.isWindows
+        ? "${serverSocket.port}"
         : serverSocket.address.address;
-    if (system.isWindows && await system.checkIsAdmin()) {
+    if (Platform.isWindows && await system.checkIsAdmin()) {
       final isSuccess = await request.startCoreByHelper(arg);
       if (isSuccess) {
         return;
@@ -110,6 +105,7 @@ class ClashService extends ClashHandlerInterface {
         commonPrint.log(error);
       }
     });
+    isStarting = false;
   }
 
   @override
@@ -120,13 +116,14 @@ class ClashService extends ClashHandlerInterface {
     return true;
   }
 
-  Future<void> sendMessage(String message) async {
+  @override
+  sendMessage(String message) async {
     final socket = await socketCompleter.future;
     socket.writeln(message);
   }
 
-  Future<void> _deleteSocketFile() async {
-    if (!system.isWindows) {
+  _deleteSocketFile() async {
+    if (!Platform.isWindows) {
       final file = File(unixSocketPath);
       if (await file.exists()) {
         await file.delete();
@@ -134,7 +131,7 @@ class ClashService extends ClashHandlerInterface {
     }
   }
 
-  Future<void> _destroySocket() async {
+  _destroySocket() async {
     if (socketCompleter.isCompleted) {
       final lastSocket = await socketCompleter.future;
       await lastSocket.close();
@@ -144,7 +141,7 @@ class ClashService extends ClashHandlerInterface {
 
   @override
   shutdown() async {
-    if (system.isWindows) {
+    if (Platform.isWindows) {
       await request.stopCoreByHelper();
     }
     await _destroySocket();
@@ -157,36 +154,6 @@ class ClashService extends ClashHandlerInterface {
   Future<bool> preload() async {
     await serverCompleter.future;
     return true;
-  }
-
-  @override
-  Future<T?> invoke<T>({
-    required ActionMethod method,
-    dynamic data,
-    Duration? timeout,
-  }) {
-    final id = '${method.name}#${utils.id}';
-
-    callbackCompleterMap[id] = Completer<T?>();
-
-    sendMessage(
-      json.encode(
-        Action(
-          id: id,
-          method: method,
-          data: data,
-        ),
-      ),
-    );
-
-    return (callbackCompleterMap[id] as Completer<T?>).future.withTimeout(
-          timeout: timeout,
-          onLast: () {
-            callbackCompleterMap.remove(id);
-          },
-          tag: id,
-          onTimeout: () => null,
-        );
   }
 }
 

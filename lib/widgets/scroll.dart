@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
@@ -9,23 +7,41 @@ import 'package:flutter/material.dart';
 class CommonScrollBar extends StatelessWidget {
   final ScrollController? controller;
   final Widget child;
-  final bool trackVisibility;
-  final bool thumbVisibility;
 
   const CommonScrollBar({
     super.key,
     required this.child,
     required this.controller,
-    this.trackVisibility = false,
-    this.thumbVisibility = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
       controller: controller,
-      thumbVisibility: thumbVisibility,
-      trackVisibility: trackVisibility,
+      thumbVisibility: true,
+      trackVisibility: true,
+      thickness: 8,
+      radius: const Radius.circular(8),
+      interactive: true,
+      child: child,
+    );
+  }
+}
+
+class CommonAutoHiddenScrollBar extends StatelessWidget {
+  final ScrollController? controller;
+  final Widget child;
+
+  const CommonAutoHiddenScrollBar({
+    super.key,
+    required this.child,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      controller: controller,
       thickness: 8,
       radius: const Radius.circular(8),
       interactive: true,
@@ -38,16 +54,14 @@ class ScrollToEndBox<T> extends StatefulWidget {
   final ScrollController controller;
   final List<T> dataSource;
   final Widget child;
-  final bool enable;
-  final VoidCallback? onCancelToEnd;
+  final CacheTag tag;
 
   const ScrollToEndBox({
     super.key,
     required this.child,
     required this.controller,
+    required this.tag,
     required this.dataSource,
-    this.onCancelToEnd,
-    this.enable = true,
   });
 
   @override
@@ -56,60 +70,36 @@ class ScrollToEndBox<T> extends StatefulWidget {
 
 class _ScrollToEndBoxState<T> extends State<ScrollToEndBox<T>> {
   final equals = ListEquality<T>();
-  bool _isFastToEnd = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<bool> _handleTryToEnd() {
-    final completer = Completer<bool>();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (mounted &&
-          widget.controller.hasClients &&
-          widget.controller.position.pixels !=
-              widget.controller.position.maxScrollExtent) {
-        await widget.controller.animateTo(
+  _handleTryToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final double offset = globalState.cacheScrollPosition[widget.tag] ?? -1;
+      if (offset < 0) {
+        widget.controller.animateTo(
           duration: kThemeAnimationDuration,
           widget.controller.position.maxScrollExtent,
           curve: Curves.easeOut,
         );
       }
-      completer.complete(true);
     });
-    return completer.future;
   }
 
   @override
   void didUpdateWidget(ScrollToEndBox<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.enable == true && oldWidget.enable != true) {
-      _handleFastToEnd();
-      return;
-    }
-    if (widget.enable &&
-        !equals.equals(oldWidget.dataSource, widget.dataSource)) {
+    if (!equals.equals(oldWidget.dataSource, widget.dataSource)) {
       _handleTryToEnd();
     }
-  }
-
-  Future<void> _handleFastToEnd() async {
-    _isFastToEnd = true;
-    await _handleTryToEnd();
-    _isFastToEnd = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return NotificationListener<UserScrollNotification>(
       onNotification: (details) {
-        if (_isFastToEnd) {
-          return false;
-        }
-        if (widget.onCancelToEnd != null) {
-          widget.onCancelToEnd!();
-        }
+        globalState.cacheScrollPosition[widget.tag] =
+            details.metrics.pixels == details.metrics.maxScrollExtent
+                ? -1
+                : details.metrics.pixels;
         return false;
       },
       child: widget.child,
@@ -153,11 +143,9 @@ class CacheItemExtentListViewState extends State<CacheItemExtentListView> {
     _updateCacheHeightMap();
   }
 
-  void _updateCacheHeightMap() {
-    globalState.computeHeightMapCache[widget.tag]
-        ?.updateMaxLength(widget.itemCount);
-    globalState.computeHeightMapCache[widget.tag] ??=
-        FixedMap(widget.itemCount);
+  _updateCacheHeightMap() {
+    globalState.cacheHeightMap[widget.tag]?.updateMaxLength(widget.itemCount);
+    globalState.cacheHeightMap[widget.tag] ??= FixedMap(widget.itemCount);
   }
 
   @override
@@ -171,7 +159,7 @@ class CacheItemExtentListViewState extends State<CacheItemExtentListView> {
       controller: widget.controller,
       itemExtentBuilder: (index, __) {
         _updateCacheHeightMap();
-        return globalState.computeHeightMapCache[widget.tag]?.updateCacheValue(
+        return globalState.cacheHeightMap[widget.tag]?.updateCacheValue(
           widget.keyBuilder(index),
           () => widget.itemExtentBuilder(index),
         );
@@ -210,21 +198,18 @@ class CacheItemExtentSliverReorderableListState
   @override
   void initState() {
     super.initState();
-    globalState.computeHeightMapCache[widget.tag]
-        ?.updateMaxLength(widget.itemCount);
-    globalState.computeHeightMapCache[widget.tag] ??=
-        FixedMap(widget.itemCount);
+    globalState.cacheHeightMap[widget.tag]?.updateMaxLength(widget.itemCount);
+    globalState.cacheHeightMap[widget.tag] ??= FixedMap(widget.itemCount);
   }
 
   @override
   Widget build(BuildContext context) {
-    globalState.computeHeightMapCache[widget.tag]
-        ?.updateMaxLength(widget.itemCount);
+    globalState.cacheHeightMap[widget.tag]?.updateMaxLength(widget.itemCount);
     return SliverReorderableList(
       itemBuilder: widget.itemBuilder,
       itemCount: widget.itemCount,
       itemExtentBuilder: (index, __) {
-        return globalState.computeHeightMapCache[widget.tag]?.updateCacheValue(
+        return globalState.cacheHeightMap[widget.tag]?.updateCacheValue(
           widget.keyBuilder(index),
           () => widget.itemExtentBuilder(index),
         );

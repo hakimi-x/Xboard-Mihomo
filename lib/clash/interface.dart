@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:fl_clash/clash/message.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
@@ -48,19 +49,19 @@ mixin ClashInterface {
 
   Future<String> updateExternalProvider(String providerName);
 
-  FutureOr<String> getTraffic(bool onlyStatisticsProxy);
+  FutureOr<String> getTraffic();
 
-  FutureOr<String> getTotalTraffic(bool onlyStatisticsProxy);
+  FutureOr<String> getTotalTraffic();
 
   FutureOr<String> getCountryCode(String ip);
 
   FutureOr<String> getMemory();
 
-  FutureOr<void> resetTraffic();
+  resetTraffic();
 
-  FutureOr<void> startLog();
+  startLog();
 
-  FutureOr<void> stopLog();
+  stopLog();
 
   Future<bool> crash();
 
@@ -71,218 +72,280 @@ mixin ClashInterface {
   FutureOr<bool> closeConnections();
 
   FutureOr<bool> resetConnections();
+
+  Future<bool> setState(CoreState state);
+}
+
+mixin AndroidClashInterface {
+  Future<bool> updateDns(String value);
+
+  Future<AndroidVpnOptions?> getAndroidVpnOptions();
+
+  Future<String> getCurrentProfileName();
+
+  Future<DateTime?> getRunTime();
 }
 
 abstract class ClashHandlerInterface with ClashInterface {
+  Map<String, Completer> callbackCompleterMap = {};
+
+  handleResult(ActionResult result) async {
+    final completer = callbackCompleterMap[result.id];
+    try {
+      switch (result.method) {
+        case ActionMethod.message:
+          clashMessage.controller.add(result.data);
+          completer?.complete(true);
+          return;
+        case ActionMethod.getConfig:
+          completer?.complete(result.toResult);
+          return;
+        default:
+          completer?.complete(result.data);
+          return;
+      }
+    } catch (e) {
+      commonPrint.log("${result.id} error $e");
+    }
+  }
+
+  sendMessage(String message);
+
+  reStart();
+
   FutureOr<bool> destroy();
 
-  Future<T?> invoke<T>({
+  Future<T> invoke<T>({
     required ActionMethod method,
     dynamic data,
     Duration? timeout,
-  });
+    FutureOr<T> Function()? onTimeout,
+    T? defaultValue,
+  }) async {
+    final id = "${method.name}#${utils.id}";
 
-  Future<T> parasResult<T>(ActionResult result) async {
-    return switch (result.method) {
-      ActionMethod.getConfig => result.toResult as T,
-      _ => result.data as T,
-    };
-  }
+    callbackCompleterMap[id] = Completer<T>();
 
-  @override
-  Future<bool> init(InitParams params) async {
-    return await invoke<bool>(
-          method: ActionMethod.initClash,
-          data: json.encode(params),
-        ) ??
-        false;
-  }
+    dynamic mDefaultValue = defaultValue;
+    if (mDefaultValue == null) {
+      if (T == String) {
+        mDefaultValue = "";
+      } else if (T == bool) {
+        mDefaultValue = false;
+      } else if (T == Map) {
+        mDefaultValue = {};
+      }
+    }
 
-  @override
-  Future<bool> shutdown() async {
-    return await invoke<bool>(
-          method: ActionMethod.shutdown,
-        ) ??
-        false;
-  }
-
-  @override
-  Future<bool> get isInit async {
-    return await invoke<bool>(
-          method: ActionMethod.getIsInit,
-        ) ??
-        false;
-  }
-
-  @override
-  Future<bool> forceGc() async {
-    return await invoke<bool>(
-          method: ActionMethod.forceGc,
-        ) ??
-        false;
-  }
-
-  @override
-  Future<String> validateConfig(String data) async {
-    return await invoke<String>(
-          method: ActionMethod.validateConfig,
+    sendMessage(
+      json.encode(
+        Action(
+          id: id,
+          method: method,
           data: data,
-        ) ??
-        '';
+        ),
+      ),
+    );
+
+    return (callbackCompleterMap[id] as Completer<T>).safeFuture(
+      timeout: timeout,
+      onLast: () {
+        callbackCompleterMap.remove(id);
+      },
+      onTimeout: onTimeout ??
+          () {
+            return mDefaultValue;
+          },
+      functionName: id,
+    );
+  }
+
+  @override
+  Future<bool> init(InitParams params) {
+    return invoke<bool>(
+      method: ActionMethod.initClash,
+      data: json.encode(params),
+    );
+  }
+
+  @override
+  Future<bool> setState(CoreState state) {
+    return invoke<bool>(
+      method: ActionMethod.setState,
+      data: json.encode(state),
+    );
+  }
+
+  @override
+  shutdown() async {
+    return await invoke<bool>(
+      method: ActionMethod.shutdown,
+      timeout: Duration(seconds: 1),
+    );
+  }
+
+  @override
+  Future<bool> get isInit {
+    return invoke<bool>(
+      method: ActionMethod.getIsInit,
+    );
+  }
+
+  @override
+  Future<bool> forceGc() {
+    return invoke<bool>(
+      method: ActionMethod.forceGc,
+    );
+  }
+
+  @override
+  FutureOr<String> validateConfig(String data) {
+    return invoke<String>(
+      method: ActionMethod.validateConfig,
+      data: data,
+    );
   }
 
   @override
   Future<String> updateConfig(UpdateParams updateParams) async {
     return await invoke<String>(
-          method: ActionMethod.updateConfig,
-          data: json.encode(updateParams),
-        ) ??
-        '';
+      method: ActionMethod.updateConfig,
+      data: json.encode(updateParams),
+      timeout: Duration(minutes: 2),
+    );
   }
 
   @override
   Future<Result> getConfig(String path) async {
-    return await invoke<Result>(
-          method: ActionMethod.getConfig,
-          data: path,
-        ) ??
-        Result<Map<String, dynamic>>.success({});
+    final res = await invoke<Result>(
+      method: ActionMethod.getConfig,
+      data: path,
+      timeout: Duration(minutes: 2),
+      defaultValue: Result.success({}),
+    );
+    return res;
   }
 
   @override
   Future<String> setupConfig(SetupParams setupParams) async {
     final data = await Isolate.run(() => json.encode(setupParams));
     return await invoke<String>(
-          method: ActionMethod.setupConfig,
-          data: data,
-        ) ??
-        '';
+      method: ActionMethod.setupConfig,
+      data: data,
+      timeout: Duration(minutes: 2),
+    );
   }
 
   @override
-  Future<bool> crash() async {
-    return await invoke<bool>(
-          method: ActionMethod.crash,
-        ) ??
-        false;
+  Future<bool> crash() {
+    return invoke<bool>(
+      method: ActionMethod.crash,
+    );
   }
 
   @override
-  Future<Map> getProxies() async {
-    return await invoke<Map>(
-          method: ActionMethod.getProxies,
-        ) ??
-        {};
+  Future<Map> getProxies() {
+    return invoke<Map>(
+      method: ActionMethod.getProxies,
+      timeout: Duration(seconds: 5),
+    );
   }
 
   @override
-  Future<String> changeProxy(ChangeProxyParams changeProxyParams) async {
-    return await invoke<String>(
-          method: ActionMethod.changeProxy,
-          data: json.encode(changeProxyParams),
-        ) ??
-        '';
+  FutureOr<String> changeProxy(ChangeProxyParams changeProxyParams) {
+    return invoke<String>(
+      method: ActionMethod.changeProxy,
+      data: json.encode(changeProxyParams),
+    );
   }
 
   @override
-  Future<String> getExternalProviders() async {
-    return await invoke<String>(
-          method: ActionMethod.getExternalProviders,
-        ) ??
-        '';
+  FutureOr<String> getExternalProviders() {
+    return invoke<String>(
+      method: ActionMethod.getExternalProviders,
+    );
   }
 
   @override
-  Future<String> getExternalProvider(String externalProviderName) async {
-    return await invoke<String>(
-          method: ActionMethod.getExternalProvider,
-          data: externalProviderName,
-        ) ??
-        '';
+  FutureOr<String> getExternalProvider(String externalProviderName) {
+    return invoke<String>(
+      method: ActionMethod.getExternalProvider,
+      data: externalProviderName,
+    );
   }
 
   @override
-  Future<String> updateGeoData(UpdateGeoDataParams params) async {
-    return await invoke<String>(
-          method: ActionMethod.updateGeoData,
-          data: json.encode(params),
-        ) ??
-        '';
+  Future<String> updateGeoData(UpdateGeoDataParams params) {
+    return invoke<String>(
+        method: ActionMethod.updateGeoData,
+        data: json.encode(params),
+        timeout: Duration(minutes: 1));
   }
 
   @override
   Future<String> sideLoadExternalProvider({
     required String providerName,
     required String data,
-  }) async {
-    return await invoke<String>(
-          method: ActionMethod.sideLoadExternalProvider,
-          data: json.encode({
-            'providerName': providerName,
-            'data': data,
-          }),
-        ) ??
-        '';
+  }) {
+    return invoke<String>(
+      method: ActionMethod.sideLoadExternalProvider,
+      data: json.encode({
+        "providerName": providerName,
+        "data": data,
+      }),
+    );
   }
 
   @override
-  Future<String> updateExternalProvider(String providerName) async {
-    return await invoke<String>(
-          method: ActionMethod.updateExternalProvider,
-          data: providerName,
-        ) ??
-        '';
+  Future<String> updateExternalProvider(String providerName) {
+    return invoke<String>(
+      method: ActionMethod.updateExternalProvider,
+      data: providerName,
+      timeout: Duration(minutes: 1),
+    );
   }
 
   @override
-  Future<String> getConnections() async {
-    return await invoke<String>(
-          method: ActionMethod.getConnections,
-        ) ??
-        '';
+  FutureOr<String> getConnections() {
+    return invoke<String>(
+      method: ActionMethod.getConnections,
+    );
   }
 
   @override
-  Future<bool> closeConnections() async {
-    return await invoke<bool>(
-          method: ActionMethod.closeConnections,
-        ) ??
-        false;
+  Future<bool> closeConnections() {
+    return invoke<bool>(
+      method: ActionMethod.closeConnections,
+    );
   }
 
   @override
-  Future<bool> resetConnections() async {
-    return await invoke<bool>(
-          method: ActionMethod.resetConnections,
-        ) ??
-        false;
+  Future<bool> resetConnections() {
+    return invoke<bool>(
+      method: ActionMethod.resetConnections,
+    );
   }
 
   @override
-  Future<bool> closeConnection(String id) async {
-    return await invoke<bool>(
-          method: ActionMethod.closeConnection,
-          data: id,
-        ) ??
-        false;
+  Future<bool> closeConnection(String id) {
+    return invoke<bool>(
+      method: ActionMethod.closeConnection,
+      data: id,
+    );
   }
 
   @override
-  Future<String> getTotalTraffic(bool onlyStatisticsProxy) async {
-    return await invoke<String>(
-          method: ActionMethod.getTotalTraffic,
-          data: onlyStatisticsProxy,
-        ) ??
-        '';
+  FutureOr<String> getTotalTraffic() {
+    return invoke<String>(
+      method: ActionMethod.getTotalTraffic,
+    );
   }
 
   @override
-  Future<String> getTraffic(bool onlyStatisticsProxy) async {
-    return await invoke<String>(
-          method: ActionMethod.getTraffic,
-          data: onlyStatisticsProxy,
-        ) ??
-        '';
+  FutureOr<String> getTraffic() {
+    return invoke<String>(
+      method: ActionMethod.getTraffic,
+    );
   }
 
   @override
@@ -303,55 +366,56 @@ abstract class ClashHandlerInterface with ClashInterface {
   }
 
   @override
-  Future<bool> startListener() async {
-    return await invoke<bool>(
-          method: ActionMethod.startListener,
-        ) ??
-        false;
+  Future<bool> startListener() {
+    return invoke<bool>(
+      method: ActionMethod.startListener,
+    );
   }
 
   @override
-  Future<bool> stopListener() async {
-    return await invoke<bool>(
-          method: ActionMethod.stopListener,
-        ) ??
-        false;
+  stopListener() {
+    return invoke<bool>(
+      method: ActionMethod.stopListener,
+    );
   }
 
   @override
-  Future<String> asyncTestDelay(String url, String proxyName) async {
+  Future<String> asyncTestDelay(String url, String proxyName) {
     final delayParams = {
-      'proxy-name': proxyName,
-      'timeout': httpTimeoutDuration.inMilliseconds,
-      'test-url': url,
+      "proxy-name": proxyName,
+      "timeout": httpTimeoutDuration.inMilliseconds,
+      "test-url": url,
     };
-    return await invoke<String>(
-          method: ActionMethod.asyncTestDelay,
-          data: json.encode(delayParams),
-        ) ??
-        json.encode(
+    return invoke<String>(
+      method: ActionMethod.asyncTestDelay,
+      data: json.encode(delayParams),
+      timeout: Duration(
+        milliseconds: 6000,
+      ),
+      onTimeout: () {
+        return json.encode(
           Delay(
             name: proxyName,
             value: -1,
             url: url,
           ),
         );
+      },
+    );
   }
 
   @override
-  Future<String> getCountryCode(String ip) async {
-    return await invoke<String>(
-          method: ActionMethod.getCountryCode,
-          data: ip,
-        ) ??
-        '';
+  FutureOr<String> getCountryCode(String ip) {
+    return invoke<String>(
+      method: ActionMethod.getCountryCode,
+      data: ip,
+    );
   }
 
   @override
-  Future<String> getMemory() async {
-    return await invoke<String>(
-          method: ActionMethod.getMemory,
-        ) ??
-        '';
+  FutureOr<String> getMemory() {
+    return invoke<String>(
+      method: ActionMethod.getMemory,
+    );
   }
 }

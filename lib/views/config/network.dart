@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
@@ -16,7 +18,7 @@ class VPNItem extends ConsumerWidget {
     final enable =
         ref.watch(vpnSettingProvider.select((state) => state.enable));
     return ListItem.switchItem(
-      title: const Text('VPN'),
+      title: const Text("VPN"),
       subtitle: Text(appLocalizations.vpnEnableDesc),
       delegate: SwitchDelegate(
         value: enable,
@@ -137,7 +139,7 @@ class Ipv6Item extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final ipv6 = ref.watch(vpnSettingProvider.select((state) => state.ipv6));
     return ListItem.switchItem(
-      title: const Text('IPv6'),
+      title: const Text("IPv6"),
       subtitle: Text(appLocalizations.ipv6InboundDesc),
       delegate: SwitchDelegate(
         value: ipv6,
@@ -210,6 +212,35 @@ class TunStackItem extends ConsumerWidget {
 class BypassDomainItem extends StatelessWidget {
   const BypassDomainItem({super.key});
 
+  _initActions(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.commonScaffoldState?.actions = [
+        IconButton(
+          onPressed: () async {
+            final res = await globalState.showMessage(
+              title: appLocalizations.reset,
+              message: TextSpan(
+                text: appLocalizations.resetTip,
+              ),
+            );
+            if (res != true) {
+              return;
+            }
+            ref.read(networkSettingProvider.notifier).updateState(
+                  (state) => state.copyWith(
+                    bypassDomain: defaultBypassDomain,
+                  ),
+                );
+          },
+          tooltip: appLocalizations.reset,
+          icon: const Icon(
+            Icons.replay,
+          ),
+        )
+      ];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListItem.open(
@@ -217,35 +248,10 @@ class BypassDomainItem extends StatelessWidget {
       subtitle: Text(appLocalizations.bypassDomainDesc),
       delegate: OpenDelegate(
         blur: false,
-        actions: [
-          Consumer(builder: (_, ref, __) {
-            return IconButton(
-              onPressed: () async {
-                final res = await globalState.showMessage(
-                  title: appLocalizations.reset,
-                  message: TextSpan(
-                    text: appLocalizations.resetTip,
-                  ),
-                );
-                if (res != true) {
-                  return;
-                }
-                ref.read(networkSettingProvider.notifier).updateState(
-                      (state) => state.copyWith(
-                        bypassDomain: defaultBypassDomain,
-                      ),
-                    );
-              },
-              tooltip: appLocalizations.reset,
-              icon: const Icon(
-                Icons.replay,
-              ),
-            );
-          })
-        ],
         title: appLocalizations.bypassDomain,
         widget: Consumer(
           builder: (_, ref, __) {
+            _initActions(context, ref);
             final bypassDomain = ref.watch(
                 networkSettingProvider.select((state) => state.bypassDomain));
             return ListInputPage(
@@ -276,7 +282,7 @@ class RouteModeItem extends ConsumerWidget {
         ref.watch(networkSettingProvider.select((state) => state.routeMode));
     return ListItem<RouteMode>.options(
       title: Text(appLocalizations.routeMode),
-      subtitle: Text(Intl.message('routeMode_${routeMode.name}')),
+      subtitle: Text(Intl.message("routeMode_${routeMode.name}")),
       delegate: OptionsDelegate<RouteMode>(
         title: appLocalizations.routeMode,
         options: RouteMode.values,
@@ -291,7 +297,7 @@ class RouteModeItem extends ConsumerWidget {
               );
         },
         textBuilder: (routeMode) => Intl.message(
-          'routeMode_${routeMode.name}',
+          "routeMode_${routeMode.name}",
         ),
         value: routeMode,
       ),
@@ -343,10 +349,10 @@ class RouteAddressItem extends ConsumerWidget {
 }
 
 final networkItems = [
-  if (system.isAndroid) const VPNItem(),
-  if (system.isAndroid)
+  if (Platform.isAndroid) const VPNItem(),
+  if (Platform.isAndroid)
     ...generateSection(
-      title: 'VPN',
+      title: "VPN",
       items: [
         const VpnSystemProxyItem(),
         const BypassDomainItem(),
@@ -366,7 +372,7 @@ final networkItems = [
     title: appLocalizations.options,
     items: [
       if (system.isDesktop) const TUNItem(),
-      if (system.isMacOS) const AutoSetSystemDnsItem(),
+      if (Platform.isMacOS) const AutoSetSystemDnsItem(),
       const TunStackItem(),
       if (!system.isDesktop) ...[
         const RouteModeItem(),
@@ -376,11 +382,46 @@ final networkItems = [
   ),
 ];
 
-class NetworkListView extends StatelessWidget {
+class NetworkListView extends ConsumerWidget {
   const NetworkListView({super.key});
 
+  _initActions(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.commonScaffoldState?.actions = [
+        IconButton(
+          onPressed: () async {
+            final res = await globalState.showMessage(
+              title: appLocalizations.reset,
+              message: TextSpan(
+                text: appLocalizations.resetTip,
+              ),
+            );
+            if (res != true) {
+              return;
+            }
+            ref.read(vpnSettingProvider.notifier).updateState(
+                  (state) => defaultVpnProps.copyWith(
+                    accessControl: state.accessControl,
+                  ),
+                );
+            ref.read(patchClashConfigProvider.notifier).updateState(
+                  (state) => state.copyWith(
+                    tun: defaultTun,
+                  ),
+                );
+          },
+          tooltip: appLocalizations.reset,
+          icon: const Icon(
+            Icons.replay,
+          ),
+        )
+      ];
+    });
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    _initActions(context, ref);
     return generateListView(
       networkItems,
     );

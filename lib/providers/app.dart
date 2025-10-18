@@ -2,7 +2,7 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/state.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,7 +30,7 @@ class Logs extends _$Logs with AutoDisposeNotifierMixin {
     return globalState.appState.logs;
   }
 
-  void addLog(Log value) {
+  addLog(Log value) {
     state = state.copyWith()..add(value);
   }
 
@@ -45,7 +45,7 @@ class Logs extends _$Logs with AutoDisposeNotifierMixin {
 @riverpod
 class Requests extends _$Requests with AutoDisposeNotifierMixin {
   @override
-  FixedList<TrackerInfo> build() {
+  FixedList<Connection> build() {
     return globalState.appState.requests;
   }
 
@@ -56,7 +56,7 @@ class Requests extends _$Requests with AutoDisposeNotifierMixin {
     );
   }
 
-  void addRequest(TrackerInfo value) {
+  addRequest(Connection value) {
     state = state.copyWith()..add(value);
   }
 }
@@ -75,7 +75,7 @@ class Providers extends _$Providers with AutoDisposeNotifierMixin {
     );
   }
 
-  void setProvider(ExternalProvider? provider) {
+  setProvider(ExternalProvider? provider) {
     if (provider == null) return;
     final index = state.indexWhere((item) => item.name == provider.name);
     if (index == -1) return;
@@ -99,10 +99,9 @@ class Packages extends _$Packages with AutoDisposeNotifierMixin {
 }
 
 @riverpod
-class SystemBrightness extends _$SystemBrightness
-    with AutoDisposeNotifierMixin {
+class AppBrightness extends _$AppBrightness with AutoDisposeNotifierMixin {
   @override
-  Brightness build() {
+  Brightness? build() {
     return globalState.appState.brightness;
   }
 
@@ -113,7 +112,7 @@ class SystemBrightness extends _$SystemBrightness
     );
   }
 
-  void setState(Brightness value) {
+  setState(Brightness? value) {
     state = value;
   }
 }
@@ -132,11 +131,11 @@ class Traffics extends _$Traffics with AutoDisposeNotifierMixin {
     );
   }
 
-  void addTraffic(Traffic value) {
+  addTraffic(Traffic value) {
     state = state.copyWith()..add(value);
   }
 
-  void clear() {
+  clear() {
     state = state.copyWith()..clear();
   }
 }
@@ -282,7 +281,7 @@ class SortNum extends _$SortNum with AutoDisposeNotifierMixin {
     );
   }
 
-  int add() => state++;
+  add() => state++;
 }
 
 @riverpod
@@ -299,7 +298,7 @@ class CheckIpNum extends _$CheckIpNum with AutoDisposeNotifierMixin {
     );
   }
 
-  int add() => state++;
+  add() => state++;
 }
 
 @riverpod
@@ -313,21 +312,6 @@ class BackBlock extends _$BackBlock with AutoDisposeNotifierMixin {
   onUpdate(value) {
     globalState.appState = globalState.appState.copyWith(
       backBlock: value,
-    );
-  }
-}
-
-@riverpod
-class Loading extends _$Loading with AutoDisposeNotifierMixin {
-  @override
-  bool build() {
-    return globalState.appState.loading;
-  }
-
-  @override
-  onUpdate(value) {
-    globalState.appState = globalState.appState.copyWith(
-      loading: value,
     );
   }
 }
@@ -376,7 +360,7 @@ class DelayDataSource extends _$DelayDataSource with AutoDisposeNotifierMixin {
     );
   }
 
-  void setDelay(Delay delay) {
+  setDelay(Delay delay) {
     if (state[delay.url]?[delay.name] != delay.value) {
       final DelayMap newDelayMap = Map.from(state);
       if (newDelayMap[delay.url] == null) {
@@ -389,17 +373,16 @@ class DelayDataSource extends _$DelayDataSource with AutoDisposeNotifierMixin {
 }
 
 @riverpod
-class SystemUiOverlayStyleState extends _$SystemUiOverlayStyleState
-    with AutoDisposeNotifierMixin {
+class ProxiesQuery extends _$ProxiesQuery with AutoDisposeNotifierMixin {
   @override
-  SystemUiOverlayStyle build() {
-    return globalState.appState.systemUiOverlayStyle;
+  String build() {
+    return globalState.appState.proxiesQuery;
   }
 
   @override
   onUpdate(value) {
     globalState.appState = globalState.appState.copyWith(
-      systemUiOverlayStyle: value,
+      proxiesQuery: value,
     );
   }
 }

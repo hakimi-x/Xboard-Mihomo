@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/app.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/widgets/widgets.dart';
@@ -13,7 +14,7 @@ class TrafficUsage extends StatelessWidget {
   Widget _buildTrafficDataItem(
     BuildContext context,
     Icon icon,
-    num trafficValue,
+    TrafficValue trafficValue,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,7 +33,7 @@ class TrafficUsage extends StatelessWidget {
               Flexible(
                 flex: 1,
                 child: Text(
-                  trafficValue.traffic.value,
+                  trafficValue.showValue,
                   style: context.textTheme.bodySmall,
                   maxLines: 1,
                 ),
@@ -41,7 +42,7 @@ class TrafficUsage extends StatelessWidget {
           ),
         ),
         Text(
-          trafficValue.traffic.unit,
+          trafficValue.showUnit,
           style: context.textTheme.bodySmall?.toLighter,
         ),
       ],
@@ -88,11 +89,11 @@ class TrafficUsage extends StatelessWidget {
                             child: DonutChart(
                               data: [
                                 DonutChartData(
-                                  value: upTotalTrafficValue.toDouble(),
+                                  value: upTotalTrafficValue.value.toDouble(),
                                   color: primaryColor,
                                 ),
                                 DonutChartData(
-                                  value: downTotalTrafficValue.toDouble(),
+                                  value: downTotalTrafficValue.value.toDouble(),
                                   color: secondaryColor,
                                 ),
                               ],
@@ -134,10 +135,12 @@ class TrafficUsage extends StatelessWidget {
                                         Container(
                                           width: 20,
                                           height: 8,
-                                          decoration: BoxDecoration(
+                                          decoration: ShapeDecoration(
                                             color: primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(3),
+                                            shape: RoundedSuperellipseBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
@@ -160,10 +163,12 @@ class TrafficUsage extends StatelessWidget {
                                         Container(
                                           width: 20,
                                           height: 8,
-                                          decoration: BoxDecoration(
+                                          decoration: ShapeDecoration(
                                             color: secondaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(3),
+                                            shape: RoundedSuperellipseBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(

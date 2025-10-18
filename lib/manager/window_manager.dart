@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
-import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/providers/app.dart';
+import 'package:fl_clash/providers/config.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +59,7 @@ class _WindowContainerState extends ConsumerState<WindowManager>
   @override
   void onWindowFocus() {
     super.onWindowFocus();
-    commonPrint.log('focus');
+    commonPrint.log("focus");
     render?.resume();
   }
 
@@ -94,14 +96,14 @@ class _WindowContainerState extends ConsumerState<WindowManager>
   @override
   void onWindowMinimize() async {
     globalState.appController.savePreferencesDebounce();
-    commonPrint.log('minimize');
+    commonPrint.log("minimize");
     render?.pause();
     super.onWindowMinimize();
   }
 
   @override
   void onWindowRestore() {
-    commonPrint.log('restore');
+    commonPrint.log("restore");
     render?.resume();
     super.onWindowRestore();
   }
@@ -126,9 +128,8 @@ class WindowHeaderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, ref, child) {
-        final isMobileView = ref.watch(isMobileViewProvider);
         final version = ref.watch(versionProvider);
-        if ((version <= 10 || !isMobileView) && system.isMacOS) {
+        if (version <= 10 && Platform.isMacOS) {
           return child!;
         }
         return Stack(
@@ -170,7 +171,7 @@ class _WindowHeaderState extends State<WindowHeader> {
     _initNotifier();
   }
 
-  Future<void> _initNotifier() async {
+  _initNotifier() async {
     isMaximizedNotifier.value = await windowManager.isMaximized();
     isPinNotifier.value = await windowManager.isAlwaysOnTop();
   }
@@ -182,7 +183,7 @@ class _WindowHeaderState extends State<WindowHeader> {
     super.dispose();
   }
 
-  Future<void> _updateMaximized() async {
+  _updateMaximized() async {
     final isMaximized = await windowManager.isMaximized();
     switch (isMaximized) {
       case true:
@@ -195,13 +196,13 @@ class _WindowHeaderState extends State<WindowHeader> {
     isMaximizedNotifier.value = await windowManager.isMaximized();
   }
 
-  Future<void> _updatePin() async {
+  _updatePin() async {
     final isAlwaysOnTop = await windowManager.isAlwaysOnTop();
     await windowManager.setAlwaysOnTop(!isAlwaysOnTop);
     isPinNotifier.value = await windowManager.isAlwaysOnTop();
   }
 
-  Widget _buildActions() {
+  _buildActions() {
     return Row(
       children: [
         IconButton(
@@ -279,11 +280,15 @@ class _WindowHeaderState extends State<WindowHeader> {
               ),
             ),
           ),
-          if (system.isMacOS)
+          if (Platform.isMacOS)
             const Text(
               appName,
             )
           else ...[
+            const Positioned(
+              left: 0,
+              child: AppIcon(),
+            ),
             Positioned(
               right: 0,
               child: _buildActions(),
@@ -301,18 +306,24 @@ class AppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: context.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.all(6),
-      child: SizedBox(
-        width: 28,
-        height: 28,
-        child: CircleAvatar(
-          foregroundImage: AssetImage('assets/images/icon.png'),
-          backgroundColor: Colors.transparent,
-        ),
+      margin: const EdgeInsets.only(left: 8),
+      child: const Row(
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: CircleAvatar(
+              foregroundImage: AssetImage("assets/images/icon.png"),
+              backgroundColor: Colors.transparent,
+            ),
+          ),
+          SizedBox(
+            width: 8,
+          ),
+          Text(
+            appName,
+          ),
+        ],
       ),
     );
   }

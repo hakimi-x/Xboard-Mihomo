@@ -24,11 +24,11 @@ class ToolsView extends ConsumerStatefulWidget {
   const ToolsView({super.key});
 
   @override
-  ConsumerState<ToolsView> createState() => _ToolViewState();
+  ConsumerState<ToolsView> createState() => _ToolboxViewState();
 }
 
-class _ToolViewState extends ConsumerState<ToolsView> {
-  Widget _buildNavigationMenuItem(NavigationItem navigationItem) {
+class _ToolboxViewState extends ConsumerState<ToolsView> {
+  _buildNavigationMenuItem(NavigationItem navigationItem) {
     return ListItem.open(
       leading: navigationItem.icon,
       title: Text(Intl.message(navigationItem.label.name)),
@@ -37,8 +37,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
           : null,
       delegate: OpenDelegate(
         title: Intl.message(navigationItem.label.name),
-        widget: navigationItem.builder(context),
-        wrap: false,
+        widget: navigationItem.view,
       ),
     );
   }
@@ -69,7 +68,7 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     );
   }
 
-  List<Widget> _getSettingList() {
+  _getSettingList() {
     return generateSection(
       title: appLocalizations.settings,
       items: [
@@ -77,8 +76,8 @@ class _ToolViewState extends ConsumerState<ToolsView> {
         _ThemeItem(),
         _BackupItem(),
         if (system.isDesktop) _HotkeyItem(),
-        if (system.isWindows) _LoopbackItem(),
-        if (system.isAndroid) _AccessItem(),
+        if (Platform.isWindows) _LoopbackItem(),
+        if (Platform.isAndroid) _AccessItem(),
         _ConfigItem(),
         _SettingItem(),
       ],
@@ -110,14 +109,10 @@ class _ToolViewState extends ConsumerState<ToolsView> {
       ..._getSettingList(),
       ..._getOtherList(vm2.b),
     ];
-    return CommonScaffold(
-      title: appLocalizations.tools,
-      body: ListView.builder(
-        key: toolsStoreKey,
-        itemCount: items.length,
-        itemBuilder: (_, index) => items[index],
-        padding: const EdgeInsets.only(bottom: 20),
-      ),
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (_, index) => items[index],
+      padding: const EdgeInsets.only(bottom: 20),
     );
   }
 }
@@ -218,7 +213,7 @@ class _LoopbackItem extends StatelessWidget {
       onTap: () {
         windows?.runas(
           '"${join(dirname(Platform.resolvedExecutable), "EnableLoopback.exe")}"',
-          '',
+          "",
         );
       },
     );
@@ -252,7 +247,7 @@ class _ConfigItem extends StatelessWidget {
       title: Text(appLocalizations.basicConfig),
       subtitle: Text(appLocalizations.basicConfigDesc),
       delegate: OpenDelegate(
-        title: appLocalizations.basicConfig,
+        title: appLocalizations.override,
         widget: const ConfigView(),
       ),
     );

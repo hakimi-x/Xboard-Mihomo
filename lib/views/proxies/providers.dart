@@ -25,7 +25,8 @@ class ProvidersView extends ConsumerStatefulWidget {
 }
 
 class _ProvidersViewState extends ConsumerState<ProvidersView> {
-  Future<void> _updateProviders() async {
+
+  _updateProviders() async {
     final providers = ref.read(providersProvider);
     final providersNotifier = ref.read(providersProvider.notifier);
     final messages = [];
@@ -38,7 +39,7 @@ class _ProvidersViewState extends ConsumerState<ProvidersView> {
           providerName: provider.name,
         );
         if (message.isNotEmpty) {
-          messages.add('${provider.name}: $message \n');
+          messages.add("${provider.name}: $message \n");
         }
         providersNotifier.setProvider(
           await clashCore.getExternalProvider(provider.name),
@@ -47,7 +48,7 @@ class _ProvidersViewState extends ConsumerState<ProvidersView> {
     );
     final titleMedium = context.textTheme.titleMedium;
     await Future.wait(updateProviders);
-    globalState.appController.updateGroupsDebounce();
+    await globalState.appController.updateGroupsDebounce();
     if (messages.isNotEmpty) {
       globalState.showMessage(
         title: appLocalizations.tip,
@@ -67,12 +68,12 @@ class _ProvidersViewState extends ConsumerState<ProvidersView> {
   @override
   Widget build(BuildContext context) {
     final providers = ref.watch(providersProvider);
-    final proxyProviders = providers.where((item) => item.type == 'Proxy').map(
+    final proxyProviders = providers.where((item) => item.type == "Proxy").map(
           (item) => ProviderItem(
             provider: item,
           ),
         );
-    final ruleProviders = providers.where((item) => item.type == 'Rule').map(
+    final ruleProviders = providers.where((item) => item.type == "Rule").map(
           (item) => ProviderItem(
             provider: item,
           ),
@@ -114,10 +115,10 @@ class ProviderItem extends StatelessWidget {
     required this.provider,
   });
 
-  Future<void> _handleUpdateProvider() async {
+  _handleUpdateProvider() async {
     final appController = globalState.appController;
-    if (provider.vehicleType != 'HTTP') return;
-    await globalState.appController.safeRun(
+    if (provider.vehicleType != "HTTP") return;
+    await globalState.safeRun(
       () async {
         appController.setProvider(
           provider.copyWith(
@@ -134,11 +135,11 @@ class ProviderItem extends StatelessWidget {
     appController.setProvider(
       await clashCore.getExternalProvider(provider.name),
     );
-    globalState.appController.updateGroupsDebounce();
+    await globalState.appController.updateGroupsDebounce();
   }
 
-  Future<void> _handleSideLoadProvider() async {
-    await globalState.appController.safeRun<void>(() async {
+  _handleSideLoadProvider() async {
+    await globalState.safeRun<void>(() async {
       final platformFile = await picker.pickerFile();
       final bytes = platformFile?.bytes;
       if (bytes == null || provider.path == null) return;
@@ -155,7 +156,7 @@ class ProviderItem extends StatelessWidget {
       );
       if (message.isNotEmpty) throw message;
     });
-    globalState.appController.updateGroupsDebounce();
+    await globalState.appController.updateGroupsDebounce();
   }
 
   String _buildProviderDesc() {
@@ -163,7 +164,7 @@ class ProviderItem extends StatelessWidget {
     final count = provider.count;
     return switch (count == 0) {
       true => baseInfo,
-      false => '$baseInfo  ·  $count${appLocalizations.entries}',
+      false => "$baseInfo  ·  $count${appLocalizations.entries}",
     };
   }
 
@@ -197,34 +198,36 @@ class ProviderItem extends StatelessWidget {
           Wrap(
             runSpacing: 6,
             spacing: 12,
-            runAlignment: WrapAlignment.center,
             children: [
               CommonChip(
                 avatar: const Icon(Icons.upload),
                 label: appLocalizations.upload,
                 onPressed: _handleSideLoadProvider,
               ),
-              if (provider.vehicleType == 'HTTP')
-                provider.isUpdating
-                    ? SizedBox(
-                        height: 30,
-                        width: 30,
-                        child: const Padding(
-                          padding: EdgeInsets.all(2),
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : CommonChip(
-                        avatar: const Icon(Icons.sync),
-                        label: appLocalizations.sync,
-                        onPressed: _handleUpdateProvider,
-                      ),
+              if (provider.vehicleType == "HTTP")
+                CommonChip(
+                  avatar: const Icon(Icons.sync),
+                  label: appLocalizations.sync,
+                  onPressed: _handleUpdateProvider,
+                ),
             ],
           ),
           const SizedBox(
             height: 4,
           ),
         ],
+      ),
+      trailing: SizedBox(
+        height: 48,
+        width: 48,
+        child: FadeThroughBox(
+          child: provider.isUpdating
+              ? const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator(),
+                )
+              : const SizedBox(),
+        ),
       ),
     );
   }

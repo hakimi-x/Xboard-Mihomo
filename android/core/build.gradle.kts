@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.argumentsWithVarargAsSingleArray
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -5,11 +7,11 @@ plugins {
 
 android {
     namespace = "com.follow.clash.core"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    ndkVersion = libs.versions.ndkVersion.get()
+    compileSdk = 35
+    ndkVersion = "28.0.13004108"
 
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = 21
     }
 
     buildTypes {
@@ -21,7 +23,6 @@ android {
             )
         }
     }
-
 
     sourceSets {
         getByName("main") {
@@ -46,7 +47,7 @@ android {
     }
 }
 dependencies {
-    implementation(libs.annotation.jvm)
+    implementation("androidx.annotation:annotation-jvm:1.9.1")
 }
 
 val copyNativeLibs by tasks.register<Copy>("copyNativeLibs") {
@@ -55,18 +56,6 @@ val copyNativeLibs by tasks.register<Copy>("copyNativeLibs") {
     }
     from("../../libclash/android")
     into("src/main/jniLibs")
-
-    doLast {
-        val includesDir = file("src/main/jniLibs/includes")
-        val targetDir = file("src/main/cpp/includes")
-        if (includesDir.exists()) {
-            copy {
-                from(includesDir)
-                into(targetDir)
-            }
-            delete(includesDir)
-        }
-    }
 }
 
 afterEvaluate {

@@ -6,8 +6,8 @@ import 'common.dart';
 
 extension PackageInfoExtension on PackageInfo {
   String get ua => [
-        '$appName/v$version',
-        'clash-verge',
-        'Platform/${Platform.operatingSystem}',
-      ].join(' ');
+        "$appNameEn/v$version", // 使用英文名称避免HTTP头中文字符问题
+        "clash-verge",
+        "Platform/${Platform.operatingSystem}",
+      ].join(" ");
 }

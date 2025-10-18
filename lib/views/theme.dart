@@ -40,25 +40,19 @@ class ThemeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      _ThemeModeItem(),
-      _PrimaryColorItem(),
-      _PrueBlackItem(),
-      _TextScaleFactorItem(),
-      const SizedBox(
-        height: 64,
+    return SingleChildScrollView(
+      child: Column(
+        spacing: 24,
+        children: [
+          _ThemeModeItem(),
+          _PrimaryColorItem(),
+          _PrueBlackItem(),
+          _TextScaleFactorItem(),
+          const SizedBox(
+            height: 64,
+          ),
+        ],
       ),
-    ];
-    return ListView.separated(
-      itemCount: items.length,
-      itemBuilder: (_, index) {
-        return items[index];
-      },
-      separatorBuilder: (_, __) {
-        return SizedBox(
-          height: 24,
-        );
-      },
     );
   }
 }
@@ -183,7 +177,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
     return max((maxWidth / 96).ceil(), 3);
   }
 
-  Future<void> _handleReset() async {
+  _handleReset() async {
     final res = await globalState.showMessage(
       message: TextSpan(
         text: appLocalizations.resetTip,
@@ -203,7 +197,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
     );
   }
 
-  Future<void> _handleDel() async {
+  _handleDel() async {
     if (_removablePrimaryColor == null) {
       return;
     }
@@ -240,7 +234,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
     });
   }
 
-  Future<void> _handleAdd() async {
+  _handleAdd() async {
     final res = await globalState.showCommonDialog<int>(
       child: _PaletteDialog(),
     );
@@ -269,7 +263,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
     );
   }
 
-  Future<void> _handleChangeSchemeVariant() async {
+  _handleChangeSchemeVariant() async {
     final schemeVariant = ref.read(
       themeSettingProvider.select(
         (state) => state.schemeVariant,
@@ -279,7 +273,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
       child: OptionsDialog<DynamicSchemeVariant>(
         title: appLocalizations.colorSchemes,
         options: DynamicSchemeVariant.values,
-        textBuilder: (item) => Intl.message('${item.name}Scheme'),
+        textBuilder: (item) => Intl.message("${item.name}Scheme"),
         value: schemeVariant,
       ),
     );
@@ -336,7 +330,7 @@ class _PrimaryColorItemState extends ConsumerState<_PrimaryColorItem> {
                   visualDensity: VisualDensity.compact,
                 ),
                 onPressed: _handleChangeSchemeVariant,
-                child: Text(Intl.message('${schemeVariant.name}Scheme')),
+                child: Text(Intl.message("${schemeVariant.name}Scheme")),
               ),
             if (_removablePrimaryColor != null)
               FilledButton(
@@ -495,7 +489,7 @@ class _TextScaleFactorItem extends ConsumerWidget {
         (state) => state.textScale,
       ),
     );
-    final String process = '${(textScale.scale * 100).round()}%';
+    final String process = "${((textScale.scale * 100) as double).round()}%";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

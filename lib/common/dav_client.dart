@@ -38,18 +38,18 @@ class DAVClient {
     }
   }
 
-  String get root => '/$appName';
+  get root => "/$appName";
 
-  String get backupFile => '$root/$fileName';
+  get backupFile => "$root/$fileName";
 
-  Future<bool> backup(Uint8List data) async {
-    await client.mkdir(root);
-    await client.write(backupFile, data);
+  backup(Uint8List data) async {
+    await client.mkdir("$root");
+    await client.write("$backupFile", data);
     return true;
   }
 
   Future<List<int>> recovery() async {
-    await client.mkdir(root);
+    await client.mkdir("$root");
     final data = await client.read(backupFile);
     return data;
   }

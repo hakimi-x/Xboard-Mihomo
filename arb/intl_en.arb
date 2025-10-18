@@ -27,6 +27,9 @@
   "more": "More",
   "other": "Other",
   "about": "About",
+  "domainStatusChecking": "Checking...",
+  "domainStatusAvailable": "Service Available",
+  "domainStatusUnavailable": "Service Unavailable",
   "en": "English",
   "ja": "Japanese",
   "ru": "Russian",
@@ -181,6 +184,8 @@
   "expirationTime": "Expiration time",
   "connections": "Connections",
   "connectionsDesc": "View current connections data",
+  "plans": "Plans",
+  "onlineSupport": "Online Support",
   "intranetIP": "Intranet IP",
   "view": "View",
   "cut": "Cut",
@@ -284,8 +289,8 @@
   "action_mode": "Switch mode",
   "action_proxy": "System proxy",
   "action_tun": "TUN",
-  "disclaimer": "Disclaimer",
-  "disclaimerDesc": "This software is only used for non-commercial purposes such as learning exchanges and scientific research. It is strictly prohibited to use this software for commercial purposes. Any commercial activity, if any, has nothing to do with this software.",
+  "disclaimer": "Important Notice",
+  "disclaimerDesc": "This software is currently in public beta. If you receive update reminders, please update promptly. Older versions may cause service instability or inability to use.",
   "agree": "Agree",
   "hotkeyManagement": "Hotkey Management",
   "hotkeyManagementDesc": "Use keyboard to control applications",
@@ -407,19 +412,652 @@
   "importFile": "Import from file",
   "importUrl": "Import from URL",
   "autoSetSystemDns": "Auto set system DNS",
-  "details": "{label} details",
-  "creationTime": "Creation time",
-  "progress": "Progress",
-  "host": "Host",
-  "destination": "Destination",
-  "destinationGeoIP": "Destination GeoIP",
-  "destinationIPASN": "Destination IPASN",
-  "specialProxy": "Special proxy",
-  "specialRules": "special rules",
-  "remoteDestination": "Remote destination",
-  "networkType": "Network type",
-  "proxyChains": "Proxy chains",
-  "log": "Log",
-  "connection": "Connection",
-  "request": "Request"
+  "xboardLogin": "Login",
+  "xboardRegister": "Register",
+  "xboardLogout": "Logout",
+  "xboardEmail": "Email",
+  "xboardPassword": "Password",
+  "xboardConfirmPassword": "Confirm Password",
+  "xboardInviteCode": "Invite Code",
+  "xboardRememberPassword": "Remember Password",
+  "xboardForgotPassword": "Forgot Password",
+  "xboardLoginSuccess": "Login successful",
+  "xboardLoginFailed": "Login failed",
+  "xboardRegisterSuccess": "Registration successful! Redirecting to login page...",
+  "xboardRegisterFailed": "Registration failed",
+  "xboardLogoutConfirmTitle": "Confirm Logout",
+  "xboardLogoutConfirmContent": "Are you sure you want to logout? You will need to re-enter your credentials.",
+  "xboardLogoutSuccess": "Successfully logged out",
+  "xboardLogoutFailed": "Logout failed",
+  "xboardTokenExpiredTitle": "Login Expired",
+  "xboardTokenExpiredContent": "Your login session has expired. Please login again to continue.",
+  "xboardRelogin": "Login Again",
+  "xboardCancel": "Cancel",
+  "xboardConfirm": "Confirm",
+  "xboardPlans": "Plans",
+  "xboardSubscription": "Subscription",
+  "xboardCurrentNode": "Current Node",
+  "xboardNodeName": "Node Name",
+  "xboardGroup": "Group",
+  "xboardProfile": "Profile",
+  "xboardLocalIP": "Local IP",
+  "xboardGettingIP": "Getting...",
+  "xboardUnknownUser": "Unknown User",
+  "xboardLoggedIn": "Logged In",
+  "xboardNotLoggedIn": "Not Logged In",
+  "xboardUnselected": "Unselected",
+  "xboardNone": "None",
+  "xboardPlanInfo": "Plan Information",
+  "xboardSubscriptionPurchase": "Subscription Purchase",
+  "xboardBuyNow": "Buy Now",
+  "xboardRetry": "Retry",
+  "xboardRefresh": "Refresh",
+  "xboardCopyLink": "Copy Link",
+  "xboardSubscriptionCopied": "Subscription link copied to clipboard",
+  "xboardReload": "Reload",
+  "xboardProcessing": "Processing...",
+  "xboardSelectPeriod": "Please select purchase period",
+  "xboardOperationFailed": "Operation failed",
+  "xboardOpenPaymentFailed": "Failed to open payment page",
+  "xboardPaymentInstructions1": "1. Payment page has been opened automatically",
+  "xboardPaymentInstructions2": "2. Please complete payment in your browser",
+  "xboardPaymentInstructions3": "3. Return to app after payment, system will detect automatically",
+  "xboardOrderNumber": "Order Number: ",
+  "xboardReopenPayment": "Reopen Payment",
+  "xboardCopyPaymentLink": "Copy Link",
+  "xboardPaymentComplete": "Payment Complete",
+  "xboardCancelPayment": "Cancel Payment",
+  "xboardPaymentSuccess": "🎉 Payment successful!",
+  "xboardPaymentCancelled": "Payment cancelled",
+  "xboardOrderNotFound": "Order not found",
+  "xboardCheckPaymentFailed": "Failed to check payment status",
+  "xboardPaymentCompleted": "Payment completed!",
+  "xboardBack": "Back",
+  "xboardCopyFailed": "Copy failed",
+  "xboardPaymentLinkCopied": "Payment link copied to clipboard",
+  "xboardOpenPaymentLinkFailed": "Failed to open payment link",
+  "xboardSendVerificationCode": "Send Verification Code",
+  "xboardEnableTun": "Enable TUN",
+  "xboardPrevious": "Previous",
+  "xboardNext": "Next",
+  "xboardLater": "Later",
+  "xboardClearError": "Clear Error",
+  "xboardUpdateLater": "Update Later",
+  "xboardForceUpdate": "Force Update",
+  "xboardNewVersionFound": "New version found",
+  "xboardCurrentVersion": "Current Version",
+  "xboardUpdateContent": "Update Content:",
+  "xboardMustUpdate": "Must Update",
+  "xboardUpdateNow": "Update Now",
+  "xboardNoSubscriptionInfo": "No subscription information",
+  "xboardLoginToViewSubscription": "Please login to view subscription usage",
+  "xboardNoAvailableSubscription": "No available subscription",
+  "xboardPurchaseSubscriptionToUse": "Please purchase a subscription to use",
+  "xboardSubscriptionExpired": "Subscription expired",
+  "xboardRenewToContinue": "Please renew to continue using",
+  "xboardTrafficExhausted": "Traffic exhausted",
+  "xboardBuyMoreTrafficOrUpgrade": "Please buy more traffic or upgrade plan",
+  "xboardExpiryTime": "Expiry time",
+  "xboardUsed": "Used",
+  "xboardUsedTraffic": "Used",
+  "xboardValidityPeriod": "Expires",
+  "xboardDays": "days",
+  "xboardMonthlyPayment": "Monthly",
+  "xboardMonthlyRenewal": "Monthly renewal",
+  "xboardQuarterlyPayment": "Quarterly",
+  "xboardThreeMonthCycle": "3-month cycle",
+  "xboardHalfYearlyPayment": "Half-yearly",
+  "xboardSixMonthCycle": "6-month cycle",
+  "xboardYearlyPayment": "Yearly",
+  "xboardTwelveMonthCycle": "12-month cycle",
+  "xboardTwoYearPayment": "Two-year",
+  "xboardTwentyFourMonthCycle": "24-month cycle",
+  "xboardThreeYearPayment": "Three-year",
+  "xboardThirtySixMonthCycle": "36-month cycle",
+  "xboardOneTimePayment": "One-time",
+  "xboardBuyoutPlan": "Buyout plan",
+  "xboardPleaseSelectPaymentPeriod": "Please select payment period",
+  "xboardOrderCreationFailed": "Order creation failed",
+  "xboardPaymentSuccess": "Payment successful",
+  "xboardPaymentCancelled": "Payment cancelled",
+  "xboardOperationFailed": "Operation failed",
+  "xboardFailedToOpenPaymentPage": "Failed to open payment page",
+  "xboardSelectPaymentPeriod": "Select payment period",
+  "xboardCouponNotYetActive": "Coupon not yet active",
+  "xboardCouponExpired": "Coupon expired",
+  "xboardUnsupportedCouponType": "Unsupported coupon type",
+  "xboardInvalidOrExpiredCoupon": "Invalid or expired coupon code",
+  "xboardValidationFailed": "Validation failed",
+  "xboardAccountBalance": "Account balance",
+  "xboardDeductibleDuringPayment": "Deductible during payment",
+  "xboardCouponOptional": "Coupon (optional)",
+  "xboardDiscounted": "Discounted",
+  "xboardEnterCouponCode": "Enter coupon code",
+  "xboardVerify": "Verify",
+  "xboardPurchaseSubscription": "Purchase subscription",
+  "xboardTraffic": "Traffic",
+  "xboardSpeedLimit": "Speed",
+  "xboardProcessing": "Processing...",
+  "xboardConfirmPurchase": "Confirm purchase",
+  "xboardAutoOpeningPaymentPage": "Auto-opening payment page, please return to app after payment",
+  "xboardPaymentPageOpenedInBrowser": "Payment page opened in browser, please return to app after payment",
+  "xboardFailedToOpenPaymentLink": "Failed to open payment link",
+  "xboardPaymentLinkCopied": "Payment link copied to clipboard",
+  "xboardCopyFailed": "Copy failed",
+  "xboardPaymentSuccessful": "🎉 Payment successful!",
+  "xboardWaitingForPayment": "Waiting for payment",
+  "xboardOrderStatusPending": "Order status: Pending payment",
+  "xboardOrderNotFound": "Order not found",
+  "xboardFailedToCheckPaymentStatus": "Failed to check payment status",
+  "xboardPaymentCompleted": "Payment completed!",
+  "xboardPaymentGateway": "Payment gateway",
+  "xboardReturn": "Return",
+  "xboardPaymentInfo": "Payment information",
+  "xboardOrderNumber": "Order number",
+  "xboardPaymentLink": "Payment link",
+  "xboardClickToCopy": "Click to copy",
+  "xboardAutoDetectPaymentStatus": "Auto-detect payment status",
+  "xboardAutoCheckEvery5Seconds": "System checks every 5 seconds, will redirect automatically after payment",
+  "xboardStop": "Stop",
+  "xboardOperationTips": "Operation tips",
+  "xboardPaymentPageAutoOpened": "1. Payment page has been opened automatically",
+  "xboardCompletePaymentInBrowser": "2. Please complete payment in your browser",
+  "xboardReturnAfterPaymentAutoDetect": "3. Return to app after payment, system will detect automatically",
+  "xboardReopenPaymentPageTip": "To reopen, click the \\\"Reopen\\\" button below",
+  "xboardBrowserNotOpenedTip": "If browser doesn't open automatically, click \\\"Reopen\\\" or copy link manually",
+  "xboardReopen": "Reopen",
+  "xboardChecking": "Checking",
+  "xboardCheckStatus": "Check status",
+  "xboardCancelPayment": "Cancel payment",
+  "xboardCreatingOrder": "Creating order",
+  "xboardLoadingPaymentPage": "Loading payment page",
+  "xboardPaymentMethodVerified": "Payment method verified",
+  "xboardWaitingPaymentCompletion": "Waiting for payment completion",
+  "xboardCreatingOrderPleaseWait": "We are creating a new order for you, please wait",
+  "xboardPreparingPaymentPage": "Preparing payment page, redirecting soon",
+  "xboardPaymentMethodVerifiedPreparing": "Payment method verified, preparing to redirect to payment page",
+  "xboardPaymentPageOpenedCompleteAndReturn": "Payment page opened, please complete payment and return to app",
+  "xboardCongratulationsSubscriptionActivated": "Congratulations! Your subscription has been successfully purchased and activated",
+  "xboardHandleLater": "Handle later",
+  "xboardSubscriptionLinkCopied": "Subscription link copied to clipboard",
+  "xboardSubscriptionPurchase": "Subscription purchase",
+  "xboardSubscriptionInfo": "Subscription information",
+  "xboardFailedToGetSubscriptionInfo": "Failed to get subscription information",
+  "xboardRetryGet": "Retry",
+  "xboardSubscriptionLink": "Subscription link",
+  "xboardUsageInstructions": "Usage instructions",
+  "xboardCopySubscriptionLinkAbove": "Copy the subscription link above",
+  "xboardAddLinkToConfig": "Add this subscription link to your configuration",
+  "xboardUpdateSubscriptionRegularly": "Update subscription regularly to get latest nodes",
+  "xboardKeepSubscriptionLinkSafe": "Please keep your subscription link safe and don't share with others",
+  "xboardLoadingFailed": "Loading failed",
+  "xboardNoSubscriptionPlans": "No subscription plans",
+  "xboardConnectionTimeout": "Connection timeout, please check network connection",
+  "xboardNoInternetConnection": "No internet connection, please check network settings",
+  "xboardServerError": "Server error",
+  "xboardInvalidCredentials": "Invalid username or password",
+  "xboardLoginExpired": "Login expired, please login again",
+  "xboardUnauthorizedAccess": "Unauthorized access, please login first",
+  "xboardPlanNotFound": "Plan not found",
+  "xboardOrderNotFound": "Order not found",
+  "xboardPaymentFailed": "Payment failed",
+  "xboardInsufficientBalance": "Insufficient balance",
+  "xboardInvalidResponseFormat": "Invalid response format from server",
+  "xboardMissingRequiredField": "Missing required field",
+  "xboardApiUrlNotConfigured": "API URL not configured",
+  "xboardConfigurationError": "Configuration error",
+  "xboardTesting": "Testing",
+  "xboardAutoTesting": "Auto testing",
+  "xboardTimeout": "Timeout",
+  "xboardExcellent": "Excellent",
+  "xboardGood": "Good",
+  "xboardFair": "Fair",
+  "xboardPoor": "Poor",
+  "xboardVeryPoor": "Very poor",
+  "xboardClearError": "Clear error",
+  "xboardPreparingImport": "Preparing import",
+  "xboardCleaningOldConfig": "Cleaning old configuration",
+  "xboardDownloadingConfig": "Downloading configuration file",
+  "xboardValidatingConfigFormat": "Validating configuration format",
+  "xboardAddingToConfigList": "Adding to configuration list",
+  "xboardImportSuccess": "Import successful",
+  "xboardImportFailed": "Import failed",
+  "xboardNetworkConnectionFailed": "Network connection failed, please check network settings",
+  "xboardConfigDownloadFailed": "Configuration download failed, please check subscription link",
+  "xboardConfigFormatError": "Configuration format error, please contact service provider",
+  "xboardConfigSaveFailed": "Configuration save failed, please check storage space",
+  "xboardUnknownErrorRetry": "Unknown error, please retry",
+  "xboardForceUpdate": "Force update",
+  "xboardNewVersionFound": "New version found",
+  "xboardCurrentVersion": "Current version",
+  "xboardUpdateContent": "Update content:",
+  "xboardMustUpdate": "Must update",
+  "xboardProxyMode": "Proxy Mode",
+  "xboardProxyModeRuleDescription": "Automatically select direct or proxy based on rules",
+  "xboardProxyModeGlobalDescription": "All traffic goes through proxy server",
+  "xboardProxyModeDirectDescription": "All traffic connects directly without proxy",
+  "xboardTunEnabled": "TUN enabled",
+  "xboardNoAvailableNodes": "No available nodes",
+  "xboardClickToSetupNodes": "Click to setup nodes",
+  "xboardProxy": "Proxy",
+  "xboardSwitch": "Switch",
+  "xboardSetup": "Setup",
+  "xboardNoAvailablePlan": "No available plan",
+  "xboardSubscriptionHasExpired": "Subscription has expired",
+  "xboardTrafficUsedUp": "Traffic used up",
+  "xboardSubscriptionStatus": "Subscription status",
+  "xboardRefreshStatus": "Refresh status",
+  "xboardHandleLater": "Handle later",
+  "xboardPurchasePlan": "Purchase plan",
+  "xboardRenewPlan": "Renew plan",
+  "xboardPurchaseTraffic": "Purchase traffic",
+  "xboardConfirmAction": "Confirm",
+  "xboardAfterPurchasingPlan": "After purchasing a plan, you will enjoy:",
+  "xboardHighSpeedNetwork": "High-speed network",
+  "xboardEnjoyFastNetworkExperience": "Enjoy fast network experience",
+  "xboardSecureEncryption": "Secure encryption",
+  "xboardProtectNetworkPrivacy": "Protect your network privacy",
+  "xboardGlobalNodes": "Global nodes",
+  "xboardConnectGlobalQualityNodes": "Connect to global quality nodes",
+  "xboardProfessionalSupport": "Professional support",
+  "xboard24HourCustomerService": "24-hour customer service support",
+  "xboardStartProxy": "Start Proxy",
+  "xboardStopProxy": "Stop Proxy",
+  "xboardRunningTime": "Running time: {time}",
+  "@xboardRunningTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionNotLoggedIn": "Not logged in",
+  "subscriptionNotLoggedInDetail": "Please login first",
+  "subscriptionNoSubscription": "No subscription",
+  "subscriptionNoSubscriptionDetail": "No available subscription plan found, please purchase a plan to use",
+  "subscriptionExpired": "Subscription expired",
+  "subscriptionExpiredDetail": "Plan expired on {date}, please renew to continue using",
+  "@subscriptionExpiredDetail": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionExpiresToday": "Subscription expires today",
+  "subscriptionExpiresTodayDetail": "Plan will expire today, please renew immediately to avoid service interruption",
+  "subscriptionExpiringInDays": "Subscription expiring soon",
+  "subscriptionExpiringInDaysDetail": "Plan will expire in {days} days, please renew in time",
+  "@subscriptionExpiringInDaysDetail": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionTrafficExhausted": "Traffic exhausted",
+  "subscriptionTrafficExhaustedDetail": "Plan traffic has been used up, please purchase more traffic or upgrade plan",
+  "subscriptionValid": "Subscription valid",
+  "subscriptionValidDetail": "Subscription will expire in {days} days",
+  "@subscriptionValidDetail": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionNotLoggedIn": "Not logged in",
+  "subscriptionNotLoggedInDetail": "Please login first",
+  "subscriptionNoSubscription": "No subscription",
+  "subscriptionNoSubscriptionDetail": "No available subscription plan found, please purchase a plan to use",
+  "subscriptionExpired": "Subscription expired",
+  "subscriptionExpiredDetail": "Plan expired on {date}, please renew to continue using",
+  "@subscriptionExpiredDetail": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionExpiresToday": "Subscription expires today",
+  "subscriptionExpiresTodayDetail": "Plan will expire today, please renew immediately to avoid service interruption",
+  "subscriptionExpiringInDays": "Subscription expiring soon",
+  "subscriptionExpiringInDaysDetail": "Plan will expire in {days} days, please renew in time",
+  "@subscriptionExpiringInDaysDetail": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionTrafficExhausted": "Traffic exhausted",
+  "subscriptionTrafficExhaustedDetail": "Plan traffic has been used up, please purchase more traffic or upgrade plan",
+  "subscriptionValid": "Subscription valid",
+  "subscriptionValidDetail": "Subscription will expire in {days} days",
+  "@subscriptionValidDetail": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "forgotPassword": "Forgot Password",
+  "resetPassword": "Reset Password",
+  "setNewPassword": "Set New Password",
+  "enterEmailForReset": "Please enter your email address and we will send a verification code to your email",
+  "verificationCodeSent": "Verification code has been sent to your email, please check",
+  "sendCodeFailed": "Failed to send verification code",
+  "verificationCodeSentTo": "Verification code has been sent to {email}, please check and enter the verification code and new password",
+  "@verificationCodeSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "emailAddress": "Email Address",
+  "pleaseEnterEmail": "Please enter email address",
+  "pleaseEnterValidEmail": "Please enter a valid email address",
+  "sendVerificationCode": "Send Verification Code",
+  "verificationCode": "Verification Code",
+  "pleaseEnterVerificationCode": "Please enter email verification code",
+  "pleaseEnterValidVerificationCode": "Please enter a valid verification code",
+  "newPassword": "New Password",
+  "pleaseEnterNewPassword": "Please enter new password",
+  "confirmNewPassword": "Confirm New Password",
+  "pleaseConfirmNewPassword": "Please re-enter new password",
+  "passwordMismatch": "Passwords do not match",
+  "passwordResetSuccessful": "Password reset successful! Please login with your new password",
+  "passwordResetFailed": "Password reset failed",
+  "resendVerificationCode": "Resend Verification Code",
+  "rememberPassword": "Remember your password?",
+  "backToLogin": "Back to Login",
+  "passwordMinLength": "Password must be at least 6 characters",
+  "registerSuccessSaveCredentials": "Registration successful - Saving credentials:",
+  "credentialsSaved": "Credentials saved",
+  "registrationFailed": "Registration failed: {e}",
+  "@registrationFailed": {
+    "placeholders": {
+      "e": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseEnterEmailAddress": "Please enter email address",
+  "pleaseEnterValidEmailAddress": "Please enter a valid email address",
+  "verificationCodeSentCheckEmail": "Verification code sent, please check your email",
+  "sendVerificationCodeFailed": "Failed to send verification code: {e}",
+  "@sendVerificationCodeFailed": {
+    "placeholders": {
+      "e": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteCodeRequired": "Invite Code Required",
+  "inviteCodeRequiredMessage": "Registration requires an invite code. Please contact a registered user to get an invite code before registering.",
+  "iUnderstand": "I Understand",
+  "createAccount": "Create Account",
+  "fillInfoToRegister": "Please fill in the following information to complete registration",
+  "pleaseEnterYourEmailAddress": "Please enter your email address",
+  "pleaseEnterAtLeast8CharsPassword": "Please enter at least 8 characters password",
+  "pleaseEnterPassword": "Please enter password",
+  "passwordMin8Chars": "Password must be at least 8 characters",
+  "pleaseConfirmPassword": "Please confirm password",
+  "pleaseReEnterPassword": "Please re-enter password",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "emailVerificationCode": "Email Verification Code",
+  "pleaseEnterEmailVerificationCode": "Please enter email verification code",
+  "verificationCode6Digits": "Verification code should be 6 digits",
+  "inviteCode": "Invite Code",
+  "pleaseEnterInviteCode": "Please enter invite code",
+  "inviteCodeOptional": "Invite Code (optional)",
+  "loading": "Loading...",
+  "registerAccount": "Register Account",
+  "alreadyHaveAccount": "Already have an account?",
+  "loginNow": "Login Now",
+  "invite": "Invite",
+  "userCenter": "User Center",
+  "inviteRules": "Invite Rules",
+  "inviteRegisterReward": "Invite friends to register and subscribe to earn commission",
+  "friendInviteReward": "Earn commission when your invited friends spend",
+  "currentCommissionRate": "Current commission rate: {rate}%",
+  "@currentCommissionRate": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "commissionSettled": "Commission settled after friend subscription",
+  "withdrawalAvailable": "Available commission can be withdrawn",
+  "myInviteQr": "My Invite QR",
+  "saveQr": "Save QR",
+  "copyInviteLink": "Copy Link",
+  "generatingInviteCode": "Generating invite code...",
+  "inviteCodeGenFailed": "Invite code generation failed",
+  "checkNetwork": "Please check network and retry",
+  "inviteStats": "Invite Stats",
+  "totalInvites": "Total Invites",
+  "commissionRate": "Commission Rate",
+  "totalCommission": "Total Commission",
+  "walletDetails": "Wallet Details",
+  "transfer": "Transfer",
+  "availableCommission": "Available Commission",
+  "pendingCommission": "Pending Commission",
+  "walletBalance": "Wallet Balance",
+  "commissionHistory": "Commission History",
+  "withdraw": "Withdraw",
+  "noCommissionRecord": "No commission records",
+  "viewHistory": "View History",
+  "loadMore": "Load More",
+  "loading": "Loading...",
+  "copiedToClipboard": "Copied to clipboard",
+  "saveQrCodeFeature": "Save QR feature coming soon",
+  "inviteLinkCopied": "Invite link copied, share with friends",
+  "withdrawCommission": "Withdraw Commission",
+  "withdrawableAmount": "Withdrawable amount: {amount}",
+  "@withdrawableAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "visitWebVersion": "Please visit web version to withdraw",
+  "completeWithdrawal": "Web version provides complete withdrawal features",
+  "goToWeb": "Go to Web",
+  "cannotOpenBrowser": "Cannot open browser, please visit web manually",
+  "openWebFailed": "Failed to open web, please visit manually",
+  "cannotGetWebUrl": "Cannot get web URL, please contact support",
+  "transferToWallet": "Transfer to Wallet",
+  "transferSuccess": "Transfer Success!",
+  "transferring": "Transferring...",
+  "transferAmount": "Transfer Amount",
+  "enterTransferAmount": "Enter transfer amount",
+  "maxTransferable": "Max transferable: ¥{amount}",
+  "@maxTransferable": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "transferNote": "Transferred balance can be used for in-app purchases",
+  "confirmTransfer": "Confirm Transfer",
+  "enterTransferAmountError": "Please enter transfer amount",
+  "invalidTransferAmount": "Please enter valid transfer amount",
+  "transferAmountExceeded": "Transfer amount cannot exceed ¥{amount}",
+  "@transferAmountExceeded": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "transferSuccessMsg": "Transfer success! Transferred ¥{amount} to wallet",
+  "@transferSuccessMsg": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "transferFailed": "Transfer failed: {error}",
+  "@transferFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalRecords": "Total {count} records",
+  "@totalRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageNumber": "Page {page}",
+  "@pageNumber": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "orderNumber": "Order: {orderNo}",
+  "@orderNumber": {
+    "placeholders": {
+      "orderNo": {
+        "type": "String"
+      }
+    }
+  },
+  "orderAmount": "Order amount: {amount}",
+  "@orderAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "close": "Close",
+  "refresh": "Refresh",
+  "switchTheme": "Switch Theme",
+  "logout": "Logout",
+  "selectTheme": "Select Theme",
+  "auto": "Auto",
+  "light": "Light",
+  "dark": "Dark",
+  "confirmLogout": "Confirm Logout",
+  "logoutConfirmMsg": "Are you sure to logout? You need to login again.",
+  "loggedOutSuccess": "Logged out successfully",
+  "logoutFailed": "Logout failed: {error}",
+  "@logoutFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "complete": "Complete",
+  "noInvitationData": "No invitation data",
+  "updateCheckForceUpdate": "Force update: {version}",
+  "@updateCheckForceUpdate": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCheckNewVersionFound": "New version found: {version}",
+  "@updateCheckNewVersionFound": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCheckCurrentVersion": "Current version: {version}",
+  "@updateCheckCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateCheckReleaseNotes": "Release Notes:",
+  "updateCheckUpdateLater": "Update Later",
+  "updateCheckMustUpdate": "Must Update",
+  "updateCheckUpdateNow": "Update Now",
+  "updateCheckServerUrlNotConfigured": "Update server URL not configured, please check configuration",
+  "updateCheckNoServerUrlsConfigured": "No update server URLs configured, please check configuration",
+  "updateCheckAllServersUnavailable": "All configured update servers are unavailable",
+  "updateCheckServerError": "Server returned error status code {statusCode}",
+  "@updateCheckServerError": {
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "updateCheckServerTemporarilyUnavailable": "Server temporarily unavailable, please try again later",
+  "onlineSupportTitle": "Online Support",
+  "onlineSupportConnected": "Successfully connected to support system",
+  "onlineSupportConnecting": "Connecting...",
+  "onlineSupportDisconnected": "Disconnected",
+  "onlineSupportConnectionError": "Connection error",
+  "onlineSupportNoMessages": "No messages yet, send a message to start consultation",
+  "onlineSupportInputHint": "Please enter your question...",
+  "onlineSupportSendImage": "Send image",
+  "onlineSupportClearHistory": "Clear history",
+  "onlineSupportClearHistoryConfirm": "Are you sure you want to clear all chat history? This action cannot be undone.",
+  "onlineSupportCancel": "Cancel",
+  "onlineSupportConfirm": "Confirm",
+  "onlineSupportSelectImages": "Select Images",
+  "onlineSupportClickToSelect": "Click to select images",
+  "onlineSupportSupportedFormats": "Supports JPG, PNG, GIF, WebP, BMP\nMax 10MB",
+  "onlineSupportAddMore": "Add More",
+  "onlineSupportSend": "Send",
+  "onlineSupportSelectImagesFailed": "Failed to select images: {error}",
+  "@onlineSupportSelectImagesFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "onlineSupportUploadFailed": "Upload failed: {error}",
+  "@onlineSupportUploadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "onlineSupportApiConfigNotFound": "Online support API configuration not found, please check configuration",
+  "onlineSupportUnsupportedHttpMethod": "Unsupported HTTP method: {method}",
+  "@onlineSupportUnsupportedHttpMethod": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "onlineSupportSendMessageFailed": "Failed to send message: Unable to get authentication token",
+  "onlineSupportTokenNotFound": "Authentication token not found",
+  "onlineSupportGetMessagesFailed": "Failed to get messages: {statusCode}",
+  "@onlineSupportGetMessagesFailed": {
+    "placeholders": {
+      "statusCode": {
+        "type": "int"
+      }
+    }
+  },
+  "contactSupport": "Support",
+  "configurationError": "Application configuration error, please contact support",
+  "onlineSupportWebSocketConfigNotFound": "Online support WebSocket configuration not found, please check configuration",
+  "newMessageFromSupport": "New message from support"
 }

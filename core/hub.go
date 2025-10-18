@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"core/state"
 	"encoding/json"
 	"fmt"
 	"github.com/metacubex/mihomo/adapter"
@@ -67,7 +68,7 @@ func handleGetIsInit() bool {
 	return isInit
 }
 
-func handleForceGC() {
+func handleForceGc() {
 	go func() {
 		log.Infoln("[APP] request force GC")
 		runtime.GC()
@@ -135,8 +136,8 @@ func handleChangeProxy(data string, fn func(string string)) {
 	}()
 }
 
-func handleGetTraffic(onlyStatisticsProxy bool) string {
-	up, down := statistic.DefaultManager.Current(onlyStatisticsProxy)
+func handleGetTraffic() string {
+	up, down := statistic.DefaultManager.Current(state.CurrentState.OnlyStatisticsProxy)
 	traffic := map[string]int64{
 		"up":   up,
 		"down": down,
@@ -149,8 +150,8 @@ func handleGetTraffic(onlyStatisticsProxy bool) string {
 	return string(data)
 }
 
-func handleGetTotalTraffic(onlyStatisticsProxy bool) string {
-	up, down := statistic.DefaultManager.Total(onlyStatisticsProxy)
+func handleGetTotalTraffic() string {
+	up, down := statistic.DefaultManager.Total(state.CurrentState.OnlyStatisticsProxy)
 	traffic := map[string]int64{
 		"up":   up,
 		"down": down,
@@ -373,15 +374,6 @@ func handleSideLoadExternalProvider(providerName string, data []byte, fn func(va
 	}()
 }
 
-func handleSuspended(suspended bool) bool {
-	if suspended {
-		tunnel.OnSuspend()
-	} else {
-		tunnel.OnRunning()
-	}
-	return true
-}
-
 func handleStartLog() {
 	if logSubscriber != nil {
 		log.UnSubscribe(logSubscriber)
@@ -426,6 +418,10 @@ func handleGetMemory(fn func(value string)) {
 	go func() {
 		fn(strconv.FormatUint(statistic.DefaultManager.Memory(), 10))
 	}()
+}
+
+func handleSetState(params string) {
+	_ = json.Unmarshal([]byte(params), state.CurrentState)
 }
 
 func handleGetConfig(path string) (*config.RawConfig, error) {

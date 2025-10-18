@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -78,21 +77,19 @@ class _CommonExpandIconState extends State<CommonExpandIcon>
   late AnimationController _animationController;
   late Animation<double> _iconTurns;
 
-  static final Animatable<double> _iconTurnTween = Tween<double>(
-    begin: 0.0,
-    end: 0.5,
-  ).chain(CurveTween(curve: Curves.fastOutSlowIn));
-
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _iconTurns = _animationController.drive(_iconTurnTween);
+    _iconTurns = _animationController.drive(
+      Tween<double>(begin: 0.0, end: 0.5),
+    );
     if (widget.expand) {
-      _animationController.value = pi;
+      _animationController.value = 1.0;
     }
   }
 
@@ -106,12 +103,6 @@ class _CommonExpandIconState extends State<CommonExpandIcon>
         _animationController.reverse();
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override

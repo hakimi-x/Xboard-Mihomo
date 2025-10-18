@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,43 +18,54 @@ class ConnectionsView extends ConsumerStatefulWidget {
   ConsumerState<ConnectionsView> createState() => _ConnectionsViewState();
 }
 
-class _ConnectionsViewState extends ConsumerState<ConnectionsView> {
-  final _connectionsStateNotifier = ValueNotifier<TrackerInfosState>(
-    const TrackerInfosState(),
+class _ConnectionsViewState extends ConsumerState<ConnectionsView>
+    with PageMixin {
+  final _connectionsStateNotifier = ValueNotifier<ConnectionsState>(
+    const ConnectionsState(),
   );
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController(
+    keepScrollOffset: false,
+  );
 
   Timer? timer;
 
-  List<Widget> _buildActions() {
-    return [
-      IconButton(
-        onPressed: () async {
-          clashCore.closeConnections();
-          await _updateConnections();
-        },
-        icon: const Icon(Icons.delete_sweep_outlined),
-      ),
-    ];
-  }
+  @override
+  List<Widget> get actions => [
+        IconButton(
+          onPressed: () async {
+            clashCore.closeConnections();
+            _connectionsStateNotifier.value =
+                _connectionsStateNotifier.value.copyWith(
+              connections: await clashCore.getConnections(),
+            );
+          },
+          icon: const Icon(Icons.delete_sweep_outlined),
+        ),
+      ];
 
-  void _onSearch(String value) {
-    _connectionsStateNotifier.value = _connectionsStateNotifier.value.copyWith(
-      query: value,
-    );
-  }
+  @override
+  get onSearch => (value) {
+        _connectionsStateNotifier.value =
+            _connectionsStateNotifier.value.copyWith(
+          query: value,
+        );
+      };
 
-  void _onKeywordsUpdate(List<String> keywords) {
-    _connectionsStateNotifier.value =
-        _connectionsStateNotifier.value.copyWith(keywords: keywords);
-  }
+  @override
+  get onKeywordsUpdate => (keywords) {
+        _connectionsStateNotifier.value =
+            _connectionsStateNotifier.value.copyWith(keywords: keywords);
+      };
 
-  Future<void> _updateConnectionsTask() async {
+  _updateConnections() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
-        await _updateConnections();
+        _connectionsStateNotifier.value =
+            _connectionsStateNotifier.value.copyWith(
+          connections: await clashCore.getConnections(),
+        );
         timer = Timer(Duration(seconds: 1), () async {
-          _updateConnectionsTask();
+          _updateConnections();
         });
       }
     });
@@ -61,18 +74,27 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView> {
   @override
   void initState() {
     super.initState();
-    _updateConnectionsTask();
-  }
-
-  Future<void> _updateConnections() async {
-    _connectionsStateNotifier.value = _connectionsStateNotifier.value.copyWith(
-      trackerInfos: await clashCore.getConnections(),
+    ref.listenManual(
+      isCurrentPageProvider(
+        PageLabel.connections,
+        handler: (pageLabel, viewMode) =>
+            pageLabel == PageLabel.tools && viewMode == ViewMode.mobile,
+      ),
+      (prev, next) {
+        if (prev != next && next == true) {
+          initPageState();
+        }
+      },
+      fireImmediately: true,
     );
+    _updateConnections();
   }
 
-  Future<void> _handleBlockConnection(String id) async {
+  _handleBlockConnection(String id) async {
     clashCore.closeConnection(id);
-    await _updateConnections();
+    _connectionsStateNotifier.value = _connectionsStateNotifier.value.copyWith(
+      connections: await clashCore.getConnections(),
+    );
   }
 
   @override
@@ -86,65 +108,44 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView> {
 
   @override
   Widget build(BuildContext context) {
-    return CommonScaffold(
-      title: appLocalizations.connections,
-      onKeywordsUpdate: _onKeywordsUpdate,
-      searchState: AppBarSearchState(onSearch: _onSearch),
-      actions: _buildActions(),
-      body: ValueListenableBuilder<TrackerInfosState>(
-        valueListenable: _connectionsStateNotifier,
-        builder: (context, state, __) {
-          final connections = state.list;
-          if (connections.isEmpty) {
-            return NullStatus(
-              label: appLocalizations.nullTip(appLocalizations.connections),
-            );
-          }
-          final items = connections
-              .map<Widget>(
-                (trackerInfo) => TrackerInfoItem(
-                  key: Key(trackerInfo.id),
-                  trackerInfo: trackerInfo,
-                  onClickKeyword: (value) {
-                    context.commonScaffoldState?.addKeyword(value);
-                  },
-                  trailing: IconButton(
-                    padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity.compact,
-                    style: ButtonStyle(
-                      minimumSize: WidgetStatePropertyAll(Size.zero),
-                    ),
-                    icon: const Icon(Icons.block),
-                    onPressed: () {
-                      _handleBlockConnection(trackerInfo.id);
-                    },
-                  ),
-                  detailTitle: appLocalizations.details(
-                    appLocalizations.connection,
-                  ),
-                ),
-              )
-              .separated(
-                const Divider(
-                  height: 0,
-                ),
-              )
-              .toList();
-          return ListView.builder(
+    return ValueListenableBuilder<ConnectionsState>(
+      valueListenable: _connectionsStateNotifier,
+      builder: (_, state, __) {
+        final connections = state.list;
+        if (connections.isEmpty) {
+          return NullStatus(
+            label: appLocalizations.nullTip(appLocalizations.connections),
+          );
+        }
+        return CommonScrollBar(
+          controller: _scrollController,
+          child: ListView.separated(
             controller: _scrollController,
-            itemBuilder: (context, index) {
-              return items[index];
+            itemBuilder: (_, index) {
+              final connection = connections[index];
+              return ConnectionItem(
+                key: Key(connection.id),
+                connection: connection,
+                onClickKeyword: (value) {
+                  context.commonScaffoldState?.addKeyword(value);
+                },
+                trailing: IconButton(
+                  icon: const Icon(Icons.block),
+                  onPressed: () {
+                    _handleBlockConnection(connection.id);
+                  },
+                ),
+              );
             },
-            itemExtentBuilder: (index, _) {
-              if (index.isOdd) {
-                return 0;
-              }
-              return TrackerInfoItem.height;
+            separatorBuilder: (BuildContext context, int index) {
+              return const Divider(
+                height: 0,
+              );
             },
             itemCount: connections.length,
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

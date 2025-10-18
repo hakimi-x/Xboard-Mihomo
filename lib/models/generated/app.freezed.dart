@@ -26,19 +26,17 @@ mixin _$AppState {
       throw _privateConstructorUsedError;
   List<Group> get groups => throw _privateConstructorUsedError;
   int get checkIpNum => throw _privateConstructorUsedError;
-  Brightness get brightness => throw _privateConstructorUsedError;
+  Brightness? get brightness => throw _privateConstructorUsedError;
   int? get runTime => throw _privateConstructorUsedError;
   List<ExternalProvider> get providers => throw _privateConstructorUsedError;
   String? get localIp => throw _privateConstructorUsedError;
-  FixedList<TrackerInfo> get requests => throw _privateConstructorUsedError;
+  FixedList<Connection> get requests => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
   FixedList<Log> get logs => throw _privateConstructorUsedError;
   FixedList<Traffic> get traffics => throw _privateConstructorUsedError;
   Traffic get totalTraffic => throw _privateConstructorUsedError;
+  String get proxiesQuery => throw _privateConstructorUsedError;
   bool get realTunEnable => throw _privateConstructorUsedError;
-  bool get loading => throw _privateConstructorUsedError;
-  SystemUiOverlayStyle get systemUiOverlayStyle =>
-      throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -62,20 +60,17 @@ abstract class $AppStateCopyWith<$Res> {
       Map<String, Map<String, int?>> delayMap,
       List<Group> groups,
       int checkIpNum,
-      Brightness brightness,
+      Brightness? brightness,
       int? runTime,
       List<ExternalProvider> providers,
       String? localIp,
-      FixedList<TrackerInfo> requests,
+      FixedList<Connection> requests,
       int version,
       FixedList<Log> logs,
       FixedList<Traffic> traffics,
       Traffic totalTraffic,
-      bool realTunEnable,
-      bool loading,
-      SystemUiOverlayStyle systemUiOverlayStyle});
-
-  $TrafficCopyWith<$Res> get totalTraffic;
+      String proxiesQuery,
+      bool realTunEnable});
 }
 
 /// @nodoc
@@ -102,7 +97,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? delayMap = null,
     Object? groups = null,
     Object? checkIpNum = null,
-    Object? brightness = null,
+    Object? brightness = freezed,
     Object? runTime = freezed,
     Object? providers = null,
     Object? localIp = freezed,
@@ -111,9 +106,8 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? logs = null,
     Object? traffics = null,
     Object? totalTraffic = null,
+    Object? proxiesQuery = null,
     Object? realTunEnable = null,
-    Object? loading = null,
-    Object? systemUiOverlayStyle = null,
   }) {
     return _then(_value.copyWith(
       isInit: null == isInit
@@ -152,10 +146,10 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
           ? _value.checkIpNum
           : checkIpNum // ignore: cast_nullable_to_non_nullable
               as int,
-      brightness: null == brightness
+      brightness: freezed == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
-              as Brightness,
+              as Brightness?,
       runTime: freezed == runTime
           ? _value.runTime
           : runTime // ignore: cast_nullable_to_non_nullable
@@ -171,7 +165,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
       requests: null == requests
           ? _value.requests
           : requests // ignore: cast_nullable_to_non_nullable
-              as FixedList<TrackerInfo>,
+              as FixedList<Connection>,
       version: null == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
@@ -188,29 +182,15 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
           ? _value.totalTraffic
           : totalTraffic // ignore: cast_nullable_to_non_nullable
               as Traffic,
+      proxiesQuery: null == proxiesQuery
+          ? _value.proxiesQuery
+          : proxiesQuery // ignore: cast_nullable_to_non_nullable
+              as String,
       realTunEnable: null == realTunEnable
           ? _value.realTunEnable
           : realTunEnable // ignore: cast_nullable_to_non_nullable
               as bool,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      systemUiOverlayStyle: null == systemUiOverlayStyle
-          ? _value.systemUiOverlayStyle
-          : systemUiOverlayStyle // ignore: cast_nullable_to_non_nullable
-              as SystemUiOverlayStyle,
     ) as $Val);
-  }
-
-  /// Create a copy of AppState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $TrafficCopyWith<$Res> get totalTraffic {
-    return $TrafficCopyWith<$Res>(_value.totalTraffic, (value) {
-      return _then(_value.copyWith(totalTraffic: value) as $Val);
-    });
   }
 }
 
@@ -232,21 +212,17 @@ abstract class _$$AppStateImplCopyWith<$Res>
       Map<String, Map<String, int?>> delayMap,
       List<Group> groups,
       int checkIpNum,
-      Brightness brightness,
+      Brightness? brightness,
       int? runTime,
       List<ExternalProvider> providers,
       String? localIp,
-      FixedList<TrackerInfo> requests,
+      FixedList<Connection> requests,
       int version,
       FixedList<Log> logs,
       FixedList<Traffic> traffics,
       Traffic totalTraffic,
-      bool realTunEnable,
-      bool loading,
-      SystemUiOverlayStyle systemUiOverlayStyle});
-
-  @override
-  $TrafficCopyWith<$Res> get totalTraffic;
+      String proxiesQuery,
+      bool realTunEnable});
 }
 
 /// @nodoc
@@ -271,7 +247,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? delayMap = null,
     Object? groups = null,
     Object? checkIpNum = null,
-    Object? brightness = null,
+    Object? brightness = freezed,
     Object? runTime = freezed,
     Object? providers = null,
     Object? localIp = freezed,
@@ -280,9 +256,8 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? logs = null,
     Object? traffics = null,
     Object? totalTraffic = null,
+    Object? proxiesQuery = null,
     Object? realTunEnable = null,
-    Object? loading = null,
-    Object? systemUiOverlayStyle = null,
   }) {
     return _then(_$AppStateImpl(
       isInit: null == isInit
@@ -321,10 +296,10 @@ class __$$AppStateImplCopyWithImpl<$Res>
           ? _value.checkIpNum
           : checkIpNum // ignore: cast_nullable_to_non_nullable
               as int,
-      brightness: null == brightness
+      brightness: freezed == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
-              as Brightness,
+              as Brightness?,
       runTime: freezed == runTime
           ? _value.runTime
           : runTime // ignore: cast_nullable_to_non_nullable
@@ -340,7 +315,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
       requests: null == requests
           ? _value.requests
           : requests // ignore: cast_nullable_to_non_nullable
-              as FixedList<TrackerInfo>,
+              as FixedList<Connection>,
       version: null == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
@@ -357,18 +332,14 @@ class __$$AppStateImplCopyWithImpl<$Res>
           ? _value.totalTraffic
           : totalTraffic // ignore: cast_nullable_to_non_nullable
               as Traffic,
+      proxiesQuery: null == proxiesQuery
+          ? _value.proxiesQuery
+          : proxiesQuery // ignore: cast_nullable_to_non_nullable
+              as String,
       realTunEnable: null == realTunEnable
           ? _value.realTunEnable
           : realTunEnable // ignore: cast_nullable_to_non_nullable
               as bool,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      systemUiOverlayStyle: null == systemUiOverlayStyle
-          ? _value.systemUiOverlayStyle
-          : systemUiOverlayStyle // ignore: cast_nullable_to_non_nullable
-              as SystemUiOverlayStyle,
     ));
   }
 }
@@ -379,14 +350,14 @@ class _$AppStateImpl implements _AppState {
   const _$AppStateImpl(
       {this.isInit = false,
       this.backBlock = false,
-      this.pageLabel = PageLabel.dashboard,
+      this.pageLabel = PageLabel.xboard,
       final List<Package> packages = const [],
       this.sortNum = 0,
       required this.viewSize,
       final Map<String, Map<String, int?>> delayMap = const {},
       final List<Group> groups = const [],
       this.checkIpNum = 0,
-      required this.brightness,
+      this.brightness,
       this.runTime,
       final List<ExternalProvider> providers = const [],
       this.localIp,
@@ -395,9 +366,8 @@ class _$AppStateImpl implements _AppState {
       required this.logs,
       required this.traffics,
       required this.totalTraffic,
-      this.realTunEnable = false,
-      this.loading = false,
-      required this.systemUiOverlayStyle})
+      this.proxiesQuery = "",
+      this.realTunEnable = false})
       : _packages = packages,
         _delayMap = delayMap,
         _groups = groups,
@@ -448,7 +418,7 @@ class _$AppStateImpl implements _AppState {
   @JsonKey()
   final int checkIpNum;
   @override
-  final Brightness brightness;
+  final Brightness? brightness;
   @override
   final int? runTime;
   final List<ExternalProvider> _providers;
@@ -463,7 +433,7 @@ class _$AppStateImpl implements _AppState {
   @override
   final String? localIp;
   @override
-  final FixedList<TrackerInfo> requests;
+  final FixedList<Connection> requests;
   @override
   final int version;
   @override
@@ -474,16 +444,14 @@ class _$AppStateImpl implements _AppState {
   final Traffic totalTraffic;
   @override
   @JsonKey()
-  final bool realTunEnable;
+  final String proxiesQuery;
   @override
   @JsonKey()
-  final bool loading;
-  @override
-  final SystemUiOverlayStyle systemUiOverlayStyle;
+  final bool realTunEnable;
 
   @override
   String toString() {
-    return 'AppState(isInit: $isInit, backBlock: $backBlock, pageLabel: $pageLabel, packages: $packages, sortNum: $sortNum, viewSize: $viewSize, delayMap: $delayMap, groups: $groups, checkIpNum: $checkIpNum, brightness: $brightness, runTime: $runTime, providers: $providers, localIp: $localIp, requests: $requests, version: $version, logs: $logs, traffics: $traffics, totalTraffic: $totalTraffic, realTunEnable: $realTunEnable, loading: $loading, systemUiOverlayStyle: $systemUiOverlayStyle)';
+    return 'AppState(isInit: $isInit, backBlock: $backBlock, pageLabel: $pageLabel, packages: $packages, sortNum: $sortNum, viewSize: $viewSize, delayMap: $delayMap, groups: $groups, checkIpNum: $checkIpNum, brightness: $brightness, runTime: $runTime, providers: $providers, localIp: $localIp, requests: $requests, version: $version, logs: $logs, traffics: $traffics, totalTraffic: $totalTraffic, proxiesQuery: $proxiesQuery, realTunEnable: $realTunEnable)';
   }
 
   @override
@@ -518,11 +486,10 @@ class _$AppStateImpl implements _AppState {
                 other.traffics == traffics) &&
             (identical(other.totalTraffic, totalTraffic) ||
                 other.totalTraffic == totalTraffic) &&
+            (identical(other.proxiesQuery, proxiesQuery) ||
+                other.proxiesQuery == proxiesQuery) &&
             (identical(other.realTunEnable, realTunEnable) ||
-                other.realTunEnable == realTunEnable) &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.systemUiOverlayStyle, systemUiOverlayStyle) ||
-                other.systemUiOverlayStyle == systemUiOverlayStyle));
+                other.realTunEnable == realTunEnable));
   }
 
   @override
@@ -546,9 +513,8 @@ class _$AppStateImpl implements _AppState {
         logs,
         traffics,
         totalTraffic,
-        realTunEnable,
-        loading,
-        systemUiOverlayStyle
+        proxiesQuery,
+        realTunEnable
       ]);
 
   /// Create a copy of AppState
@@ -562,28 +528,26 @@ class _$AppStateImpl implements _AppState {
 
 abstract class _AppState implements AppState {
   const factory _AppState(
-          {final bool isInit,
-          final bool backBlock,
-          final PageLabel pageLabel,
-          final List<Package> packages,
-          final int sortNum,
-          required final Size viewSize,
-          final Map<String, Map<String, int?>> delayMap,
-          final List<Group> groups,
-          final int checkIpNum,
-          required final Brightness brightness,
-          final int? runTime,
-          final List<ExternalProvider> providers,
-          final String? localIp,
-          required final FixedList<TrackerInfo> requests,
-          required final int version,
-          required final FixedList<Log> logs,
-          required final FixedList<Traffic> traffics,
-          required final Traffic totalTraffic,
-          final bool realTunEnable,
-          final bool loading,
-          required final SystemUiOverlayStyle systemUiOverlayStyle}) =
-      _$AppStateImpl;
+      {final bool isInit,
+      final bool backBlock,
+      final PageLabel pageLabel,
+      final List<Package> packages,
+      final int sortNum,
+      required final Size viewSize,
+      final Map<String, Map<String, int?>> delayMap,
+      final List<Group> groups,
+      final int checkIpNum,
+      final Brightness? brightness,
+      final int? runTime,
+      final List<ExternalProvider> providers,
+      final String? localIp,
+      required final FixedList<Connection> requests,
+      required final int version,
+      required final FixedList<Log> logs,
+      required final FixedList<Traffic> traffics,
+      required final Traffic totalTraffic,
+      final String proxiesQuery,
+      final bool realTunEnable}) = _$AppStateImpl;
 
   @override
   bool get isInit;
@@ -604,7 +568,7 @@ abstract class _AppState implements AppState {
   @override
   int get checkIpNum;
   @override
-  Brightness get brightness;
+  Brightness? get brightness;
   @override
   int? get runTime;
   @override
@@ -612,7 +576,7 @@ abstract class _AppState implements AppState {
   @override
   String? get localIp;
   @override
-  FixedList<TrackerInfo> get requests;
+  FixedList<Connection> get requests;
   @override
   int get version;
   @override
@@ -622,11 +586,9 @@ abstract class _AppState implements AppState {
   @override
   Traffic get totalTraffic;
   @override
+  String get proxiesQuery;
+  @override
   bool get realTunEnable;
-  @override
-  bool get loading;
-  @override
-  SystemUiOverlayStyle get systemUiOverlayStyle;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.

@@ -117,8 +117,8 @@ const _$AccessSortTypeEnumMap = {
 
 _$WindowPropsImpl _$$WindowPropsImplFromJson(Map<String, dynamic> json) =>
     _$WindowPropsImpl(
-      width: (json['width'] as num?)?.toDouble() ?? 750,
-      height: (json['height'] as num?)?.toDouble() ?? 600,
+      width: (json['width'] as num?)?.toDouble() ?? 850,
+      height: (json['height'] as num?)?.toDouble() ?? 800,
       top: (json['top'] as num?)?.toDouble(),
       left: (json['left'] as num?)?.toDouble(),
     );
@@ -137,7 +137,6 @@ _$VpnPropsImpl _$$VpnPropsImplFromJson(Map<String, dynamic> json) =>
       systemProxy: json['systemProxy'] as bool? ?? true,
       ipv6: json['ipv6'] as bool? ?? false,
       allowBypass: json['allowBypass'] as bool? ?? true,
-      dnsHijacking: json['dnsHijacking'] as bool? ?? false,
       accessControl: json['accessControl'] == null
           ? defaultAccessControl
           : AccessControl.fromJson(
@@ -150,7 +149,6 @@ Map<String, dynamic> _$$VpnPropsImplToJson(_$VpnPropsImpl instance) =>
       'systemProxy': instance.systemProxy,
       'ipv6': instance.ipv6,
       'allowBypass': instance.allowBypass,
-      'dnsHijacking': instance.dnsHijacking,
       'accessControl': instance.accessControl,
     };
 
@@ -240,8 +238,8 @@ const _$ProxyCardTypeEnumMap = {
 
 _$TextScaleImpl _$$TextScaleImplFromJson(Map<String, dynamic> json) =>
     _$TextScaleImpl(
-      enable: json['enable'] as bool? ?? false,
-      scale: (json['scale'] as num?)?.toDouble() ?? 1.0,
+      enable: json['enable'] ?? false,
+      scale: json['scale'] ?? 1.0,
     );
 
 Map<String, dynamic> _$$TextScaleImplToJson(_$TextScaleImpl instance) =>
@@ -258,7 +256,7 @@ _$ThemePropsImpl _$$ThemePropsImplFromJson(Map<String, dynamic> json) =>
               .toList() ??
           defaultPrimaryColors,
       themeMode: $enumDecodeNullable(_$ThemeModeEnumMap, json['themeMode']) ??
-          ThemeMode.dark,
+          ThemeMode.system,
       schemeVariant: $enumDecodeNullable(
               _$DynamicSchemeVariantEnumMap, json['schemeVariant']) ??
           DynamicSchemeVariant.content,
