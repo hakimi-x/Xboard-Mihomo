@@ -57,3 +57,4 @@ app.*.map.json
 # Android CXX build artifacts
 /android/core/.cxx/
 
+assets/config/xboard.config.yaml
