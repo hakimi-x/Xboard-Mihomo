@@ -78,9 +78,23 @@ class _ForgotPasswordPageControllerState extends ConsumerState<ForgotPasswordPag
   }
 
   Future<void> _handleResetPassword() async {
-    if (_code.isEmpty || _password.isEmpty || _confirmPassword.isEmpty) {
+    if (_code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterAllFields)),
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterVerificationCode)),
+      );
+      return;
+    }
+
+    if (_password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterNewPassword)),
+      );
+      return;
+    }
+
+    if (_confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseConfirmNewPassword)),
       );
       return;
     }
