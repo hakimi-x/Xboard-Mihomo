@@ -57,7 +57,3 @@ app.*.map.json
 # Android CXX build artifacts
 /android/core/.cxx/
 
-# XBoard 配置文件（用户自定义，不提交）
-# 只忽略根目录的配置文件，assets/config/ 下的要提交
-/xboard.config.yaml
-/xboard.config.yml

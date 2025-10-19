@@ -2,13 +2,8 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 // import 'package:fl_clash/views/views.dart';
 import 'package:fl_clash/xboard/features/payment/pages/plans.dart';
-import 'package:fl_clash/xboard/features/subscription/pages/xboard_home_page.dart';
-import 'package:fl_clash/xboard/features/online_support/pages/online_support_page.dart';
-import 'package:fl_clash/xboard/features/online_support/providers/chat_provider.dart';
-import 'package:fl_clash/xboard/features/invite/pages/invite_page.dart';
-import 'package:fl_clash/xboard/features/shared/shared.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Navigation {
   static Navigation? _instance;
@@ -31,7 +26,7 @@ class Navigation {
       const NavigationItem(
         icon: Icon(Icons.home),
         label: PageLabel.xboard,
-        view: XBoardHomePage(
+        view: XBoardHomePageController(
           key: GlobalObjectKey(
             PageLabel.xboard,
           ),
@@ -51,7 +46,7 @@ class Navigation {
       const NavigationItem(
         icon: Icon(Icons.support_agent),
         label: PageLabel.onlineSupport,
-        view: OnlineSupportPage(
+        view: OnlineSupportPageController(
           key: GlobalObjectKey(
             PageLabel.onlineSupport,
           ),
@@ -61,7 +56,7 @@ class Navigation {
       const NavigationItem(
         icon: Icon(Icons.people),
         label: PageLabel.invite,
-        view: InvitePage(
+        view: InvitePageController(
           key: GlobalObjectKey(
             PageLabel.invite,
           ),

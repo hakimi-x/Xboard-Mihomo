@@ -3,8 +3,8 @@
 // Models
 export 'models/message_model.dart';
 
-// Pages
-export 'pages/online_support_page.dart';
+// Pages - 已迁移到 UI 分离系统，请使用:
+// import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
 // Providers
 export 'providers/chat_provider.dart';

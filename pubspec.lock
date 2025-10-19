@@ -337,6 +337,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
+  default_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/ui_themes/default_ui"
+      relative: true
+    source: path
+    version: "1.0.0"
   defer_pointer:
     dependency: "direct main"
     description:
@@ -949,6 +956,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.5"
+  modern_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/ui_themes/modern_ui"
+      relative: true
+    source: path
+    version: "1.0.0"
   nm:
     dependency: transitive
     description:

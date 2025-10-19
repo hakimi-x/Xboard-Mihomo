@@ -3,7 +3,7 @@ import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/xboard/sdk/xboard_sdk.dart';
 import 'package:fl_clash/xboard/features/auth/providers/xboard_user_provider.dart';
 import 'package:fl_clash/xboard/features/subscription/providers/xboard_subscription_provider.dart';
-import 'plan_purchase_page.dart';
+import 'package:fl_clash/core/controllers/xboard/plan_purchase_page_controller.dart';
 import '../widgets/plan_description_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,7 +147,7 @@ class _PlansViewState extends ConsumerState<PlansView> {
   void _navigateToPurchase(PlanData plan) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => PlanPurchasePage(plan: plan),
+        builder: (context) => PlanPurchasePageController(plan: plan),
       ),
     );
   }

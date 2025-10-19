@@ -4,7 +4,7 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/xboard/core/core.dart';
 import 'package:fl_clash/xboard/features/online_support/models/message_model.dart';
-import 'package:fl_clash/xboard/features/online_support/pages/online_support_page.dart';
+import 'package:fl_clash/core/controllers/xboard/online_support_page_controller.dart';
 import 'package:fl_clash/xboard/features/online_support/services/api_service.dart';
 import 'package:fl_clash/xboard/features/online_support/services/service_config.dart';
 import 'package:fl_clash/xboard/features/online_support/services/websocket_service.dart';
@@ -359,7 +359,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       if (context != null) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const OnlineSupportPage(),
+            builder: (context) => const OnlineSupportPageController(),
           ),
         );
         XBoardLogger.debug('已跳转到在线客服页面');

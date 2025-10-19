@@ -1,0 +1,21 @@
+name: default_ui
+description: XBoard Mihomo 默认 UI 主题包
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # 引用主项目（用于访问契约和模型）
+  fl_clash:
+    path: ../../..
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+

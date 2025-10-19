@@ -4,6 +4,17 @@
 
 `features` 目录包含 XBoard 的所有业务功能模块，每个模块负责一个独立的业务领域。
 
+## ⚠️ 重要更新 (2025-10-19)
+
+**XBoard 页面已迁移到 UI 分离系统！**
+
+所有主要页面现在使用新的 Controller 系统，支持多主题切换：
+- 页面实现位置：`lib/core/controllers/xboard/`
+- UI 主题包：`packages/ui_themes/default_ui` 和 `packages/ui_themes/modern_ui`
+- 旧的页面文件已删除，请使用 `*PageController` 代替
+
+详情请查看：`docs/XBOARD_UI_SEPARATION_README.md`
+
 ## 📂 功能模块
 
 ### 🔐 [auth](auth/) - 认证模块
@@ -16,18 +27,18 @@
 - ✅ 忘记密码
 - ✅ 验证码发送
 
-**主要页面**:
-- `LoginPage` - 登录页面
-- `RegisterPage` - 注册页面
-- `ForgotPasswordPage` - 忘记密码页面
+**主要页面** (已迁移到 Controller 系统):
+- `LoginPageController` - 登录页面
+- `RegisterPageController` - 注册页面
+- `ForgotPasswordPageController` - 忘记密码页面
 
 **使用示例**:
 ```dart
-import 'package:fl_clash/xboard/features/auth/auth.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
-// 导航到登录页面
+// 导航到登录页面（新系统）
 Navigator.push(context, MaterialPageRoute(
-  builder: (_) => const LoginPage(),
+  builder: (_) => const LoginPageController(),
 ));
 ```
 
@@ -44,9 +55,9 @@ Navigator.push(context, MaterialPageRoute(
 - ✅ 订阅链接管理
 - ✅ 一键连接
 
-**主要页面**:
-- `SubscriptionPage` - 订阅管理页面
-- `XBoardHomePage` - XBoard 主页
+**主要页面** (已迁移到 Controller 系统):
+- `SubscriptionPageController` - 订阅管理页面
+- `XBoardHomePageController` - XBoard 主页
 
 **主要组件**:
 - `SubscriptionUsageCard` - 使用量卡片
@@ -55,11 +66,11 @@ Navigator.push(context, MaterialPageRoute(
 
 **使用示例**:
 ```dart
-import 'package:fl_clash/xboard/features/subscription/subscription.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
-// 显示订阅页面
+// 显示订阅页面（新系统）
 Navigator.push(context, MaterialPageRoute(
-  builder: (_) => const SubscriptionPage(),
+  builder: (_) => const SubscriptionPageController(),
 ));
 ```
 
@@ -78,9 +89,9 @@ Navigator.push(context, MaterialPageRoute(
 - ✅ 优惠券支持
 
 **主要页面**:
-- `PlansPage` - 套餐列表页面
-- `PlanPurchasePage` - 套餐购买页面
-- `PaymentGatewayPage` - 支付网关页面
+- `PlansView` - 套餐列表页面（保持原样）
+- `PlanPurchasePageController` - 套餐购买页面（已迁移）
+- `PaymentGatewayPageController` - 支付网关页面（已迁移）
 
 **主要组件**:
 - `PaymentWaitingOverlay` - 支付等待遮罩
@@ -88,16 +99,17 @@ Navigator.push(context, MaterialPageRoute(
 
 **使用示例**:
 ```dart
-import 'package:fl_clash/xboard/features/payment/payment.dart';
+import 'package:fl_clash/xboard/features/payment/pages/plans.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
 // 显示套餐列表
 Navigator.push(context, MaterialPageRoute(
-  builder: (_) => const PlansPage(),
+  builder: (_) => const PlansView(),
 ));
 
-// 购买套餐
+// 购买套餐（新系统）
 Navigator.push(context, MaterialPageRoute(
-  builder: (_) => PlanPurchasePage(plan: selectedPlan),
+  builder: (_) => PlanPurchasePageController(plan: selectedPlan),
 ));
 ```
 
@@ -116,8 +128,8 @@ Navigator.push(context, MaterialPageRoute(
 - ✅ 佣金提现
 - ✅ 佣金划转
 
-**主要页面**:
-- `InvitePage` - 邀请管理页面
+**主要页面** (已迁移到 Controller 系统):
+- `InvitePageController` - 邀请管理页面
 
 **主要组件**:
 - `InviteQRCard` - 邀请二维码卡片
@@ -134,11 +146,11 @@ Navigator.push(context, MaterialPageRoute(
 
 **使用示例**:
 ```dart
-import 'package:fl_clash/xboard/features/invite/invite.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
-// 显示邀请页面
+// 显示邀请页面（新系统）
 Navigator.push(context, MaterialPageRoute(
-  builder: (_) => const InvitePage(),
+  builder: (_) => const InvitePageController(),
 ));
 ```
 
@@ -193,6 +205,19 @@ Navigator.push(context, MaterialPageRoute(
 - ✅ 在线客服
 - ✅ 工单系统
 - ✅ 帮助文档
+
+**主要页面** (已迁移到 Controller 系统):
+- `OnlineSupportPageController` - 在线客服页面
+
+**使用示例**:
+```dart
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
+
+// 显示在线客服页面（新系统）
+Navigator.push(context, MaterialPageRoute(
+  builder: (_) => const OnlineSupportPageController(),
+));
+```
 
 ---
 

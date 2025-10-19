@@ -23,6 +23,7 @@ import 'models/models.dart';
 import 'package:fl_clash/xboard/features/remote_task/remote_task_manager.dart'; // 导入远程任务管理器
 
 import 'package:fl_clash/xboard/sdk/xboard_sdk.dart'; // 导入域名服务
+import 'package:fl_clash/core/ui_theme_initializer.dart'; // 导入UI主题初始化器
 
 // 定义一个全局变量来持有 RemoteTaskManager 实例，方便在整个应用生命周期中访问和管理
 RemoteTaskManager? remoteTaskManager;
@@ -33,6 +34,9 @@ Future<void> main() async {
 
   // 首先初始化XBoard配置模块和域名服务（必须在RemoteTaskManager之前）
   await _initializeXBoardServices();
+  
+  // 初始化 UI 主题系统
+  await UIThemeInitializer.initialize();
 
   // 初始化 RemoteTaskManager - 非阻塞模式，失败不影响应用启动
   try {

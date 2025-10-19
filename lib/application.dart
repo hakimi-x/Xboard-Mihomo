@@ -18,6 +18,7 @@ import 'pages/pages.dart';
 import 'xboard/xboard.dart';
 import 'package:fl_clash/xboard/sdk/xboard_sdk.dart';
 import 'package:fl_clash/xboard/features/online_support/providers/websocket_auto_connector.dart';
+import 'package:fl_clash/core/controllers/xboard/xboard_controllers.dart';
 
 class Application extends ConsumerStatefulWidget {
   const Application({
@@ -328,8 +329,8 @@ class _AppHomeRouterState extends ConsumerState<_AppHomeRouter> {
       debugPrint('[_AppHomeRouter] 状态: 已认证，跳转到主页面');
       return const HomePage();
     } else if (userState.isInitialized) {
-      debugPrint('[_AppHomeRouter] 状态: 未认证但已初始化，显示登录页面');
-      return const LoginPage();
+      debugPrint('[_AppHomeRouter] 状态: 未认证但已初始化，显示登录页面（新UI系统）');
+      return const LoginPageController();
     } else {
       debugPrint('[_AppHomeRouter] 状态: 初始化中，显示加载页面');
       return const Scaffold(
