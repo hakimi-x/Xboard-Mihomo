@@ -3,12 +3,6 @@
 /// 所有页面契约都在这里导出
 library;
 
-// FlClash 核心页面契约
-export 'home_page_contract.dart';
-export 'profiles_page_contract.dart';
-export 'proxies_page_contract.dart';
-export 'settings_page_contract.dart';
-
 // XBoard 页面契约
 // Auth 模块
 export 'xboard/auth/login_page_contract.dart';
