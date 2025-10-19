@@ -116,7 +116,10 @@ class DefaultForgotPasswordPage extends ForgotPasswordPageContract {
         ),
         const SizedBox(height: 32),
         XBInputField(
-          controller: TextEditingController(text: data.email),
+          controller: TextEditingController(text: data.email)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(offset: data.email.length),
+            ),
           labelText: AppLocalizations.of(context).emailAddress,
           hintText: AppLocalizations.of(context).pleaseEnterEmail,
           prefixIcon: Icons.email_outlined,
@@ -175,7 +178,10 @@ class DefaultForgotPasswordPage extends ForgotPasswordPageContract {
         ),
         const SizedBox(height: 32),
         XBInputField(
-          controller: TextEditingController(text: data.code),
+          controller: TextEditingController(text: data.code)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(offset: data.code.length),
+            ),
           labelText: AppLocalizations.of(context).verificationCode,
           hintText: AppLocalizations.of(context).pleaseEnterVerificationCode,
           prefixIcon: Icons.verified_user_outlined,
@@ -185,7 +191,10 @@ class DefaultForgotPasswordPage extends ForgotPasswordPageContract {
         ),
         const SizedBox(height: 16),
         XBInputField(
-          controller: TextEditingController(text: data.password),
+          controller: TextEditingController(text: data.password)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(offset: data.password.length),
+            ),
           labelText: AppLocalizations.of(context).newPassword,
           hintText: AppLocalizations.of(context).pleaseEnterNewPassword,
           prefixIcon: Icons.lock_outlined,
@@ -201,7 +210,10 @@ class DefaultForgotPasswordPage extends ForgotPasswordPageContract {
         ),
         const SizedBox(height: 16),
         XBInputField(
-          controller: TextEditingController(text: data.confirmPassword),
+          controller: TextEditingController(text: data.confirmPassword)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(offset: data.confirmPassword.length),
+            ),
           labelText: AppLocalizations.of(context).confirmNewPassword,
           hintText: AppLocalizations.of(context).pleaseConfirmNewPassword,
           prefixIcon: Icons.lock_outlined,

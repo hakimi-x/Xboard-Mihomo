@@ -64,7 +64,10 @@ class DefaultRegisterPage extends RegisterPageContract {
                       ),
                       const SizedBox(height: 32),
                       XBInputField(
-                        controller: TextEditingController(text: data.email),
+                        controller: TextEditingController(text: data.email)
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: data.email.length),
+                          ),
                         labelText: appLocalizations.emailAddress,
                         hintText: appLocalizations.pleaseEnterYourEmailAddress,
                         prefixIcon: Icons.email_outlined,
@@ -74,7 +77,10 @@ class DefaultRegisterPage extends RegisterPageContract {
                       ),
                       const SizedBox(height: 20),
                       XBInputField(
-                        controller: TextEditingController(text: data.password),
+                        controller: TextEditingController(text: data.password)
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: data.password.length),
+                          ),
                         labelText: appLocalizations.password,
                         hintText: appLocalizations.pleaseEnterAtLeast8CharsPassword,
                         prefixIcon: Icons.lock_outlined,
@@ -92,7 +98,10 @@ class DefaultRegisterPage extends RegisterPageContract {
                       ),
                       const SizedBox(height: 20),
                       XBInputField(
-                        controller: TextEditingController(text: data.confirmPassword),
+                        controller: TextEditingController(text: data.confirmPassword)
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: data.confirmPassword.length),
+                          ),
                         labelText: appLocalizations.confirmNewPassword,
                         hintText: appLocalizations.pleaseReEnterPassword,
                         prefixIcon: Icons.lock_outlined,
@@ -114,7 +123,10 @@ class DefaultRegisterPage extends RegisterPageContract {
                         Column(
                           children: [
                             XBInputField(
-                              controller: TextEditingController(text: data.emailCode),
+                              controller: TextEditingController(text: data.emailCode)
+                                ..selection = TextSelection.fromPosition(
+                                  TextPosition(offset: data.emailCode.length),
+                                ),
                               labelText: appLocalizations.emailVerificationCode,
                               hintText: appLocalizations.pleaseEnterEmailVerificationCode,
                               prefixIcon: Icons.verified_user_outlined,
@@ -137,7 +149,10 @@ class DefaultRegisterPage extends RegisterPageContract {
                         ),
                       // 邀请码字段
                       XBInputField(
-                        controller: TextEditingController(text: data.inviteCode),
+                        controller: TextEditingController(text: data.inviteCode)
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: data.inviteCode.length),
+                          ),
                         labelText: data.isInviteForce
                             ? '${appLocalizations.xboardInviteCode} *'
                             : appLocalizations.xboardInviteCode,

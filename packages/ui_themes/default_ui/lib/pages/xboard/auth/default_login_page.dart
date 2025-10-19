@@ -95,7 +95,10 @@ class DefaultLoginPage extends LoginPageContract {
                   ),
                   const SizedBox(height: 48),
                   XBInputField(
-                    controller: TextEditingController(text: data.username),
+                    controller: TextEditingController(text: data.username)
+                      ..selection = TextSelection.fromPosition(
+                        TextPosition(offset: data.username.length),
+                      ),
                     labelText: appLocalizations.xboardEmail,
                     hintText: appLocalizations.xboardEmail,
                     prefixIcon: Icons.email_outlined,
@@ -105,7 +108,10 @@ class DefaultLoginPage extends LoginPageContract {
                   ),
                   const SizedBox(height: 20),
                   XBInputField(
-                    controller: TextEditingController(text: data.password),
+                    controller: TextEditingController(text: data.password)
+                      ..selection = TextSelection.fromPosition(
+                        TextPosition(offset: data.password.length),
+                      ),
                     labelText: appLocalizations.xboardPassword,
                     hintText: appLocalizations.xboardPassword,
                     prefixIcon: Icons.lock_outlined,
