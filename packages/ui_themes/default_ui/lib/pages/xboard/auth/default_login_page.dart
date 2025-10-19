@@ -6,6 +6,9 @@
 // ═══════════════════════════════════════════════════════
 
 import 'package:fl_clash/ui/contracts/pages/pages_contracts.dart';
+import 'package:fl_clash/xboard/features/shared/shared.dart';
+import 'package:fl_clash/xboard/features/domain_status/domain_status.dart';
+import 'package:fl_clash/common/common.dart';
 import 'package:flutter/material.dart';
 
 class DefaultLoginPage extends LoginPageContract {
@@ -17,170 +20,212 @@ class DefaultLoginPage extends LoginPageContract {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      body: SafeArea(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          const LanguageSelector(),
+          const SizedBox(width: 8),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () => showDomainStatusDialog(context),
+              child: const DomainStatusIndicator(),
+            ),
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.surface,
+              colorScheme.surface.withValues(alpha: 0.8),
+            ],
+          ),
+        ),
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Logo
-                  Icon(
-                    Icons.vpn_key,
-                    size: 80,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // 标题
-                  Text(
-                    '登录',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '欢迎回来',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  
-                  const SizedBox(height: 48),
-                  
-                  // 错误提示
-                  if (data.errorMessage != null)
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.errorContainer,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Theme.of(context).colorScheme.onErrorContainer,
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colorScheme.primary.withValues(alpha: 0.1),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              data.errorMessage!,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onErrorContainer,
-                              ),
-                            ),
+                          child: Icon(
+                            Icons.vpn_key_outlined,
+                            size: 48,
+                            color: colorScheme.primary,
                           ),
-                        ],
-                      ),
-                    ),
-                  
-                  // 邮箱输入
-                  TextField(
-                    controller: TextEditingController(text: data.username),
-                    decoration: InputDecoration(
-                      labelText: '邮箱',
-                      prefixIcon: const Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    enabled: !data.isLoading,
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // 密码输入
-                  TextField(
-                    controller: TextEditingController(text: data.password),
-                    decoration: InputDecoration(
-                      labelText: '密码',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          data.showPassword ? Icons.visibility_off : Icons.visibility,
                         ),
-                        onPressed: callbacks.onTogglePasswordVisibility,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    obscureText: !data.showPassword,
-                    enabled: !data.isLoading,
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // 记住我和忘记密码
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: data.rememberMe,
-                            onChanged: data.isLoading 
-                                ? null 
-                                : (value) => callbacks.onToggleRememberMe(value ?? false),
+                        const SizedBox(height: 24),
+                        Text(
+                          data.appTitle,
+                          style: textTheme.displaySmall?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const Text('记住我'),
-                        ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          data.appWebsite,
+                          style: textTheme.titleMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  XBInputField(
+                    controller: TextEditingController(text: data.username),
+                    labelText: appLocalizations.xboardEmail,
+                    hintText: appLocalizations.xboardEmail,
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    enabled: data.isDomainReady && !data.isLoading,
+                    onChanged: callbacks.onUsernameChanged,
+                  ),
+                  const SizedBox(height: 20),
+                  XBInputField(
+                    controller: TextEditingController(text: data.password),
+                    labelText: appLocalizations.xboardPassword,
+                    hintText: appLocalizations.xboardPassword,
+                    prefixIcon: Icons.lock_outlined,
+                    obscureText: !data.showPassword,
+                    enabled: data.isDomainReady && !data.isLoading,
+                    onChanged: callbacks.onPasswordChanged,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        data.showPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                       ),
-                      TextButton(
-                        onPressed: data.isLoading ? null : callbacks.onNavigateToForgotPassword,
-                        child: const Text('忘记密码？'),
+                      onPressed: callbacks.onTogglePasswordVisibility,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Checkbox(
+                          value: data.rememberMe,
+                          onChanged: (value) {
+                            if (!data.isLoading) {
+                              callbacks.onToggleRememberMe(value ?? false);
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () {
+                          if (!data.isLoading) {
+                            callbacks.onToggleRememberMe(!data.rememberMe);
+                          }
+                        },
+                        child: Text(
+                          appLocalizations.xboardRememberPassword,
+                          style: textTheme.bodyMedium,
+                        ),
                       ),
                     ],
                   ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // 登录按钮
-                  FilledButton(
-                    onPressed: data.isLoading
-                        ? null
-                        : () => callbacks.onLogin(
-                              data.username,
-                              data.password,
-                              data.rememberMe,
-                            ),
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 56),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: data.isDomainReady && !data.isLoading
+                          ? () => callbacks.onLogin(
+                                data.username,
+                                data.password,
+                                data.rememberMe,
+                              )
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: data.isDomainReady && !data.isLoading
+                              ? LinearGradient(
+                                  colors: [
+                                    colorScheme.primary,
+                                    colorScheme.primaryContainer,
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                )
+                              : null,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: data.isLoading
+                                ? SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    appLocalizations.xboardLogin,
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.onPrimary,
+                                    ),
+                                  ),
+                          ),
+                        ),
                       ),
                     ),
-                    child: data.isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('登录'),
                   ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // 注册按钮
-                  OutlinedButton(
-                    onPressed: data.isLoading ? null : callbacks.onNavigateToRegister,
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 56),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: data.isLoading ? null : callbacks.onNavigateToForgotPassword,
+                        child: Text(
+                          appLocalizations.xboardForgotPassword,
+                        ),
                       ),
-                    ),
-                    child: const Text('还没有账号？立即注册'),
+                      TextButton(
+                        onPressed: data.isLoading ? null : callbacks.onNavigateToRegister,
+                        child: Text(
+                          appLocalizations.xboardRegister,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

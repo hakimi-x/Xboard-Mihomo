@@ -2,7 +2,6 @@
 library;
 
 import 'package:fl_clash/ui/contracts/contract_base.dart';
-import 'package:flutter/material.dart';
 
 /// 登录页面契约
 abstract class LoginPageContract extends PageContract<LoginPageData, LoginPageCallbacks> {
@@ -15,6 +14,12 @@ abstract class LoginPageContract extends PageContract<LoginPageData, LoginPageCa
 
 /// 登录页面数据
 class LoginPageData implements DataModel {
+  /// 应用标题
+  final String appTitle;
+  
+  /// 应用网站
+  final String appWebsite;
+  
   /// 用户名/邮箱
   final String username;
   
@@ -32,25 +37,34 @@ class LoginPageData implements DataModel {
   
   /// 是否显示密码
   final bool showPassword;
+  
+  /// 域名是否就绪
+  final bool isDomainReady;
 
   const LoginPageData({
+    this.appTitle = 'XBoard',
+    this.appWebsite = '',
     this.username = '',
     this.password = '',
     this.rememberMe = false,
     this.isLoading = false,
     this.errorMessage,
     this.showPassword = false,
+    this.isDomainReady = true,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      'appTitle': appTitle,
+      'appWebsite': appWebsite,
       'username': username,
       'password': password,
       'rememberMe': rememberMe,
       'isLoading': isLoading,
       'errorMessage': errorMessage,
       'showPassword': showPassword,
+      'isDomainReady': isDomainReady,
     };
   }
 }
@@ -71,6 +85,12 @@ class LoginPageCallbacks implements CallbacksModel {
   
   /// 切换记住我
   final ValueCallback<bool> onToggleRememberMe;
+  
+  /// 用户名改变
+  final ValueCallback<String>? onUsernameChanged;
+  
+  /// 密码改变
+  final ValueCallback<String>? onPasswordChanged;
 
   const LoginPageCallbacks({
     required this.onLogin,
@@ -78,6 +98,8 @@ class LoginPageCallbacks implements CallbacksModel {
     required this.onNavigateToForgotPassword,
     required this.onTogglePasswordVisibility,
     required this.onToggleRememberMe,
+    this.onUsernameChanged,
+    this.onPasswordChanged,
   });
 }
 
