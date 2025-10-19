@@ -10,7 +10,6 @@ library default_ui;
 import 'package:fl_clash/ui/theme_package_base.dart';
 import 'package:fl_clash/ui/registry/ui_registry.dart';
 import 'package:fl_clash/ui/contracts/pages/pages_contracts.dart';
-import 'package:default_ui/pages/default_home_page.dart';
 import 'package:default_ui/pages/xboard/auth/default_login_page.dart';
 import 'package:default_ui/pages/xboard/auth/default_register_page.dart';
 import 'package:default_ui/pages/xboard/auth/default_forgot_password_page.dart';
@@ -21,7 +20,6 @@ import 'package:default_ui/pages/xboard/payment/default_payment_gateway_page.dar
 import 'package:default_ui/pages/xboard/invite/default_invite_page.dart';
 import 'package:default_ui/pages/xboard/online_support/default_online_support_page.dart';
 
-export 'pages/default_home_page.dart';
 export 'pages/xboard/auth/default_login_page.dart';
 export 'pages/xboard/auth/default_register_page.dart';
 export 'pages/xboard/auth/default_forgot_password_page.dart';
@@ -47,16 +45,6 @@ class DefaultUITheme extends ThemePackageBase {
   @override
   void register() {
     final registry = UIRegistry();
-
-    // FlClash 核心页面
-    registry.registerPage<HomePageContract>(
-      themeId: metadata.id,
-      pageType: HomePageContract,
-      builder: (data, callbacks) => DefaultHomePage(
-        data: data as HomePageData,
-        callbacks: callbacks as HomePageCallbacks,
-      ),
-    );
 
     // XBoard Auth 模块
     registry.registerPage<LoginPageContract>(

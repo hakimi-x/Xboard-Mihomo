@@ -10,7 +10,6 @@ library modern_ui;
 import 'package:fl_clash/ui/theme_package_base.dart';
 import 'package:fl_clash/ui/registry/ui_registry.dart';
 import 'package:fl_clash/ui/contracts/pages/pages_contracts.dart';
-import 'package:modern_ui/pages/modern_home_page.dart';
 import 'package:modern_ui/pages/xboard/auth/modern_login_page.dart';
 import 'package:modern_ui/pages/xboard/auth/modern_register_page.dart';
 import 'package:modern_ui/pages/xboard/auth/modern_forgot_password_page.dart';
@@ -21,7 +20,6 @@ import 'package:modern_ui/pages/xboard/payment/modern_payment_gateway_page.dart'
 import 'package:modern_ui/pages/xboard/invite/modern_invite_page.dart';
 import 'package:modern_ui/pages/xboard/online_support/modern_online_support_page.dart';
 
-export 'pages/modern_home_page.dart';
 export 'pages/xboard/auth/modern_login_page.dart';
 export 'pages/xboard/auth/modern_register_page.dart';
 export 'pages/xboard/auth/modern_forgot_password_page.dart';
@@ -47,16 +45,6 @@ class ModernUITheme extends ThemePackageBase {
   @override
   void register() {
     final registry = UIRegistry();
-
-    // FlClash 核心页面
-    registry.registerPage<HomePageContract>(
-      themeId: metadata.id,
-      pageType: HomePageContract,
-      builder: (data, callbacks) => ModernHomePage(
-        data: data as HomePageData,
-        callbacks: callbacks as HomePageCallbacks,
-      ),
-    );
 
     // XBoard Auth 模块
     registry.registerPage<LoginPageContract>(
