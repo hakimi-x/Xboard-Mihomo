@@ -3,7 +3,15 @@
 // ═══════════════════════════════════════════════════════
 
 import 'package:fl_clash/ui/contracts/pages/pages_contracts.dart';
+import 'package:fl_clash/common/common.dart';
+import 'package:fl_clash/enum/enum.dart';
+import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/xboard/features/shared/shared.dart';
+import 'package:fl_clash/xboard/features/subscription/widgets/subscription_usage_card.dart';
+import 'package:fl_clash/xboard/features/subscription/widgets/xboard_connect_button.dart';
+import 'package:fl_clash/xboard/features/auth/providers/xboard_user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DefaultXBoardHomePage extends XBoardHomePageContract {
   const DefaultXBoardHomePage({
@@ -14,202 +22,120 @@ class DefaultXBoardHomePage extends XBoardHomePageContract {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('XBoard'),
-        actions: [
-          IconButton(icon: const Icon(Icons.support_agent), onPressed: callbacks.onOnlineSupport),
-          IconButton(icon: const Icon(Icons.person), onPressed: callbacks.onProfile),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: callbacks.onRefresh,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // 用户信息卡片
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: data.userInfo.avatar != null ? NetworkImage(data.userInfo.avatar!) : null,
-                      child: data.userInfo.avatar == null ? const Icon(Icons.person, size: 32) : null,
+    return Consumer(
+      builder: (_, ref, __) {
+        ref.listenManual(
+          isCurrentPageProvider(PageLabel.xboard),
+          (prev, next) {
+            if (prev != next && next == true) {
+              // 页面激活时的逻辑
+            }
+          },
+          fireImmediately: true,
+        );
+
+        // 获取屏幕高度并计算自适应间距
+        final screenHeight = MediaQuery.of(context).size.height;
+        final appBarHeight = kToolbarHeight;
+        final statusBarHeight = MediaQuery.of(context).padding.top;
+        final bottomNavHeight = 60.0; // 底部导航栏高度
+        final availableHeight = screenHeight - appBarHeight - statusBarHeight - bottomNavHeight;
+
+        // 根据可用高度调整间距
+        double sectionSpacing;
+        double verticalPadding;
+        double horizontalPadding;
+
+        if (availableHeight < 500) {
+          // 小屏幕：紧凑布局
+          sectionSpacing = 8.0;
+          verticalPadding = 8.0;
+          horizontalPadding = 12.0;
+        } else if (availableHeight < 650) {
+          // 中等屏幕：适中布局
+          sectionSpacing = 10.0;
+          verticalPadding = 10.0;
+          horizontalPadding = 16.0;
+        } else {
+          // 大屏幕：标准布局
+          sectionSpacing = 14.0;
+          verticalPadding = 12.0;
+          horizontalPadding = 16.0;
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                Theme.of(context).colorScheme.surface,
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(vertical: verticalPadding),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - (2 * verticalPadding),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
+                    child: IntrinsicHeight(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(data.userInfo.username, style: Theme.of(context).textTheme.titleLarge),
-                          Text(data.userInfo.email, style: Theme.of(context).textTheme.bodySmall),
+                          const NoticeBanner(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                            child: _buildUsageSection(ref),
+                          ),
+                          SizedBox(height: sectionSpacing),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                            child: _buildProxyModeSection(),
+                          ),
+                          SizedBox(height: sectionSpacing),
+                          const NodeSelectorBar(),
+                          SizedBox(height: sectionSpacing),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                            child: _buildConnectionSection(),
+                          ),
+                          // 添加弹性空间，确保内容不会太紧凑
+                          if (availableHeight > 600) const Spacer(),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // 订阅状态卡片
-            Card(
-              color: data.subscriptionStatus.isActive ? Theme.of(context).colorScheme.primaryContainer : null,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('套餐状态', style: Theme.of(context).textTheme.titleMedium),
-                        Chip(
-                          label: Text(data.subscriptionStatus.isActive ? '已激活' : '未激活'),
-                          backgroundColor: data.subscriptionStatus.isActive ? Colors.green : Colors.grey,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text('套餐名称：${data.subscriptionStatus.planName}'),
-                    Text('到期时间：${data.subscriptionStatus.formattedExpireDate}'),
-                    if (!data.subscriptionStatus.isExpired)
-                      Text('剩余天数：${data.subscriptionStatus.remainingDays}天'),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: callbacks.onManageSubscription,
-                            child: const Text('订阅管理'),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: callbacks.onPurchasePlan,
-                            child: const Text('购买套餐'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // 流量统计卡片
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('流量统计', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 16),
-                    LinearProgressIndicator(
-                      value: data.trafficStats.usagePercentage / 100,
-                      minHeight: 8,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${data.trafficStats.usagePercentage.toStringAsFixed(1)}% 已使用'),
-                        Text(data.trafficStats.formatBytes(data.trafficStats.totalTraffic - data.trafficStats.usedTraffic)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              const Icon(Icons.upload, color: Colors.green),
-                              Text(data.trafficStats.formatBytes(data.trafficStats.uploadTraffic)),
-                              const Text('上传', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              const Icon(Icons.download, color: Colors.blue),
-                              Text(data.trafficStats.formatBytes(data.trafficStats.downloadTraffic)),
-                              const Text('下载', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // 快速操作
-            Card(
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.card_giftcard),
-                    title: const Text('邀请好友'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: callbacks.onInvite,
                   ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.support_agent),
-                    title: const Text('在线客服'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: callbacks.onOnlineSupport,
-                  ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: const Text('退出登录'),
-                    onTap: () async {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('确认退出'),
-                          content: const Text('确定要退出登录吗？'),
-                          actions: [
-                            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
-                            TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('确定')),
-                          ],
-                        ),
-                      );
-                      if (confirm == true) callbacks.onLogout();
-                    },
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-            
-            // 公告列表
-            if (data.notices.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text('公告', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              ...data.notices.take(5).map((notice) => Card(
-                child: ListTile(
-                  title: Text(notice.title),
-                  subtitle: Text(notice.createdAt.toString().substring(0, 10)),
-                  trailing: notice.isRead ? null : const Badge(),
-                  onTap: () => callbacks.onViewNotice(notice),
-                ),
-              )),
-            ],
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
-}
 
+  Widget _buildUsageSection(WidgetRef ref) {
+    final userInfo = ref.userInfo;
+    final subscriptionInfo = ref.subscriptionInfo;
+    final currentProfile = ref.watch(currentProfileProvider);
+    
+    return SubscriptionUsageCard(
+      subscriptionInfo: subscriptionInfo,
+      userInfo: userInfo,
+      profileSubscriptionInfo: currentProfile?.subscriptionInfo,
+    );
+  }
+
+  Widget _buildConnectionSection() {
+    return const XBoardConnectButton(isFloating: false);
+  }
+
+  Widget _buildProxyModeSection() {
+    return const XBoardOutboundMode();
+  }
+}
