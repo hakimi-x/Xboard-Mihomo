@@ -2,7 +2,6 @@
 library;
 
 import 'package:fl_clash/ui/contracts/contract_base.dart';
-import 'package:flutter/material.dart';
 
 /// 忘记密码页面契约
 abstract class ForgotPasswordPageContract extends PageContract<ForgotPasswordPageData, ForgotPasswordPageCallbacks> {
@@ -15,10 +14,8 @@ abstract class ForgotPasswordPageContract extends PageContract<ForgotPasswordPag
 
 /// 重置密码步骤
 enum ResetPasswordStep {
-  enterEmail,      // 输入邮箱
-  enterCode,       // 输入验证码
-  enterNewPassword, // 输入新密码
-  success,         // 重置成功
+  sendCode,        // 发送验证码步骤
+  resetPassword,   // 重置密码步骤
 }
 
 /// 忘记密码页面数据
@@ -27,13 +24,13 @@ class ForgotPasswordPageData implements DataModel {
   final String email;
   
   /// 验证码
-  final String verificationCode;
+  final String code;
   
   /// 新密码
-  final String newPassword;
+  final String password;
   
   /// 确认新密码
-  final String confirmNewPassword;
+  final String confirmPassword;
   
   /// 当前步骤
   final ResetPasswordStep currentStep;
@@ -41,104 +38,81 @@ class ForgotPasswordPageData implements DataModel {
   /// 是否正在加载
   final bool isLoading;
   
-  /// 错误信息
-  final String? errorMessage;
-  
-  /// 成功信息
-  final String? successMessage;
-  
   /// 是否显示密码
-  final bool showPassword;
+  final bool obscurePassword;
   
   /// 是否显示确认密码
-  final bool showConfirmPassword;
-  
-  /// 倒计时秒数（发送验证码后）
-  final int countdown;
+  final bool obscureConfirmPassword;
 
   const ForgotPasswordPageData({
     this.email = '',
-    this.verificationCode = '',
-    this.newPassword = '',
-    this.confirmNewPassword = '',
-    this.currentStep = ResetPasswordStep.enterEmail,
+    this.code = '',
+    this.password = '',
+    this.confirmPassword = '',
+    this.currentStep = ResetPasswordStep.sendCode,
     this.isLoading = false,
-    this.errorMessage,
-    this.successMessage,
-    this.showPassword = false,
-    this.showConfirmPassword = false,
-    this.countdown = 0,
+    this.obscurePassword = true,
+    this.obscureConfirmPassword = true,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return {
       'email': email,
-      'verificationCode': verificationCode,
-      'newPassword': newPassword,
-      'confirmNewPassword': confirmNewPassword,
+      'code': code,
+      'password': password,
+      'confirmPassword': confirmPassword,
       'currentStep': currentStep.toString(),
       'isLoading': isLoading,
-      'errorMessage': errorMessage,
-      'successMessage': successMessage,
-      'showPassword': showPassword,
-      'showConfirmPassword': showConfirmPassword,
-      'countdown': countdown,
+      'obscurePassword': obscurePassword,
+      'obscureConfirmPassword': obscureConfirmPassword,
     };
-  }
-  
-  /// 验证密码是否匹配
-  bool get passwordsMatch => newPassword == confirmNewPassword && newPassword.isNotEmpty;
-  
-  /// 是否可以发送验证码
-  bool get canSendCode => email.isNotEmpty && countdown == 0;
-  
-  /// 是否可以继续下一步
-  bool get canProceed {
-    switch (currentStep) {
-      case ResetPasswordStep.enterEmail:
-        return email.isNotEmpty;
-      case ResetPasswordStep.enterCode:
-        return verificationCode.isNotEmpty;
-      case ResetPasswordStep.enterNewPassword:
-        return passwordsMatch;
-      case ResetPasswordStep.success:
-        return true;
-    }
   }
 }
 
 /// 忘记密码页面回调
 class ForgotPasswordPageCallbacks implements CallbacksModel {
   /// 发送验证码
-  final AsyncCallback onSendVerificationCode;
-  
-  /// 验证验证码
-  final AsyncCallback onVerifyCode;
+  final VoidCallback onSendVerificationCode;
   
   /// 重置密码
-  final AsyncCallback onResetPassword;
+  final VoidCallback onResetPassword;
   
-  /// 返回上一步
-  final VoidCallback onBack;
+  /// 返回上一步（从resetPassword步骤返回到sendCode步骤）
+  final VoidCallback onGoBackToSendCode;
   
   /// 返回登录
-  final VoidCallback onNavigateToLogin;
+  final VoidCallback onBackToLogin;
   
   /// 切换密码可见性
   final VoidCallback onTogglePasswordVisibility;
   
   /// 切换确认密码可见性
   final VoidCallback onToggleConfirmPasswordVisibility;
+  
+  /// 邮箱改变
+  final ValueCallback<String>? onEmailChanged;
+  
+  /// 验证码改变
+  final ValueCallback<String>? onCodeChanged;
+  
+  /// 密码改变
+  final ValueCallback<String>? onPasswordChanged;
+  
+  /// 确认密码改变
+  final ValueCallback<String>? onConfirmPasswordChanged;
 
   const ForgotPasswordPageCallbacks({
     required this.onSendVerificationCode,
-    required this.onVerifyCode,
     required this.onResetPassword,
-    required this.onBack,
-    required this.onNavigateToLogin,
+    required this.onGoBackToSendCode,
+    required this.onBackToLogin,
     required this.onTogglePasswordVisibility,
     required this.onToggleConfirmPasswordVisibility,
+    this.onEmailChanged,
+    this.onCodeChanged,
+    this.onPasswordChanged,
+    this.onConfirmPasswordChanged,
   });
 }
 

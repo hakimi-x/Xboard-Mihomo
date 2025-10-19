@@ -2,7 +2,6 @@
 library;
 
 import 'package:fl_clash/ui/contracts/contract_base.dart';
-import 'package:flutter/material.dart';
 
 /// 注册页面契约
 abstract class RegisterPageContract extends PageContract<RegisterPageData, RegisterPageCallbacks> {
@@ -15,9 +14,6 @@ abstract class RegisterPageContract extends PageContract<RegisterPageData, Regis
 
 /// 注册页面数据
 class RegisterPageData implements DataModel {
-  /// 用户名
-  final String username;
-  
   /// 邮箱
   final String email;
   
@@ -30,8 +26,14 @@ class RegisterPageData implements DataModel {
   /// 邀请码
   final String inviteCode;
   
-  /// 是否正在加载
-  final bool isLoading;
+  /// 邮箱验证码
+  final String emailCode;
+  
+  /// 是否正在注册
+  final bool isRegistering;
+  
+  /// 是否正在发送邮箱验证码
+  final bool isSendingEmailCode;
   
   /// 错误信息
   final String? errorMessage;
@@ -42,62 +44,61 @@ class RegisterPageData implements DataModel {
   /// 是否显示确认密码
   final bool showConfirmPassword;
   
-  /// 是否同意条款
-  final bool agreeToTerms;
+  /// 是否需要邮箱验证
+  final bool isEmailVerify;
+  
+  /// 邀请码是否必填
+  final bool isInviteForce;
+  
+  /// 配置是否加载中
+  final bool isConfigLoading;
 
   const RegisterPageData({
-    this.username = '',
     this.email = '',
     this.password = '',
     this.confirmPassword = '',
     this.inviteCode = '',
-    this.isLoading = false,
+    this.emailCode = '',
+    this.isRegistering = false,
+    this.isSendingEmailCode = false,
     this.errorMessage,
     this.showPassword = false,
     this.showConfirmPassword = false,
-    this.agreeToTerms = false,
+    this.isEmailVerify = false,
+    this.isInviteForce = false,
+    this.isConfigLoading = false,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      'username': username,
       'email': email,
       'password': password,
       'confirmPassword': confirmPassword,
       'inviteCode': inviteCode,
-      'isLoading': isLoading,
+      'emailCode': emailCode,
+      'isRegistering': isRegistering,
+      'isSendingEmailCode': isSendingEmailCode,
       'errorMessage': errorMessage,
       'showPassword': showPassword,
       'showConfirmPassword': showConfirmPassword,
-      'agreeToTerms': agreeToTerms,
+      'isEmailVerify': isEmailVerify,
+      'isInviteForce': isInviteForce,
+      'isConfigLoading': isConfigLoading,
     };
   }
-  
-  /// 验证密码是否匹配
-  bool get passwordsMatch => password == confirmPassword && password.isNotEmpty;
-  
-  /// 验证表单是否完整
-  bool get isFormValid =>
-      username.isNotEmpty &&
-      email.isNotEmpty &&
-      password.isNotEmpty &&
-      passwordsMatch &&
-      agreeToTerms;
 }
 
 /// 注册页面回调
 class RegisterPageCallbacks implements CallbacksModel {
   /// 注册
-  final Future<void> Function(
-    String username,
-    String email,
-    String password,
-    String inviteCode,
-  ) onRegister;
+  final VoidCallback onRegister;
   
-  /// 跳转到登录
-  final VoidCallback onNavigateToLogin;
+  /// 发送邮箱验证码
+  final VoidCallback onSendEmailCode;
+  
+  /// 返回登录
+  final VoidCallback onBackToLogin;
   
   /// 切换密码可见性
   final VoidCallback onTogglePasswordVisibility;
@@ -105,23 +106,32 @@ class RegisterPageCallbacks implements CallbacksModel {
   /// 切换确认密码可见性
   final VoidCallback onToggleConfirmPasswordVisibility;
   
-  /// 切换同意条款
-  final ValueCallback<bool> onToggleAgreeToTerms;
+  /// 邮箱改变
+  final ValueCallback<String>? onEmailChanged;
   
-  /// 查看用户协议
-  final VoidCallback onViewTerms;
+  /// 密码改变
+  final ValueCallback<String>? onPasswordChanged;
   
-  /// 查看隐私政策
-  final VoidCallback onViewPrivacy;
+  /// 确认密码改变
+  final ValueCallback<String>? onConfirmPasswordChanged;
+  
+  /// 邀请码改变
+  final ValueCallback<String>? onInviteCodeChanged;
+  
+  /// 邮箱验证码改变
+  final ValueCallback<String>? onEmailCodeChanged;
 
   const RegisterPageCallbacks({
     required this.onRegister,
-    required this.onNavigateToLogin,
+    required this.onSendEmailCode,
+    required this.onBackToLogin,
     required this.onTogglePasswordVisibility,
     required this.onToggleConfirmPasswordVisibility,
-    required this.onToggleAgreeToTerms,
-    required this.onViewTerms,
-    required this.onViewPrivacy,
+    this.onEmailChanged,
+    this.onPasswordChanged,
+    this.onConfirmPasswordChanged,
+    this.onInviteCodeChanged,
+    this.onEmailCodeChanged,
   });
 }
 
