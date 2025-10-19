@@ -194,6 +194,15 @@ plugins/                       # 插件（子模块）
 
 如果这个项目对您有帮助，欢迎给个 ⭐ Star！
 
+### 💰 打赏支持
+
+如果您觉得这个项目对您有帮助，可以请作者喝杯咖啡 ☕
+
+| 币种 | 地址 |
+|------|------|
+| **TRC-USDT** | `TFPvpxb5k2mYYcvABe5BrCz7Tt6BhnZxxj` |
+| **POL-USDT** | `0xFbbfD2b98fB3F7a4084275ad3139ba179bFDFa0F` |
+
 ---
 
 <div align="center">
