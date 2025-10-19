@@ -1,6 +1,14 @@
 /// 忘记密码页面控制器
+///
+/// 负责：
+/// 1. 管理忘记密码流程的步骤
+/// 2. 处理发送验证码和重置密码
+/// 3. 使用 UIRegistry 动态构建页面
+
 import 'package:fl_clash/ui/contracts/pages/pages_contracts.dart';
 import 'package:fl_clash/ui/registry/ui_registry.dart';
+import 'package:fl_clash/xboard/sdk/xboard_sdk.dart';
+import 'package:fl_clash/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,84 +21,176 @@ class ForgotPasswordPageController extends ConsumerStatefulWidget {
 
 class _ForgotPasswordPageControllerState extends ConsumerState<ForgotPasswordPageController> {
   String _email = '';
-  String _verificationCode = '';
-  String _newPassword = '';
-  String _confirmNewPassword = '';
-  ResetPasswordStep _currentStep = ResetPasswordStep.enterEmail;
-  bool _showPassword = false;
-  bool _showConfirmPassword = false;
+  String _code = '';
+  String _password = '';
+  String _confirmPassword = '';
+  ResetPasswordStep _currentStep = ResetPasswordStep.sendCode;
   bool _isLoading = false;
-  int _countdown = 0;
-  String? _errorMessage;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   Future<void> _handleSendVerificationCode() async {
-    setState(() { _isLoading = true; });
-    try {
-      // TODO: 发送验证码逻辑
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) {
-        setState(() { _currentStep = ResetPasswordStep.enterCode; _countdown = 60; });
-        _startCountdown();
-      }
-    } finally {
-      if (mounted) setState(() { _isLoading = false; });
+    if (_email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterEmail)),
+      );
+      return;
     }
-  }
 
-  void _startCountdown() {
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted && _countdown > 0) {
-        setState(() { _countdown--; });
-        _startCountdown();
-      }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterValidEmail)),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
     });
-  }
 
-  Future<void> _handleVerifyCode() async {
-    setState(() { _isLoading = true; });
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) setState(() { _currentStep = ResetPasswordStep.enterNewPassword; });
+      await XBoardSDK.sendVerificationCode(_email);
+
+      if (mounted) {
+        setState(() {
+          _currentStep = ResetPasswordStep.resetPassword;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).verificationCodeSent),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context).sendCodeFailed}: $e')),
+        );
+      }
     } finally {
-      if (mounted) setState(() { _isLoading = false; });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _handleResetPassword() async {
-    setState(() { _isLoading = true; });
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) setState(() { _currentStep = ResetPasswordStep.success; });
-    } finally {
-      if (mounted) setState(() { _isLoading = false; });
+    if (_code.isEmpty || _password.isEmpty || _confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterAllFields)),
+      );
+      return;
     }
+
+    if (_password != _confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).passwordMismatch)),
+      );
+      return;
+    }
+
+    if (_password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).passwordMinLength)),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await XBoardSDK.resetPassword(
+        email: _email,
+        password: _password,
+        emailCode: _code,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).passwordResetSuccessful),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context).passwordResetFailed}: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _handleGoBackToSendCode() {
+    setState(() {
+      _currentStep = ResetPasswordStep.sendCode;
+      _code = '';
+      _password = '';
+      _confirmPassword = '';
+    });
+  }
+
+  void _handleBackToLogin() {
+    Navigator.of(context).pop();
+  }
+
+  void _handleTogglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
+  void _handleToggleConfirmPasswordVisibility() {
+    setState(() {
+      _obscureConfirmPassword = !_obscureConfirmPassword;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // 准备契约数据
     final data = ForgotPasswordPageData(
       email: _email,
-      verificationCode: _verificationCode,
-      newPassword: _newPassword,
-      confirmNewPassword: _confirmNewPassword,
+      code: _code,
+      password: _password,
+      confirmPassword: _confirmPassword,
       currentStep: _currentStep,
       isLoading: _isLoading,
-      showPassword: _showPassword,
-      showConfirmPassword: _showConfirmPassword,
-      countdown: _countdown,
+      obscurePassword: _obscurePassword,
+      obscureConfirmPassword: _obscureConfirmPassword,
     );
-    
+
+    // 准备回调
     final callbacks = ForgotPasswordPageCallbacks(
       onSendVerificationCode: _handleSendVerificationCode,
-      onVerifyCode: _handleVerifyCode,
       onResetPassword: _handleResetPassword,
-      onBack: () => setState(() { if (_currentStep.index > 0) _currentStep = ResetPasswordStep.values[_currentStep.index - 1]; }),
-      onNavigateToLogin: () => Navigator.pushReplacementNamed(context, '/login'),
-      onTogglePasswordVisibility: () => setState(() { _showPassword = !_showPassword; }),
-      onToggleConfirmPasswordVisibility: () => setState(() { _showConfirmPassword = !_showConfirmPassword; }),
+      onGoBackToSendCode: _handleGoBackToSendCode,
+      onBackToLogin: _handleBackToLogin,
+      onTogglePasswordVisibility: _handleTogglePasswordVisibility,
+      onToggleConfirmPasswordVisibility: _handleToggleConfirmPasswordVisibility,
+      onEmailChanged: (value) => setState(() => _email = value),
+      onCodeChanged: (value) => setState(() => _code = value),
+      onPasswordChanged: (value) => setState(() => _password = value),
+      onConfirmPasswordChanged: (value) => setState(() => _confirmPassword = value),
     );
-    
-    return UIRegistry().buildPage<ForgotPasswordPageContract>(data: data, callbacks: callbacks);
+
+    // 使用 UIRegistry 动态构建页面
+    return UIRegistry().buildPage<ForgotPasswordPageContract>(
+      data: data,
+      callbacks: callbacks,
+    );
   }
 }
-
