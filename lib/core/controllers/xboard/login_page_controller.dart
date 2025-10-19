@@ -15,6 +15,8 @@ import 'package:fl_clash/xboard/config/utils/config_file_loader.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'register_page_controller.dart';
+import 'forgot_password_page_controller.dart';
 
 class LoginPageController extends ConsumerStatefulWidget {
   const LoginPageController({super.key});
@@ -123,13 +125,17 @@ class _LoginPageControllerState extends ConsumerState<LoginPageController> {
   }
 
   void _handleNavigateToRegister() async {
-    await Navigator.pushNamed(context, '/register');
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const RegisterPageController()),
+    );
     _loadSavedCredentials();
     _checkDomainStatus();
   }
 
   void _handleNavigateToForgotPassword() async {
-    await Navigator.pushNamed(context, '/forgot_password');
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const ForgotPasswordPageController()),
+    );
     _checkDomainStatus();
   }
 
