@@ -6,6 +6,7 @@ import 'package:fl_clash/xboard/features/subscription/pages/xboard_home_page.dar
 import 'package:fl_clash/xboard/features/online_support/pages/online_support_page.dart';
 import 'package:fl_clash/xboard/features/online_support/providers/chat_provider.dart';
 import 'package:fl_clash/xboard/features/invite/pages/invite_page.dart';
+import 'package:fl_clash/xboard/features/user_center/pages/user_center_page.dart';
 import 'package:fl_clash/xboard/features/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,17 +69,16 @@ class Navigation {
         ),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile], // 桌面端和手机端都显示
       ),
-      // TODO: 个人中心页面占位 - 待开发
-      // const NavigationItem(
-      //   icon: Icon(Icons.person),
-      //   label: PageLabel.userCenter,
-      //   view: UserCenterPage(
-      //     key: GlobalObjectKey(
-      //       PageLabel.userCenter,
-      //     ),
-      //   ),
-      //   modes: [NavigationItemMode.desktop],
-      // ),
+      const NavigationItem(
+        icon: Icon(Icons.person),
+        label: PageLabel.userCenter,
+        view: UserCenterPage(
+          key: GlobalObjectKey(
+            PageLabel.userCenter,
+          ),
+        ),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile], // 桌面端和手机端都显示
+      ),
     ];
   }
 

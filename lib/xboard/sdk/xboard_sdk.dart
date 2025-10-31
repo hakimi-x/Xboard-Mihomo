@@ -541,7 +541,11 @@ class XBoardSDK {
         message: message,
         level: level,
       );
-      return result.data;
+      // API返回success=true表示创建成功，即使data为null
+      if (result.success) {
+        return result.data;
+      }
+      return null;
     } catch (e) {
       XBoardLogger.error('[SDK] 创建工单失败', e);
       return null;

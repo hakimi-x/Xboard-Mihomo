@@ -4,7 +4,6 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/xboard/features/invite/providers/invite_provider.dart';
-import 'package:fl_clash/xboard/features/invite/widgets/user_menu_widget.dart';
 import 'package:fl_clash/xboard/features/invite/widgets/error_card.dart';
 import 'package:fl_clash/xboard/features/invite/widgets/invite_rules_card.dart';
 import 'package:fl_clash/xboard/features/invite/widgets/invite_qr_card.dart';
@@ -20,12 +19,6 @@ class InvitePage extends ConsumerStatefulWidget {
 }
 
 class _InvitePageState extends ConsumerState<InvitePage> with PageMixin {
-  @override
-  List<Widget> get actions {
-    return [
-      const UserMenuWidget(),
-    ];
-  }
 
   @override
   void initState() {
